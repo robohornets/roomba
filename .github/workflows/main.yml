@@ -1,5 +1,10 @@
 # This is a basic workflow to build robot code.
-name: CI
+name: Build Robot Code
+
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: write
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch.
 on:
