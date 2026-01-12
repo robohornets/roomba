@@ -1,7 +1,7 @@
 {
     "fileName": "WhatTime.json",
     "name": "WhatTime",
-    "version": "2026.1.0",
+    "version": "v2026.1.7",
     "frcYear": 2026,
     "uuid": "2C0B26E9-47AA-4C55-B235-640C45ECAD33",
     "mavenUrls": [
@@ -12,7 +12,7 @@
         {
             "groupId": "com.github.CaedmonMyers",
             "artifactId": "WhatTime",
-            "version": "2026.1.0"
+            "version": "v2026.1.7"
         }
     ],
     "jniDependencies": [],
