@@ -4,11 +4,17 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
+import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -16,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
-    private final RobotContainer m_robotContainer;
+    private final RobotContainer robotContainer;
 
     private PowerDistribution pdp = new PowerDistribution();
 
@@ -27,8 +33,29 @@ public class Robot extends TimedRobot {
 
     private final boolean kUseLimelight = false;
 
+    public double matchTimeRemainingSeconds = 160.0;
+    public double matchTimeElapsedSeconds = 0.0;
+
+    // A bool representing if the hub is inactive first or second
+    public Optional<Boolean> inactiveFirst;
+    public Optional<Alliance> firstInactiveAlliance;
+
+    // The current alliance for the robot
+    public Optional<Alliance> currentAlliance;
+
+    // Manages rumble for Xbox controller
+    // Start high so it doesn't trigger randomly
+    public double nextRumbleStartTime = 1000;
+
     public Robot() {
-        m_robotContainer = new RobotContainer();
+        robotContainer = new RobotContainer();
+    }
+
+    @Override
+    public void robotInit() {
+        currentAlliance = DriverStation.getAlliance();
+        
+        NetworkTablesUtil.put("Current Alliance", currentAlliance);
     }
 
     @Override
@@ -47,15 +74,29 @@ public class Robot extends TimedRobot {
          * of how to use vision should be tuned per-robot and to the team's specification.
          */
         if (kUseLimelight) {
-            var driveState = m_robotContainer.drivetrain.getState();
+            var driveState = robotContainer.drivetrain.getState();
             double headingDeg = driveState.Pose.getRotation().getDegrees();
             double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
             LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
             var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
             if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-                m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+                robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
             }
+        }
+
+        matchTimeRemainingSeconds = DriverStation.getMatchTime();
+        matchTimeElapsedSeconds = 160 - matchTimeRemainingSeconds;
+
+        if (matchTimeElapsedSeconds - nextRumbleStartTime >= 0 && matchTimeElapsedSeconds - nextRumbleStartTime <= 2) {
+            robotContainer.driverJoystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.operatorJoystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.debugJoystick.setRumble(RumbleType.kBothRumble, 1.0);
+        }
+        else {
+            robotContainer.driverJoystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.operatorJoystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.debugJoystick.setRumble(RumbleType.kBothRumble, 0.0);
         }
     }
 
@@ -70,7 +111,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        m_autonomousCommand = robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
@@ -91,7 +132,31 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+        String gameData = DriverStation.getGameSpecificMessage();
+
+        if(gameData.length() > 0) {
+            switch (gameData.charAt(0)) {
+                case 'B' :
+                    NetworkTablesUtil.put("First Inactive Hub", "Blue");
+                    firstInactiveAlliance = Optional.of(Alliance.Blue);
+                    break;
+                case 'R' :
+                    NetworkTablesUtil.put("First Inactive Hub", "Red");
+                    firstInactiveAlliance = Optional.of(Alliance.Red);
+                    break;
+                default :
+                    NetworkTablesUtil.put("First Inactive Hub", "Unknown");
+                break;
+            }
+        } else {
+            NetworkTablesUtil.put("First Inactive Hub", "Unknown");
+        }
+
+        if (currentAlliance == firstInactiveAlliance) {
+            inactiveFirst = Optional.of(true);
+        }
+    }
 
     @Override
     public void teleopExit() {}
@@ -112,6 +177,59 @@ public class Robot extends TimedRobot {
 
 
     public void updateNetworkTablesValues() {
-        // NetworkTablesUtil.put()
+        NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
+    }
+    
+    public void updateMatchPhase() {
+        // Autonomous Phase
+        if (matchTimeElapsedSeconds <= 20) {
+            NetworkTablesUtil.put("Active Hub?", true);
+            
+            nextRumbleStartTime = 20;
+        }
+        // Transition Shift
+        else if (matchTimeElapsedSeconds > 20 && matchTimeElapsedSeconds <= 30) {
+            NetworkTablesUtil.put("Active Hub?", true);
+
+            nextRumbleStartTime = 30;
+        }
+        // Shift 1
+        else if (matchTimeElapsedSeconds > 30 && matchTimeElapsedSeconds <= 55) {
+            inactiveFirst.ifPresent(inactive -> 
+                NetworkTablesUtil.put("Active Hub?", !inactive)
+            );
+
+            nextRumbleStartTime = 55;
+        }
+        // Shift 2
+        else if (matchTimeElapsedSeconds > 55 && matchTimeElapsedSeconds <= 80) {
+            inactiveFirst.ifPresent(inactive -> 
+                NetworkTablesUtil.put("Active Hub?", inactive)
+            );
+
+            nextRumbleStartTime = 80;
+        }
+        // Shift 3
+        else if (matchTimeElapsedSeconds > 80 && matchTimeElapsedSeconds <= 105) {
+            inactiveFirst.ifPresent(inactive -> 
+                NetworkTablesUtil.put("Active Hub?", !inactive)
+            );
+
+            nextRumbleStartTime = 105;
+        }
+        // Shift 4
+        else if (matchTimeElapsedSeconds > 105 && matchTimeElapsedSeconds <= 130) {
+            inactiveFirst.ifPresent(inactive -> 
+                NetworkTablesUtil.put("Active Hub?", inactive)
+            );
+
+            nextRumbleStartTime = 130;
+        }
+        // End Game
+        else if (matchTimeElapsedSeconds > 130 && matchTimeElapsedSeconds <= 160) {
+            NetworkTablesUtil.put("Active Hub?", true);
+
+            nextRumbleStartTime = 160;
+        }
     }
 }
