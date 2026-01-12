@@ -179,7 +179,7 @@ public class Robot extends TimedRobot {
     public void updateNetworkTablesValues() {
         NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
     }
-
+    
     public void updateMatchPhase() {
         // Autonomous Phase
         if (matchTimeElapsedSeconds <= 20) {
