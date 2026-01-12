@@ -14,3 +14,19 @@ This will delete the local branches without remotes from VSCode as well as updat
 ```
 git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -d
 ```
+
+## Libraries
+### PathplannerLib
+![GitHub Release](https://img.shields.io/github/v/release/mjansen4857/pathplanner)
+
+[https://github.com/mjansen4857/pathplanner](https://github.com/mjansen4857/pathplanner)
+
+### CTRE-Phoenix (v6)
+![GitHub Release](https://img.shields.io/github/v/release/CrossTheRoadElec/Phoenix-Releases)
+
+[https://github.com/CrossTheRoadElec/Phoenix-Releases](https://github.com/CrossTheRoadElec/Phoenix-Releases)
+
+### WhatTime
+![GitHub Release](https://img.shields.io/github/v/release/CaedmonMyers/WhatTime)
+
+[https://github.com/CaedmonMyers/WhatTime](https://github.com/CaedmonMyers/WhatTime)
