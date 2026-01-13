@@ -25,6 +25,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
+import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 
 public class RobotContainer {
     public static double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -54,6 +55,7 @@ public class RobotContainer {
 
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
