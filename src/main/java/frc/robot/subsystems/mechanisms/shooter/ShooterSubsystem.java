@@ -31,11 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         double launchSpeed = Math.sqrt(( 9.8 * distanceToHubX*distanceToHubX ) / ( 2 * Math.cos(outputAngle)*Math.cos(outputAngle) * ( distanceToHubX * Math.tan(outputAngle) - distanceToHubY ) ));
 
-        double flightTime = distanceToHubX/( launchSpeed * Math.cos(outputAngle) );
-
-        System.out.println(outputAngle);
-        System.out.println(launchSpeed);
-        System.out.println(flightTime);
+        // double flightTime = distanceToHubX/( launchSpeed * Math.cos(outputAngle) );
         
         return new double[]{outputAngle,launchSpeed};
         
