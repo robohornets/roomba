@@ -24,14 +24,15 @@ public class ShooterSubsystem extends SubsystemBase {
     
     // TODO: create commands and set motors
 
-
     // Distance to hub (X), distance to hub (y), angle of the ball as it enters the hub
     public double[] calculateShooterValues(double distanceToHubX, double distanceToHubY, double enterAngle){
-        double outputAngle = Math.atan(2*distanceToHubX/distanceToHubY - Math.tan(enterAngle));
+        // https://www.desmos.com/calculator/aavfklnkvh
+
+
+        enterAngle = enterAngle * Math.PI / 180;
+        double outputAngle = Math.atan(2*distanceToHubY/distanceToHubX - Math.tan(enterAngle));
 
         double launchSpeed = Math.sqrt(( 9.8 * distanceToHubX*distanceToHubX ) / ( 2 * Math.cos(outputAngle)*Math.cos(outputAngle) * ( distanceToHubX * Math.tan(outputAngle) - distanceToHubY ) ));
-
-        // double flightTime = distanceToHubX/( launchSpeed * Math.cos(outputAngle) );
         
         return new double[]{outputAngle,launchSpeed};
         
