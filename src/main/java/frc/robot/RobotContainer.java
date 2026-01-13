@@ -12,17 +12,22 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.commands.namedcommands.RegisterCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
+import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 
 public class RobotContainer {
     public static double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -50,11 +55,20 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem);
+
+
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
+
+
+        registerCommands.registerCommands();
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Mode", autoChooser);
