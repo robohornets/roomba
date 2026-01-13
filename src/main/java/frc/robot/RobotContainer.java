@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -56,6 +57,7 @@ public class RobotContainer {
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
