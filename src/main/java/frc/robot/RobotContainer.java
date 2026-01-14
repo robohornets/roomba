@@ -81,9 +81,16 @@ public class RobotContainer {
         tests.runTests();
 
         configureBindings();
+        configureDefaults();
 
         // Warmup PathPlanner to avoid Java pauses
         FollowPathCommand.warmupCommand().schedule();
+    }
+
+
+    private void configureDefaults() {
+        
+        
     }
 
     private void configureBindings() {
@@ -96,6 +103,7 @@ public class RobotContainer {
                     .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
+
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
