@@ -12,11 +12,12 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.motor.MotorSubsystem;
 
 public class RobotContainer {
     public static double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -57,7 +59,10 @@ public class RobotContainer {
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem);
+    public final MotorSubsystem motorSubsystem = new MotorSubsystem();
+    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
+
+
 
 
     // MARK: Tests
@@ -70,13 +75,14 @@ public class RobotContainer {
     public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
 
-
+        
         registerCommands.registerCommands();
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
-        SmartDashboard.putData("Auto Mode", autoChooser);
+        NetworkTablesUtil.put("Auto Mode", autoChooser);
 
         // MARK: Run Tests
+        /* Disable tests on actual code */
         tests.runTests();
 
         configureBindings();

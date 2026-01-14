@@ -17,8 +17,8 @@ public class ClimberSubsystem extends SubsystemBase {
     public static final double maxHeight = 65.0;
 
     // TODO: VERY IMPORTANT!!!! Put the correct device ids
-    public final TalonFX climberLeft = new TalonFX(-1);
-    public final TalonFX climberRight = new TalonFX(-2);
+    public final TalonFX climberLeft = new TalonFX(12);
+    public final TalonFX climberRight = new TalonFX(13);
 
     public double elevatorEncoderOffset = 0.0;
 
