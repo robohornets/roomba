@@ -8,10 +8,6 @@ import java.util.Optional;
 
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.ctre.phoenix6.HootAutoReplay;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
@@ -20,8 +16,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -69,7 +63,7 @@ public class Robot extends TimedRobot {
         robotContainer.shooterSubsystem.shooterTopMotor.setNeutralMode(NeutralModeValue.Brake);
         robotContainer.climberSubsystem.climberLeft.setNeutralMode(NeutralModeValue.Brake);
         robotContainer.climberSubsystem.climberRight.setNeutralMode(NeutralModeValue.Brake);
-        
+
         NetworkTablesUtil.put("Current Alliance", currentAlliance);
     }
 

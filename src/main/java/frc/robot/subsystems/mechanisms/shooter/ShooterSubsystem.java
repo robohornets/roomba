@@ -5,7 +5,6 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import java.lang.Math;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -58,7 +57,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command alignShooterYawToHub(){
         return Commands.run(
             () -> {
-                double desiredRotations = calculateDesiredRotationsToFace(getHubPosition()); // rotations required to face towards the hub
+                double desiredRotations = calculateRotationsToFace(getHubPosition()); // rotations required to face towards the hub
                 double currentRotations = getShooterYaw(); // current rotations
 
                 System.out.println(currentRotations);
@@ -82,10 +81,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
 
-    public double calculateDesiredRotationsToFace(double[] hubPosition){
+    public double calculateRotationsToFace(double[] position){
         return (
             Math.atan2(
-                hubPosition[1],hubPosition[0]
+                position[1],position[0]
             ) / (2 * Math.PI)
             + 1
         ) % 1;
@@ -108,7 +107,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public double[] getHubPosition(){
         // TODO: calculate hub position using limelight (relative to robot)
 
-        return new double[]{5.00, 5.00};
+        return new double[]{5.00, 2.00};
     }
 
 
