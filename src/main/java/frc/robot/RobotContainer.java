@@ -61,6 +61,10 @@ public class RobotContainer {
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem);
 
 
+    // MARK: Tests
+    public final Tests tests = new Tests();
+
+
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
@@ -72,6 +76,9 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Mode", autoChooser);
+
+        // MARK: Run Tests
+        tests.runTests();
 
         configureBindings();
 

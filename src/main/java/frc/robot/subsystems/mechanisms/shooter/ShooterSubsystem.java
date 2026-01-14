@@ -38,6 +38,12 @@ public class ShooterSubsystem extends SubsystemBase {
         
     }
 
+    public double calculateRequiredRPM(double desiredSpeed){
+
+        
+        return 0.0;
+    }
+
 
 
 
