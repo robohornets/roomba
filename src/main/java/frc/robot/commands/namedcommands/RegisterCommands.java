@@ -23,6 +23,7 @@ public class RegisterCommands {
     }
     
     public void registerCommands(){
+        NamedCommands.registerCommand("shoot", shooterSubsystem.pitchToAngleDeg(60));
         
     }
 }
