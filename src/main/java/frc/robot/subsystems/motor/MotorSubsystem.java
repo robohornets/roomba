@@ -20,9 +20,13 @@ public class MotorSubsystem extends SubsystemBase {
 
 
         enterAngle = enterAngle * Math.PI / 180;
-        double outputAngle = Math.atan(2*distanceY/distanceX - Math.tan(enterAngle));
+        double outputAngle = Math.atan(2 * distanceY / distanceX - Math.tan(enterAngle));
 
-        double launchSpeed = Math.sqrt(( 9.80665 * distanceX*distanceY ) / ( 2 * Math.cos(outputAngle)*Math.cos(outputAngle) * ( distanceX * Math.tan(outputAngle) - distanceY ) ));
+        double launchSpeed = Math.sqrt(
+            ( 9.80665 * distanceX * distanceY ) / 
+            ( 2 * Math.cos(outputAngle) * Math.cos(outputAngle) 
+            * ( distanceX * Math.tan(outputAngle) - distanceY ) 
+        ));
         
         return new double[]{launchSpeed, outputAngle};
         

@@ -1,9 +1,14 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.btwrobotics.WhatTime.frc.PositionManager;
+import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import java.lang.Math;
+import java.util.Arrays;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,29 +19,76 @@ import frc.robot.subsystems.motor.MotorSubsystem;
 public class ShooterSubsystem extends SubsystemBase {
 
     MotorSubsystem motorSubsystem = new MotorSubsystem();
-
-    public final TalonFX shooterMotor = new TalonFX(10);
-    public final TalonFX shooterPitchMotor = new TalonFX(9);
+    
+    public final MotorWrapper shooterMotor = new MotorWrapper(
+        new TalonFX(10),
+        false
+        );
+    public final MotorWrapper shooterPitchMotor = new MotorWrapper(
+        new TalonFX(9),
+        false
+    );
 
     public final Pigeon2 shooterPigeon = new Pigeon2(34);
 
 
     // TODO: Calculate values
+    public double hubEnterAngle = -70;
 
-    public double angleSpeed = 0.1;
-    public double angleHoldSpeed = 0.02;
+    public double shooterPitchSpeed = 0.1;
+    public double shooterPitchHoldSpeed = 0.02;
+
+    public double shooterPitchMax = 0.3;
+    public double shooterPitchMin = 0.0;
+
+    public double positionThreshold = 0.01; // Threshold for position manager
+
+    public double hubHeight = 2;
+    public double shooterHeight = 1;
+
 
 
     // TODO: create commands and set motors
 
-
-
-    public double getShooterMotorPitch(){
-        return shooterPitchMotor.getPosition().getValueAsDouble();
+    public Command pitchToAngleDeg(double angle){
+        return Commands.run(
+            () -> {
+                System.out.println("pitchToAngleDeg");
+                getDistanceToHub();
+                new PositionManager(
+                    shooterPitchMin,
+                    shooterPitchMax,
+                    Arrays.asList(shooterPitchMotor),
+                    angle / 360,
+                    shooterPitchSpeed,
+                    shooterPitchHoldSpeed,
+                    positionThreshold,
+                    () -> getShooterPitchDeg()
+                );
+            }
+        );
     }
-    public double getShooterPitch(){
+
+
+
+    public double getShooterMotorPitchDeg(){
+        return shooterPitchMotor.getPosition() * 360;
+    }
+    public double getShooterPitchDeg(){
         // MARK: Should be roll?
-        return shooterPigeon.getRoll(false).getValueAsDouble();
+        return shooterPigeon.getRoll().getValueAsDouble();
+    }
+    public double[] getDistanceToHub(){
+        // MARK: still in progress
+        // meters
+        double[] hubPosition = new double[]{12.5, 4.5};
+        
+        double[] robotPosition = NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").getDoubleArray(new double[]{0.0,0.0,0.0});
+
+        // double degrees = motorSubsystem.rotationsToFace(new double[]{hubPosition[0] - robotPosition[0], hubPosition[1] - robotPosition[1]});
+
+    
+        return new double[]{0,0};
     }
 
     // TODO: calculate hub position using limelight (relative to robot) (x,y: front right of robot are positive)

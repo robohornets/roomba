@@ -1,6 +1,8 @@
 package frc.robot.subsystems.mechanisms.climber;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.btwrobotics.WhatTime.frc.FlywheelPair;
+import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,18 +18,30 @@ public class ClimberSubsystem extends SubsystemBase {
     public static final double minHeight = 0.0; 
     public static final double maxHeight = 65.0;
 
+    
+    
+    
     // TODO: VERY IMPORTANT!!!! Put the correct device ids
-    public final TalonFX climberLeft = new TalonFX(12);
-    public final TalonFX climberRight = new TalonFX(13);
+    public final MotorWrapper climberLeft = new MotorWrapper(
+        new TalonFX(12),
+        true
+    );
+    public final MotorWrapper climberRight = new MotorWrapper(
+        new TalonFX(13),
+        false
+    );
+    public final FlywheelPair climberPair = new FlywheelPair(climberLeft, climberRight, climberUpDownSpeed);
+
+
 
     public double elevatorEncoderOffset = 0.0;
 
     public void resetClimberEncoder() {
-        elevatorEncoderOffset = climberLeft.getPosition().getValueAsDouble();
+        elevatorEncoderOffset = climberLeft.getPosition();
     }
 
     public double getClimberHeight() {
-        return climberLeft.getPosition().getValueAsDouble();
+        return climberLeft.getPosition();
     }
 
 
@@ -35,13 +49,11 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command climberUp() {
         return Commands.run(
             () -> {
-                if (Math.abs(climberLeft.getPosition().getValueAsDouble()) <= 65.0) {
-                    climberLeft.set(-climberUpDownSpeed);
-                    climberRight.set(climberUpDownSpeed);
+                if (Math.abs(climberLeft.getPosition()) <= 65.0) {
+                    climberPair.runForward();
                     CommandScheduler.getInstance().cancelAll();
                 } else {
-                    climberLeft.set(-0.015);
-                    climberRight.set(0.015);
+                    climberPair.runForward(0.015);
                 }
             }
         );
@@ -50,12 +62,10 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command climberDown() {
         return Commands.run(
             () -> {
-                if (Math.abs(climberLeft.getPosition().getValueAsDouble()) >= 5.0) {
-                    climberLeft.set(climberUpDownSpeed);
-                    climberRight.set(-climberUpDownSpeed);
+                if (Math.abs(climberLeft.getPosition()) >= 5.0) {
+                    climberPair.runBackward();
                 } else {
-                    climberLeft.set(-0.015);
-                    climberRight.set(0.015);
+                    climberPair.runForward(0.015);
                 }
             }
         );
@@ -64,8 +74,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command climberUpManual() {
         return Commands.run(
             () -> {
-                climberLeft.set(-climberUpDownSpeed);
-                climberRight.set(climberUpDownSpeed);
+                climberPair.runForward();
             }
         );
     }
@@ -73,8 +82,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command climberDownManual() {
         return Commands.run(
             () -> {
-                climberLeft.set(climberUpDownSpeed);
-                climberRight.set(-climberUpDownSpeed);
+                climberPair.runBackward();
             }
         );
     }
@@ -82,12 +90,10 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command climberUpSlow() {
         return Commands.run(
             () -> {
-                if (Math.abs(climberLeft.getPosition().getValueAsDouble()) <= 65.0) {
-                    climberLeft.set(-climberUpDownSpeedSlow);
-                    climberRight.set(climberUpDownSpeedSlow);
+                if (Math.abs(climberLeft.getPosition()) <= 65.0) {
+                    climberPair.runForward(climberUpDownSpeedSlow);
                 } else {
-                    climberLeft.set(-0.015);
-                    climberRight.set(0.015);
+                    climberPair.runForward(0.015);
                 }
             }
         );
@@ -96,12 +102,10 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command climberDownSlow() {
         return Commands.run(
             () -> {
-                if (Math.abs(climberLeft.getPosition().getValueAsDouble()) >= 5.0) {
-                    climberLeft.set(climberUpDownSpeedSlow);
-                    climberRight.set(-climberUpDownSpeedSlow);
+                if (Math.abs(climberLeft.getPosition()) >= 5.0) {
+                    climberPair.runBackward(-climberUpDownSpeedSlow);
                 } else {
-                    climberLeft.set(-0.015);
-                    climberRight.set(0.015);
+                    climberPair.runForward(0.015);
                 }
             }
         );
@@ -110,8 +114,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command stopClimber() {
         return Commands.run(
             () -> {
-                climberLeft.set(-0.015);
-                climberRight.set(0.015);
+                climberPair.runForward(0.015);
             }
         );
     }
