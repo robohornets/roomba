@@ -95,13 +95,7 @@ public class RobotContainer {
 
 
     private void configureDefaults() {
-        shooterSubsystem.setDefaultCommand(
-            Commands.run(
-                () -> {
-                    shooterSubsystem.aimAtHub();
-                }, shooterSubsystem
-            )
-        );
+        
         
     }
 
