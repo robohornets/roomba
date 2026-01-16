@@ -185,3 +185,10 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+
+# Simulator
+/ctre_sim/
+networktables.json
+simgui-ds.json
+simgui-window.json
+simgui.json

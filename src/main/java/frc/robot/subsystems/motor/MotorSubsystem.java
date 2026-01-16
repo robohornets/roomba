@@ -5,13 +5,9 @@ import java.lang.Math;
 
 public class MotorSubsystem extends SubsystemBase {
 
-    public double rotationsToFace(double[] position){
-        return (
-            (
-                -Math.atan2(
-                    position[0],position[1]
-                )
-            ) % (2 * Math.PI)
+    public double degreesToFace(double[] position, double angle){ // negative is clockwise positive is counterclockwise
+        return angle - (
+            -Math.atan2(position[1], position[0])
         ) * 180 / Math.PI;
     }
 
@@ -28,7 +24,7 @@ public class MotorSubsystem extends SubsystemBase {
             * ( distanceX * Math.tan(outputAngle) - distanceY ) 
         ));
         
-        return new double[]{launchSpeed, outputAngle};
+        return new double[]{launchSpeed, outputAngle * 180 / Math.PI};
         
     }
 
