@@ -27,6 +27,6 @@ git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs 
 [https://github.com/CrossTheRoadElec/Phoenix-Releases](https://github.com/CrossTheRoadElec/Phoenix-Releases)
 
 ### WhatTime
-![GitHub Release](https://img.shields.io/github/v/release/CaedmonMyers/WhatTime)
+![GitHub Release](https://img.shields.io/github/v/release/robohornets/WhatTime)
 
-[https://github.com/CaedmonMyers/WhatTime](https://github.com/CaedmonMyers/WhatTime)
+[https://github.com/robohornets/WhatTime](https://github.com/robohornets/WhatTime)
