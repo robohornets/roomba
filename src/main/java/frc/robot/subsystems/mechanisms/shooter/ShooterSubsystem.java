@@ -7,6 +7,7 @@ import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import java.lang.Math;
 import java.util.Arrays;
+import java.util.List;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,6 +47,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public double hubHeight = 2;
     public double shooterHeight = 1;
 
+    public PositionManager shooterPositionManager = new PositionManager(shooterPitchMin, shooterPitchMax, List.of(shooterPitchMotor), 0.2, 0.0, 1.0, () -> getShooterPitchDeg());
+
 
 
     // TODO: create commands and set motors
@@ -55,16 +58,8 @@ public class ShooterSubsystem extends SubsystemBase {
             () -> {
                 System.out.println("pitchToAngleDeg");
                 getDistanceToHub();
-                new PositionManager(
-                    shooterPitchMin,
-                    shooterPitchMax,
-                    Arrays.asList(shooterPitchMotor),
-                    angle / 360,
-                    shooterPitchSpeed,
-                    shooterPitchHoldSpeed,
-                    positionThreshold,
-                    () -> getShooterPitchDeg()
-                );
+                
+                shooterPositionManager.move(angle);
             }
         );
     }
