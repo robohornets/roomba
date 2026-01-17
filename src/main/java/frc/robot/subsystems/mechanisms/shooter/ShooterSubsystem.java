@@ -1,20 +1,15 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.btwrobotics.WhatTime.frc.PositionManager;
-import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
-import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
-import com.ctre.phoenix6.hardware.Pigeon2;
-import java.lang.Math;
-import java.util.Arrays;
 import java.util.List;
+
+import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
+import com.btwrobotics.WhatTime.frc.PositionManager;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-
 import frc.robot.subsystems.motor.MotorSubsystem;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -47,21 +42,23 @@ public class ShooterSubsystem extends SubsystemBase {
     public double hubHeight = 2;
     public double shooterHeight = 1;
 
-    public PositionManager shooterPositionManager = new PositionManager(shooterPitchMin, shooterPitchMax, List.of(shooterPitchMotor), 0.2, 0.0, positionThreshold, () -> getShooterPitchDeg());
+    public PositionManager shooterPositionManager = new PositionManager(
+        shooterPitchMin,
+        shooterPitchMax,
+        List.of(shooterPitchMotor),
+        0.2,
+        0.0,
+        positionThreshold, 
+        () -> getShooterPitchDeg()
+    );
 
 
 
     // TODO: create commands and set motors
 
     public Command pitchToAngleDeg(double angle){
-        return Commands.run(
-            () -> {
-                System.out.println("pitchToAngleDeg");
-                getDistanceToHub();
-                
-                shooterPositionManager.move(angle);
-            }
-        );
+        return shooterPositionManager.move(angle);
+        
     }
 
 
