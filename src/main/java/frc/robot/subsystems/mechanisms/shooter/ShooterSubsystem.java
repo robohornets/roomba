@@ -42,12 +42,12 @@ public class ShooterSubsystem extends SubsystemBase {
     public double shooterPitchMax = 0.3;
     public double shooterPitchMin = 0.0;
 
-    public double positionThreshold = 0.01; // Threshold for position manager
+    public double positionThreshold = 1.0; // Threshold for position manager
 
     public double hubHeight = 2;
     public double shooterHeight = 1;
 
-    public PositionManager shooterPositionManager = new PositionManager(shooterPitchMin, shooterPitchMax, List.of(shooterPitchMotor), 0.2, 0.0, 1.0, () -> getShooterPitchDeg());
+    public PositionManager shooterPositionManager = new PositionManager(shooterPitchMin, shooterPitchMax, List.of(shooterPitchMotor), 0.2, 0.0, positionThreshold, () -> getShooterPitchDeg());
 
 
 
