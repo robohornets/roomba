@@ -76,7 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // meters
         double[] hubPosition = new double[]{12.5, 4.5};
         
-        // double[] robotPosition = NetworkTablesUtil.get("Pose").getValueAsDoubleArray();
+        double[] robotPosition = NetworkTablesUtil.getTable().getEntry("Pose").getDoubleArray(new double[]{0.0, 0.0});
 
         // double degrees = motorSubsystem.rotationsToFace(new double[]{hubPosition[0] - robotPosition[0], hubPosition[1] - robotPosition[1]});
         
