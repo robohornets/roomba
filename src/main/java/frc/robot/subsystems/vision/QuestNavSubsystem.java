@@ -13,6 +13,7 @@ import gg.questnav.questnav.QuestNav;
 public class QuestNavSubsystem extends SubsystemBase {
     CommandSwerveDrivetrain drivetrain;
 
+
     public QuestNavSubsystem(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
     }
@@ -46,4 +47,6 @@ public class QuestNavSubsystem extends SubsystemBase {
         }
         questNav.commandPeriodic();
     }
+
+
 }

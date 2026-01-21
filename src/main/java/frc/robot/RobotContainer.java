@@ -63,16 +63,17 @@ public class RobotContainer {
     
     // MARK: Subsystems
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final MotorSubsystem motorSubsystem = new MotorSubsystem();
-    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
-
+    
     // MARK: Vision
+    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
     QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
-
+    
+    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
+    
     // MARK: Tests
-    public final Tests tests = new Tests();
+    public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
 
     /* Path follower */
