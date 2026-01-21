@@ -2,15 +2,16 @@ package frc.robot.subsystems.mechanisms.shooter;
 
 import java.util.List;
 
+import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
-import com.btwrobotics.WhatTime.frc.PositionManager;
+import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.motor.MotorSubsystem;
+
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -75,10 +76,10 @@ public class ShooterSubsystem extends SubsystemBase {
         // meters
         double[] hubPosition = new double[]{12.5, 4.5};
         
-        double[] robotPosition = NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").getDoubleArray(new double[]{0.0,0.0,0.0});
+        // double[] robotPosition = NetworkTablesUtil.get("Pose").getValueAsDoubleArray();
 
         // double degrees = motorSubsystem.rotationsToFace(new double[]{hubPosition[0] - robotPosition[0], hubPosition[1] - robotPosition[1]});
-
+        
     
         return new double[]{0,0};
     }
