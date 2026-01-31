@@ -29,6 +29,7 @@ import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.motor.MotorSubsystem;
+import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class RobotContainer {
@@ -69,6 +70,8 @@ public class RobotContainer {
     // MARK: Vision
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
     QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
+
+    LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight4");
     
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
     
