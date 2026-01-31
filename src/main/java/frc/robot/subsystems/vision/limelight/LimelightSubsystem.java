@@ -49,7 +49,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
         PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
-        if (estimate.tagCount == 0) {
+        if (estimate == null || estimate.tagCount == 0) {
             return;
         }
         

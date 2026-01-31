@@ -56,7 +56,7 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    // MARK: Xbox controllers
+    // MARK: Xbox Controllers
     public final CommandXboxController driverJoystick = new CommandXboxController(0);
     public final CommandXboxController operatorJoystick = new CommandXboxController(1);
     public final CommandXboxController debugJoystick = new CommandXboxController(2);
@@ -66,15 +66,21 @@ public class RobotContainer {
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final MotorSubsystem motorSubsystem = new MotorSubsystem();
-    
-    // MARK: Vision
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
+
+    // MARK: Vision
+    // Uses the Quest to periodically add vision measurements
     QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
 
+    // Read AprilTags from the Limelight periodically to add vision measurements
     LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight4");
     
+    
+    // MARK: Register Commands
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
     
+
+
     // MARK: Tests
     public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
@@ -108,8 +114,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
+        // Positive X is forward, Positive Y is left according to WPILib
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
