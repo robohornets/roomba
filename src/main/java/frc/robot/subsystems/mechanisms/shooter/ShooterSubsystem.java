@@ -1,5 +1,6 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
@@ -8,7 +9,9 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.motor.MotorSubsystem;
@@ -95,15 +98,13 @@ public class ShooterSubsystem extends SubsystemBase {
                 System.out.println(launchVariables[1]);
                 // pitch towards the required angle
 
-
                 new PositionManager(
-                    shooterPitchMin,
-                    shooterPitchMax,
-                    Arrays.asList(shooterPitchMotor),
-                    launchVariables[1],
-                    shooterPitchSpeed,
-                    shooterPitchHoldSpeed,
-                    positionThreshold,
+                    shooterPitchMin, 
+                    shooterPitchMax, 
+                    Arrays.asList(shooterPitchMotor), 
+                    launchVariables[1], 
+                    shooterPitchHoldSpeed, 
+                    positionThreshold, 
                     () -> getShooterPitchDeg()
                 );
             }
