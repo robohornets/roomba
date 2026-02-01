@@ -1,7 +1,7 @@
 {
     "fileName": "WhatTime.json",
     "name": "WhatTime",
-    "version": "v2026.1.14",
+    "version": "v2026.1.15",
     "frcYear": 2026,
     "uuid": "2C0B26E9-47AA-4C55-B235-640C45ECAD33",
     "mavenUrls": [
@@ -12,7 +12,7 @@
         {
             "groupId": "com.btwrobotics.whattime.frc",
             "artifactId": "whattime",
-            "version": "v2026.1.14"
+            "version": "v2026.1.15"
         }
     ],
     "jniDependencies": [],

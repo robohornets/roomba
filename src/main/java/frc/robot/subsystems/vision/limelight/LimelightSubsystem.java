@@ -39,11 +39,12 @@ public class LimelightSubsystem extends SubsystemBase {
 
     public void addOdometryMeasurement() {
         // Give limelight current estimated rotation from pose for MegaTag 2
-        Pose2d currentPose = drivetrain.getState().Pose;
+        double currentYaw = drivetrain.getState().Pose.getRotation().getDegrees();
 
+        // Set the current yaw of the robot for increased accuracy
         LimelightHelpers.SetRobotOrientation(
             limelightName, 
-            currentPose.getRotation().getDegrees(),
+            currentYaw,
             0, 0, 0, 0, 0
         );
 
@@ -61,9 +62,9 @@ public class LimelightSubsystem extends SubsystemBase {
 
         NetworkTablesUtil.put("Limelight Pose", estimate.pose);
 
-        // Translate the 
+        // Translate the pose by its offset from the centre of the robot
         Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.LIMELIGHT_TRANSFORM_FROM_CENTRE.inverse());
 
-        drivetrain.addVisionMeasurement(estimate.pose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
+        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
     }
 }

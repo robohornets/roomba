@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorBulkActions;
+import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -54,6 +56,10 @@ public class Robot extends TimedRobot {
     // Start high so it doesn't trigger randomly
     public double nextRumbleStartTime = 1000;
     public MotorBulkActions motorBulkActions = new MotorBulkActions();
+
+    // MARK: Hub Manager
+    public MatchTimeManager matchTimeManager = new MatchTimeManager();
+    public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
 
     public Robot() {
         robotContainer = new RobotContainer();
@@ -150,29 +156,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        String gameData = DriverStation.getGameSpecificMessage();
-
-        if(gameData.length() > 0) {
-            switch (gameData.charAt(0)) {
-                case 'B' :
-                    NetworkTablesUtil.put("First Inactive Hub", "Blue");
-                    firstInactiveAlliance = Optional.of(Alliance.Blue);
-                    break;
-                case 'R' :
-                    NetworkTablesUtil.put("First Inactive Hub", "Red");
-                    firstInactiveAlliance = Optional.of(Alliance.Red);
-                    break;
-                default :
-                    NetworkTablesUtil.put("First Inactive Hub", "Unknown");
-                break;
-            }
-        } else {
-            NetworkTablesUtil.put("First Inactive Hub", "Unknown");
-        }
-
-        if (currentAlliance == firstInactiveAlliance) {
-            inactiveFirst = Optional.of(true);
-        }
+        NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
+        NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
     }
 
     @Override
@@ -200,58 +185,5 @@ public class Robot extends TimedRobot {
         NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
         NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
         NetworkTablesUtil.put("Shooter Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
-    }
-    
-    public void updateMatchPhase() {
-        // Autonomous Phase
-        if (matchTimeElapsedSeconds <= 20) {
-            NetworkTablesUtil.put("Active Hub?", true);
-            
-            nextRumbleStartTime = 20;
-        }
-        // Transition Shift
-        else if (matchTimeElapsedSeconds > 20 && matchTimeElapsedSeconds <= 30) {
-            NetworkTablesUtil.put("Active Hub?", true);
-
-            nextRumbleStartTime = 30;
-        }
-        // Shift 1
-        else if (matchTimeElapsedSeconds > 30 && matchTimeElapsedSeconds <= 55) {
-            inactiveFirst.ifPresent(inactive -> 
-                NetworkTablesUtil.put("Active Hub?", !inactive)
-            );
-
-            nextRumbleStartTime = 55;
-        }
-        // Shift 2
-        else if (matchTimeElapsedSeconds > 55 && matchTimeElapsedSeconds <= 80) {
-            inactiveFirst.ifPresent(inactive -> 
-                NetworkTablesUtil.put("Active Hub?", inactive)
-            );
-
-            nextRumbleStartTime = 80;
-        }
-        // Shift 3
-        else if (matchTimeElapsedSeconds > 80 && matchTimeElapsedSeconds <= 105) {
-            inactiveFirst.ifPresent(inactive -> 
-                NetworkTablesUtil.put("Active Hub?", !inactive)
-            );
-
-            nextRumbleStartTime = 105;
-        }
-        // Shift 4
-        else if (matchTimeElapsedSeconds > 105 && matchTimeElapsedSeconds <= 130) {
-            inactiveFirst.ifPresent(inactive -> 
-                NetworkTablesUtil.put("Active Hub?", inactive)
-            );
-
-            nextRumbleStartTime = 130;
-        }
-        // End Game
-        else if (matchTimeElapsedSeconds > 130 && matchTimeElapsedSeconds <= 160) {
-            NetworkTablesUtil.put("Active Hub?", true);
-
-            nextRumbleStartTime = 160;
-        }
     }
 }

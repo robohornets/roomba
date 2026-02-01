@@ -80,7 +80,6 @@ public class RobotContainer {
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
     
 
-
     // MARK: Tests
     public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
