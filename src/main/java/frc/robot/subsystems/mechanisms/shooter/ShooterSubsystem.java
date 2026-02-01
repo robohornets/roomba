@@ -1,23 +1,30 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.btwrobotics.WhatTime.frc.PositionManager;
-import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
-import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
-import com.ctre.phoenix6.hardware.Pigeon2;
-import java.lang.Math;
 import java.util.Arrays;
+import java.util.List;
 
+import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
+import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.motor.MotorSubsystem;
 
-public class ShooterSubsystem extends SubsystemBase {
 
+
+
+public class ShooterSubsystem extends SubsystemBase {
+    CommandSwerveDrivetrain drivetrain;
+
+    public ShooterSubsystem(CommandSwerveDrivetrain drivetrain) {
+        this.drivetrain = drivetrain;
+    }
     MotorSubsystem motorSubsystem = new MotorSubsystem();
     
     public final MotorWrapper shooterMotor = new MotorWrapper(
@@ -41,15 +48,29 @@ public class ShooterSubsystem extends SubsystemBase {
     public double shooterPitchMax = 0.3;
     public double shooterPitchMin = 0.0;
 
-    public double positionThreshold = 0.01; // Threshold for position manager
+    public double positionThreshold = 1.0; // Threshold for position manager
 
     public double hubHeight = 2;
     public double shooterHeight = 1;
+
+    public PositionManager shooterPositionManager = new PositionManager(
+        shooterPitchMin,
+        shooterPitchMax,
+        List.of(shooterPitchMotor),
+        0.2,
+        0.0,
+        positionThreshold, 
+        () -> getShooterPitchDeg()
+    );
 
 
 
     // TODO: create commands and set motors
 
+    public Command pitchToAngleDeg(double angle){
+        return shooterPositionManager.move(angle);
+    }
+        
     public Command aimAtHub(){
         return Commands.run(
             () -> {
@@ -77,15 +98,13 @@ public class ShooterSubsystem extends SubsystemBase {
                 System.out.println(launchVariables[1]);
                 // pitch towards the required angle
 
-
                 new PositionManager(
-                    shooterPitchMin,
-                    shooterPitchMax,
-                    Arrays.asList(shooterPitchMotor),
-                    launchVariables[1],
-                    shooterPitchSpeed,
-                    shooterPitchHoldSpeed,
-                    positionThreshold,
+                    shooterPitchMin, 
+                    shooterPitchMax, 
+                    Arrays.asList(shooterPitchMotor), 
+                    launchVariables[1], 
+                    shooterPitchHoldSpeed, 
+                    positionThreshold, 
                     () -> getShooterPitchDeg()
                 );
             }
