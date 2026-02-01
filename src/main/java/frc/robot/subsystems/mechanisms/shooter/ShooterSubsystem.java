@@ -66,7 +66,48 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command pitchToAngleDeg(double angle){
         return shooterPositionManager.move(angle);
+    }
         
+    public Command aimAtHub(){
+        return Commands.run(
+            () -> {
+                System.out.println("pitchToAngleDeg");
+                double[] robotPosition = NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").getDoubleArray(new double[]{0.0,0.0,0.0});
+                
+                double[] distanceToHub = getDistanceToHub(
+                    new double[]{robotPosition[0], robotPosition[1]}
+                );
+
+                double degreesToRotate = motorSubsystem.degreesToFace(distanceToHub, robotPosition[2]);
+                
+                System.out.println(distanceToHub[0]);
+                System.out.println(distanceToHub[1]);
+                System.out.println(degreesToRotate);
+
+
+                // rotate the hub by degreesToRotate
+
+    
+                double[] launchVariables = motorSubsystem.calculateTrajectory(distanceToHub[0], distanceToHub[1], hubEnterAngle);
+
+
+                System.out.println(launchVariables[0]);
+                System.out.println(launchVariables[1]);
+                // pitch towards the required angle
+
+
+                new PositionManager(
+                    shooterPitchMin,
+                    shooterPitchMax,
+                    Arrays.asList(shooterPitchMotor),
+                    launchVariables[1],
+                    shooterPitchSpeed,
+                    shooterPitchHoldSpeed,
+                    positionThreshold,
+                    () -> getShooterPitchDeg()
+                );
+            }
+        );
     }
 
 
@@ -78,19 +119,12 @@ public class ShooterSubsystem extends SubsystemBase {
         // MARK: Should be roll?
         return shooterPigeon.getRoll().getValueAsDouble();
     }
-    public double[] getDistanceToHub(){
+    public double[] getDistanceToHub(double[] position){
         // MARK: still in progress
         // meters
-        double[] hubPosition = new double[]{0,0};
-        // drivetrain.get
-
-        Pose2d robotPose = drivetrain.getState().Pose;
+        double[] hubPosition = new double[]{12.5, 4.5};
         
-        // double[] robotPosition = 
-        // double degrees = motorSubsystem.rotationsToFace(new double[]{hubPosition[0] - robotPosition[0], hubPosition[1] - robotPosition[1]});
-        
-    
-        return new double[]{0,0};
+        return new double[]{hubPosition[0] - position[0], hubPosition[1] - position[1]};
     }
 
     // TODO: calculate hub position using limelight (relative to robot) (x,y: front right of robot are positive)
