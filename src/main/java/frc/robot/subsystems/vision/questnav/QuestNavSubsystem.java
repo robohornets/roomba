@@ -1,5 +1,7 @@
 package frc.robot.subsystems.vision.questnav;
 
+import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -13,18 +15,11 @@ import gg.questnav.questnav.QuestNav;
 public class QuestNavSubsystem extends SubsystemBase {
     CommandSwerveDrivetrain drivetrain;
 
-
     public QuestNavSubsystem(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
     }
     
     QuestNav questNav = new QuestNav();
-    Matrix<N3, N1> QUESTNAV_STD_DEVS = 
-        VecBuilder.fill(
-            0.02, // Trust down to 2cm in X direction
-            0.02, // Trust down to 2cm in Y direction
-            0.035 // Trust down to 2deg/0.35rad rotational
-    );
 
     // Runs every 20ms to update robot pose from Quest
     @Override
@@ -42,11 +37,11 @@ public class QuestNavSubsystem extends SubsystemBase {
                 // Transform questPose by Transform3d based on the location of the Quest mount
                 Pose3d robotPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
 
-                drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, QUESTNAV_STD_DEVS);
+                NetworkTablesUtil.put("QuestNav Pose", robotPose.toPose2d());
+
+                drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
             }
         }
         questNav.commandPeriodic();
     }
-
-
 }

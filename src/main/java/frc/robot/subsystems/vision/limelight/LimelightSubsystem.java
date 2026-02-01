@@ -1,12 +1,18 @@
 package frc.robot.subsystems.vision.limelight;
 
+import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.ctre.phoenix6.StatusSignal;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -16,12 +22,6 @@ public class LimelightSubsystem extends SubsystemBase {
     private CommandSwerveDrivetrain drivetrain;
     private final String limelightName;
     private final StatusSignal<AngularVelocity> angularVelocityZ;
-
-
-    private static final Matrix<N3, N1> VISION_STD_DEVS = 
-        VecBuilder.fill(0.7, 0.7, 9999999);
-    
-    private static final double MAX_ANGULAR_VELOCITY_DEG_PER_SEC = 720.0;
 
     public LimelightSubsystem(
         CommandSwerveDrivetrain drivetrain, 
@@ -53,11 +53,17 @@ public class LimelightSubsystem extends SubsystemBase {
             return;
         }
         
+        // Discard result if the angular velocity is too high
         double angularVelDegPerSec = Math.abs(angularVelocityZ.refresh().getValueAsDouble());
-        if (angularVelDegPerSec > MAX_ANGULAR_VELOCITY_DEG_PER_SEC) {
+        if (angularVelDegPerSec > LimelightConstants.MAX_ANGULAR_VELOCITY_DEG_PER_SEC) {
             return;
         }
 
-        drivetrain.addVisionMeasurement(estimate.pose, estimate.timestampSeconds, VISION_STD_DEVS);
+        NetworkTablesUtil.put("Limelight Pose", estimate.pose);
+
+        // Translate the 
+        Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.LIMELIGHT_TRANSFORM_FROM_CENTRE.inverse());
+
+        drivetrain.addVisionMeasurement(estimate.pose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
     }
 }
