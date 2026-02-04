@@ -30,17 +30,23 @@ import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.motor.MotorSubsystem;
+import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
+import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class RobotContainer {
     public static double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    // MARK: Field centric drive
+    // MARK: Drivetrain
+    // Create the swerve drivetrain subsystem for the robot
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    // Field centric drive
     private static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
-    // MARK: Robot centric drive
+    // Robot centric drive
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
         .withDeadband(MaxSpeed * 0.1)
         .withRotationalDeadband(MaxAngularRate * 0.1)
@@ -51,22 +57,32 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
+    // MARK: Xbox Controllers
     public final CommandXboxController driverJoystick = new CommandXboxController(0);
     public final CommandXboxController operatorJoystick = new CommandXboxController(1);
     public final CommandXboxController debugJoystick = new CommandXboxController(2);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
+    
+    // MARK: Subsystems
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final MotorSubsystem motorSubsystem = new MotorSubsystem();
+    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
+
+    // MARK: Vision
+    // Uses the Quest to periodically add vision measurements
+    QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
+
+    // Read AprilTags from the Limelight periodically to add vision measurements
+    LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight4");
+    
+    
+    // MARK: Register Commands
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
-
-
+    
 
     // MARK: Tests
-    public final Tests tests = new Tests();
+    public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
 
     /* Path follower */
@@ -74,7 +90,6 @@ public class RobotContainer {
 
     public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
-
         
         registerCommands.registerCommands();
 
@@ -99,8 +114,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
+        // Positive X is forward, Positive Y is left according to WPILib
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)

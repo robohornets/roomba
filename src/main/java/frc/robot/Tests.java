@@ -7,12 +7,17 @@ import frc.robot.subsystems.motor.MotorSubsystem;
 
 
 public class Tests {
-    public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-    public final MotorSubsystem motorSubsystem = new MotorSubsystem();
+    IntakeSubsystem intakeSubsystem;
+    ShooterSubsystem shooterSubsystem;
+    ClimberSubsystem climberSubsystem;
+    MotorSubsystem motorSubsystem;
 
-
+    public Tests(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, ClimberSubsystem climberSubsystem, MotorSubsystem motorSubsystem) {
+        this.intakeSubsystem = intakeSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
+        this.climberSubsystem = climberSubsystem;
+        this.motorSubsystem = motorSubsystem;
+    }
     // Run tests
     public void runTests(){
         
