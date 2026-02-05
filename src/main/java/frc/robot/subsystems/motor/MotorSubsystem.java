@@ -1,9 +1,20 @@
+
 package frc.robot.subsystems.motor;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * MotorSubsystem provides utility methods for motion-related calculations used by
+ * other subsystems and commands. It includes helpers to compute the signed angle
+ * required to face a target and to estimate projectile launch parameters for
+ * reaching a target at a given horizontal and vertical distance.
+ *
+ * <p>This class does not directly drive actuators; it exposes pure calculation
+ * methods that callers can use when planning or aiming mechanisms.
+ * 
+ * In the future this should be moved to WhatTime
+ */
 public class MotorSubsystem extends SubsystemBase {
-
     /**
      * Calculates the signed angular difference (in degrees) required to rotate from a
      * reference heading to face a target described by a 2D position vector.
