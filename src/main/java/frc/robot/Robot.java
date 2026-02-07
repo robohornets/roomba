@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
 
     // MARK: Hub Manager
     public MatchTimeManager matchTimeManager = new MatchTimeManager();
-    public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
+    // public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
 
     public Robot() {
         robotContainer = new RobotContainer();
@@ -157,8 +157,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
-        NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
+        // NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
+        // NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
     }
 
     @Override
