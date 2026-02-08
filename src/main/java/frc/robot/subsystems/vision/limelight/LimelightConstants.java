@@ -16,8 +16,22 @@ public class LimelightConstants {
     public static final double MAX_ANGULAR_VELOCITY_DEG_PER_SEC = 720.0;
 
     // Position of Limelight relative to the centre of the robot in metres
-    public static final Transform2d LIMELIGHT_TRANSFORM_FROM_CENTRE = new Transform2d(
+    public static final Transform2d LIMELIGHT_4_TRANSFORM_FROM_CENTRE = new Transform2d(
         new Translation2d(0.6858, 0.0), 
         new Rotation2d(0)
     );
+
+    public static final Transform2d LIMELIGHT_2_TRANSFORM_FROM_CENTRE = new Transform2d(
+        new Translation2d(0.0, 0.6858), 
+        new Rotation2d(1.5 * Math.PI)
+    );
+
+    public static Transform2d getTransformForLimelight(String limelightName) {
+        if (limelightName == "limelight-two") {
+            return LIMELIGHT_2_TRANSFORM_FROM_CENTRE;
+        }
+        else {
+            return LIMELIGHT_4_TRANSFORM_FROM_CENTRE;
+        }
+    }
 }

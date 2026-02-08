@@ -59,6 +59,8 @@ public class LimelightSubsystem extends SubsystemBase {
         this.angularVelocityZ = drivetrain.getPigeon2().getAngularVelocityZWorld();
     }
 
+    Pose2d mostRecentPose2d = new Pose2d();
+
     /**
      * Periodic update called by the scheduler. Adds a vision odometry measurement each cycle.
      * <p>Delegates to {@link #addOdometryMeasurement()} to perform the actual read/filter/submit
@@ -115,11 +117,16 @@ public class LimelightSubsystem extends SubsystemBase {
             return;
         }
 
-        NetworkTablesUtil.put("Limelight Pose", estimate.pose);
-
         // Translate the pose by its offset from the centre of the robot
-        Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.LIMELIGHT_TRANSFORM_FROM_CENTRE.inverse());
+        Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.getTransformForLimelight(limelightName).inverse());
+
+        mostRecentPose2d = transformedPose;
+        NetworkTablesUtil.put("Vision Systems", limelightName + "Pose", transformedPose);
 
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
+    }
+
+    public Pose2d getMostRecentPose2d() {
+        return mostRecentPose2d;
     }
 }

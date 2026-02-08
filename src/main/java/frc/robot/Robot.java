@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
+import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 
@@ -60,7 +62,7 @@ public class Robot extends TimedRobot {
 
     // MARK: Hub Manager
     public MatchTimeManager matchTimeManager = new MatchTimeManager();
-    public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
+    // public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
 
     public Robot() {
         robotContainer = new RobotContainer();
@@ -157,8 +159,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
-        NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
+        // NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
+        // NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
     }
 
     @Override
@@ -178,6 +180,10 @@ public class Robot extends TimedRobot {
     @Override
     public void simulationPeriodic() {}
 
+    Field2d robotField2d = new Field2d();
+    Field2d questField2d = new Field2d();
+    Field2d limelight4Field2d = new Field2d();
+    Field2d limelight2Field2d = new Field2d();
 
     public void updateNetworkTablesValues() {
         // MARK: use limelight to calculate this
@@ -186,5 +192,11 @@ public class Robot extends TimedRobot {
         NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
         NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
         NetworkTablesUtil.put("Shooter Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
+
+        robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
+        NetworkTablesUtil.put("Main Robot Pose", robotField2d);
+
+        questField2d.setRobotPose(robotContainer.limelightSubsystem.getMostRecentPose2d());
+        NetworkTablesUtil.put("QuestNav Pose", questField2d);
     }
 }
