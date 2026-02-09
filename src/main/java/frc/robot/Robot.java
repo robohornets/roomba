@@ -113,14 +113,14 @@ public class Robot extends TimedRobot {
         matchTimeElapsedSeconds = 160 - matchTimeRemainingSeconds;
 
         if (matchTimeElapsedSeconds - nextRumbleStartTime >= 0 && matchTimeElapsedSeconds - nextRumbleStartTime <= 2) {
-            robotContainer.driverJoystick.setRumble(RumbleType.kBothRumble, 1.0);
-            robotContainer.operatorJoystick.setRumble(RumbleType.kBothRumble, 1.0);
-            robotContainer.debugJoystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.driverJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.operatorJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.debugJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
         }
         else {
-            robotContainer.driverJoystick.setRumble(RumbleType.kBothRumble, 0.0);
-            robotContainer.operatorJoystick.setRumble(RumbleType.kBothRumble, 0.0);
-            robotContainer.debugJoystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.driverJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.operatorJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.debugJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
         }
 
         updateNetworkTablesValues();
