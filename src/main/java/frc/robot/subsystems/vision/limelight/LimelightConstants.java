@@ -10,7 +10,7 @@ import edu.wpi.first.math.numbers.N3;
 
 public class LimelightConstants {
     // Standard deviations or sexually transmitted disease developments?
-    public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.7, 0.7, 9999999);
+    public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.07, 0.07, 9999999);
     
     // Maximum allowed rate of angular rotation before discarding results for innacuracy
     public static final double MAX_ANGULAR_VELOCITY_DEG_PER_SEC = 720.0;
@@ -27,7 +27,7 @@ public class LimelightConstants {
     );
 
     public static Transform2d getTransformForLimelight(String limelightName) {
-        if (limelightName == "limelight-two") {
+        if (limelightName.equals("limelight-two")) {
             return LIMELIGHT_2_TRANSFORM_FROM_CENTRE;
         }
         else {

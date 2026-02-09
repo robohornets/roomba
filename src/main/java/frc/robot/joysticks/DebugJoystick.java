@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class DebugJoystick {
-    private final CommandXboxController joystick;
+    public final CommandXboxController joystick;
     private final CommandSwerveDrivetrain drivetrain;
 
     public DebugJoystick(CommandXboxController joystick, CommandSwerveDrivetrain drivetrain) {
@@ -31,7 +31,8 @@ public class DebugJoystick {
 
         joystick.povUp();
 
-        joystick.povDown();
+        // Reset Field Centric Heading
+        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         joystick.povLeft();
 

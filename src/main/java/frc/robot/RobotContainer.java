@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.namedcommands.RegisterCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.joysticks.DebugJoystick;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
@@ -58,9 +59,9 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     // MARK: Xbox Controllers
-    public final CommandXboxController driverJoystick = new CommandXboxController(0);
-    public final CommandXboxController operatorJoystick = new CommandXboxController(1);
-    public final CommandXboxController debugJoystick = new CommandXboxController(2);
+    public final DebugJoystick driverJoystick = new DebugJoystick(new CommandXboxController(0), drivetrain);
+    public final DebugJoystick operatorJoystick = new DebugJoystick(new CommandXboxController(1), drivetrain);
+    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain);
 
     
     // MARK: Subsystems
@@ -118,9 +119,9 @@ public class RobotContainer {
         // Positive X is forward, Positive Y is left according to WPILib
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverJoystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-driverJoystick.joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverJoystick.joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driverJoystick.joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -133,19 +134,16 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        driverJoystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverJoystick.getLeftY(), -driverJoystick.getLeftX()))
+        driverJoystick.joystick.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-driverJoystick.joystick.getLeftY(), -driverJoystick.joystick.getLeftX()))
         ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        driverJoystick.back().and(driverJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driverJoystick.back().and(driverJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driverJoystick.start().and(driverJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driverJoystick.start().and(driverJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // Reset the field-centric heading on left bumper press.
-        driverJoystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        driverJoystick.joystick.back().and(driverJoystick.joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        driverJoystick.joystick.back().and(driverJoystick.joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        driverJoystick.joystick.start().and(driverJoystick.joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        driverJoystick.joystick.start().and(driverJoystick.joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

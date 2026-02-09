@@ -2,7 +2,9 @@ package frc.robot.subsystems.vision.questnav;
 
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import gg.questnav.questnav.PoseFrame;
@@ -40,6 +42,9 @@ public class QuestNavSubsystem extends SubsystemBase {
     public QuestNavSubsystem(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
     }
+
+    Pose2d mostRecentPose2d = new Pose2d();
+    Field2d questField2d = new Field2d();
     
     /**
      * Periodic update (called roughly every 20ms). Reads unread pose frames from QuestNav and
@@ -68,14 +73,22 @@ public class QuestNavSubsystem extends SubsystemBase {
                 double timestamp = questFrame.dataTimestamp();
 
                 // Transform questPose by Transform3d based on the location of the Quest mount
-                Pose3d robotPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
+                Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
 
-                NetworkTablesUtil.put("QuestNav Pose", robotPose.toPose2d());
+                mostRecentPose2d = transformedPose.toPose2d();
+                NetworkTablesUtil.put("Vision Systems", "QuestNav Pose", transformedPose.toPose2d());
 
-                drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
+                questField2d.setRobotPose(transformedPose.toPose2d());
+                NetworkTablesUtil.put("Vision Systems", "QuestNav Field Pose", questField2d);
+
+                drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
             }
         }
         // Allow QuestNav library to progress internal state/commands
         questNav.commandPeriodic();
+    }
+
+    public Pose2d getMostRecentPose2d() {
+        return mostRecentPose2d;
     }
 }

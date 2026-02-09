@@ -181,7 +181,7 @@ public class Robot extends TimedRobot {
     public void simulationPeriodic() {}
 
     Field2d robotField2d = new Field2d();
-    Field2d questField2d = new Field2d();
+    
     Field2d limelight4Field2d = new Field2d();
     Field2d limelight2Field2d = new Field2d();
 
@@ -195,8 +195,5 @@ public class Robot extends TimedRobot {
 
         robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
         NetworkTablesUtil.put("Main Robot Pose", robotField2d);
-
-        questField2d.setRobotPose(robotContainer.limelightSubsystem.getMostRecentPose2d());
-        NetworkTablesUtil.put("QuestNav Pose", questField2d);
     }
 }

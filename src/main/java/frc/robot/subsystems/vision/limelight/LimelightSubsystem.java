@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
@@ -60,6 +61,7 @@ public class LimelightSubsystem extends SubsystemBase {
     }
 
     Pose2d mostRecentPose2d = new Pose2d();
+    Field2d limelightField2d = new Field2d();
 
     /**
      * Periodic update called by the scheduler. Adds a vision odometry measurement each cycle.
@@ -122,6 +124,9 @@ public class LimelightSubsystem extends SubsystemBase {
 
         mostRecentPose2d = transformedPose;
         NetworkTablesUtil.put("Vision Systems", limelightName + "Pose", transformedPose);
+
+        limelightField2d.setRobotPose(transformedPose);
+        NetworkTablesUtil.put("Vision Systems", limelightName + " Field Pose", limelightField2d);
 
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
     }
