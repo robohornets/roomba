@@ -1,15 +1,26 @@
 package frc.robot.joysticks;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.vision.limelight.LimelightConstants;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers;
+import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
+import gg.questnav.questnav.QuestNav;
 
 public class DebugJoystick {
     public final CommandXboxController joystick;
     private final CommandSwerveDrivetrain drivetrain;
+    private final QuestNavSubsystem questNavSubsystem;
 
-    public DebugJoystick(CommandXboxController joystick, CommandSwerveDrivetrain drivetrain) {
+    public DebugJoystick(
+        CommandXboxController joystick, 
+        CommandSwerveDrivetrain drivetrain,
+        QuestNavSubsystem questNavSubsystem
+    ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
+        this.questNavSubsystem = questNavSubsystem;
     }
 
     public void configureBindings() {
@@ -34,7 +45,14 @@ public class DebugJoystick {
         // Reset Field Centric Heading
         joystick.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        joystick.povLeft();
+        joystick.povLeft().onTrue(
+            Commands.run(
+                () -> {
+                    // Reset QuestNav pose to Limelight position
+                    questNavSubsystem.setQuestPose(LimelightHelpers.getBotPose3d("limelight-four"));
+                }
+            )
+        );
 
         joystick.povRight();
     }

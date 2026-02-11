@@ -131,7 +131,7 @@ public class LimelightSubsystem extends SubsystemBase {
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
     }
 
-    public Pose2d getMostRecentPose2d() {
-        return mostRecentPose2d;
+    public Pose2d getPose2d() {
+        return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
 }

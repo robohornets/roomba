@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 
@@ -76,10 +77,10 @@ public class QuestNavSubsystem extends SubsystemBase {
                 Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
 
                 mostRecentPose2d = transformedPose.toPose2d();
-                NetworkTablesUtil.put("Vision Systems", "QuestNav Pose", transformedPose.toPose2d());
+                NetworkTablesUtil.put("VisionSystems", "QuestNav Pose", transformedPose.toPose2d());
 
                 questField2d.setRobotPose(transformedPose.toPose2d());
-                NetworkTablesUtil.put("Vision Systems", "QuestNav Field Pose", questField2d);
+                NetworkTablesUtil.put("VisionSystems", "QuestNav Field Pose", questField2d);
 
                 drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
             }
@@ -88,7 +89,12 @@ public class QuestNavSubsystem extends SubsystemBase {
         questNav.commandPeriodic();
     }
 
-    public Pose2d getMostRecentPose2d() {
-        return mostRecentPose2d;
+    public void setQuestPose(Pose3d pose3d) {
+        questNav.setPose(pose3d.transformBy(QuestNavConstants.ROBOT_TO_QUEST));
+    }
+
+    public void questPeriodicCommand() {
+        questNav.commandPeriodic();
+        NetworkTablesUtil.put("VisionSystems", drivetrain);
     }
 }
