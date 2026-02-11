@@ -4,6 +4,7 @@ import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -75,11 +76,14 @@ public class QuestNavSubsystem extends SubsystemBase {
                 // Transform questPose by Transform3d based on the location of the Quest mount
                 Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
 
+                NetworkTable Table = NetworkTablesUtil.getTable("VisionSystems");
                 mostRecentPose2d = transformedPose.toPose2d();
-                NetworkTablesUtil.put("Vision Systems", "QuestNav Pose", transformedPose.toPose2d());
+                Table.getEntry("QuestNavPose").setValue(transformedPose.toPose2d());
+                // NetworkTablesUtil.put("VisionSystems", "QuestNavPose", transformedPose.toPose2d());
 
-                questField2d.setRobotPose(transformedPose.toPose2d());
-                NetworkTablesUtil.put("Vision Systems", "QuestNav Field Pose", questField2d);
+                //questField2d.setRobotPose(transformedPose.toPose2d());
+                Table.getEntry("QuestNavFieldPose").setValue(questField2d);
+                // NetworkTablesUtil.put("VisionSystems", "QuestNavFieldPose", questField2d);
 
                 drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
             }

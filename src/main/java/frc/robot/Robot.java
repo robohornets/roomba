@@ -193,7 +193,7 @@ public class Robot extends TimedRobot {
         NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
         NetworkTablesUtil.put("Shooter Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
 
-        robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
+        //robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
         NetworkTablesUtil.put("Main Robot Pose", robotField2d);
     }
 }

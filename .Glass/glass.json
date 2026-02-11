@@ -1,5 +1,11 @@
 {
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
     "retained": {
       "limelight-hornet": {
         "double[]##v_/limelight-hornet/botpose": {
@@ -9,13 +15,28 @@
     },
     "transitory": {
       "Pose": {
+        "double[]##v_/Pose/robotPose": {
+          "open": true
+        }
+      },
+      "QuestNav": {
         "open": true
       },
-      "SmartDashboard": {
+      "Shuffleboard": {
         "open": true
       },
-      "limelight4": {
-        "open": true
+      "limelight-four": {
+        "double[]##v_/limelight-four/botpose": {
+          "open": true
+        },
+        "double[]##v_/limelight-four/robot_orientation_set": {
+          "open": true
+        }
+      },
+      "limelight-two": {
+        "double[]##v_/limelight-two/botpose": {
+          "open": true
+        }
       }
     },
     "types": {
@@ -29,11 +50,8 @@
     },
     "windows": {
       "/Pose": {
-        "bottom": 1638,
+        "builtin": "",
         "height": 8.051901817321777,
-        "left": 534,
-        "right": 3466,
-        "top": 291,
         "width": 17.54825210571289,
         "window": {
           "visible": true
@@ -44,11 +62,10 @@
   "NetworkTables Info": {
     "Connections": {
       "open": true
-    },
-    "visible": true
+    }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT4)",
+    "mode": "Client (NT3)",
     "serverTeam": "1209"
   }
 }
