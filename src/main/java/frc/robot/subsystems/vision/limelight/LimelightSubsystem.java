@@ -4,6 +4,7 @@ import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.ctre.phoenix6.StatusSignal;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -122,11 +123,16 @@ public class LimelightSubsystem extends SubsystemBase {
         // Translate the pose by its offset from the centre of the robot
         Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.getTransformForLimelight(limelightName).inverse());
 
+        NetworkTable Table = NetworkTablesUtil.getTable("VisionSystems");
         mostRecentPose2d = transformedPose;
-        NetworkTablesUtil.put("Vision Systems", limelightName + "Pose", transformedPose);
+        Table.getEntry(limelightName + "Pose").setValue(transformedPose);
+        // NetworkTablesUtil.put("VisionSystems", limelightName + "Pose", transformedPose);
 
-        limelightField2d.setRobotPose(transformedPose);
-        NetworkTablesUtil.put("Vision Systems", limelightName + " Field Pose", limelightField2d);
+        if (limelightName == "limelight-four") {
+            limelightField2d.setRobotPose(transformedPose);
+        }
+        Table.getEntry(limelightName + "FieldPose").setValue(limelightField2d);
+        NetworkTablesUtil.put("VisionSystems", limelightName + " FieldPose", limelightField2d);
 
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
     }

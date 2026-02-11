@@ -14,8 +14,12 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,11 +30,14 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.namedcommands.RegisterCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DebugJoystick;
+import frc.robot.joysticks.DriverJoystick;
+import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.motor.MotorSubsystem;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
@@ -58,9 +65,18 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
+    // MARK: Vision
+    // Uses the Quest to periodically add vision measurements
+    public QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
+
+    // Read AprilTags from the Limelight periodically to add vision measurements
+    LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight-four");
+    LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
+
+
     // MARK: Xbox Controllers
-    public final DebugJoystick driverJoystick = new DebugJoystick(new CommandXboxController(0), drivetrain);
-    public final DebugJoystick operatorJoystick = new DebugJoystick(new CommandXboxController(1), drivetrain);
+    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, questNavSubsystem);
+    public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain);
     public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain);
 
     
@@ -69,14 +85,6 @@ public class RobotContainer {
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final MotorSubsystem motorSubsystem = new MotorSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
-
-    // MARK: Vision
-    // Uses the Quest to periodically add vision measurements
-    QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
-
-    // Read AprilTags from the Limelight periodically to add vision measurements
-    LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight-four");
-    LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
     
     
     // MARK: Register Commands
@@ -116,12 +124,32 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        driverJoystick.configureBindings();
+        operatorJoystick.configureBindings();
+        debugJoystick.configureBindings();
+
         // Positive X is forward, Positive Y is left according to WPILib
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverJoystick.joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(-driverJoystick.joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driverJoystick.joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        );
+
+        driverJoystick.joystick.povUp().onTrue(
+            Commands.runOnce(
+                () -> {
+                    // NetworkTable Table = NetworkTablesUtil.getTable("limelight-two");
+                    // NetworkTableEntry Entry = Table.getEntry("botpose");
+                    // double[] pos = Entry.getDoubleArray(new double[]{0.0,0.0,0.0,0.0,0.0});
+                    // Translation2d translation2d = new Translation2d(pos[0], pos[1]);
+                    
+                    // Rotation2d rotation2d = new Rotation2d(drivetrain.getPigeon2().getYaw().getValueAsDouble());
+                    // LimelightHelpers.getRobotPose_FieldSpace2D()
+                    
+                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
+                }
             )
         );
 
@@ -138,7 +166,7 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-driverJoystick.joystick.getLeftY(), -driverJoystick.joystick.getLeftX()))
         ));
 
-        // Run SysId routines when holding back/start and X/Y.
+        // Run SysId routines when holding back/strt and X/Y.
         // Note that each routine should be run exactly once in a single log.
         driverJoystick.joystick.back().and(driverJoystick.joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverJoystick.joystick.back().and(driverJoystick.joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));

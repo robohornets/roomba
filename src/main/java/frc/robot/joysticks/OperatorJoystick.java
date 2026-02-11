@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class OperatorJoystick {
-    private final CommandXboxController joystick;
+    public final CommandXboxController joystick;
     private final CommandSwerveDrivetrain drivetrain;
 
     public OperatorJoystick(CommandXboxController joystick, CommandSwerveDrivetrain drivetrain) {
