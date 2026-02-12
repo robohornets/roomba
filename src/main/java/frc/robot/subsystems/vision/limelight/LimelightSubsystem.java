@@ -123,16 +123,16 @@ public class LimelightSubsystem extends SubsystemBase {
         // Translate the pose by its offset from the centre of the robot
         Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.getTransformForLimelight(limelightName).inverse());
 
-        NetworkTable Table = NetworkTablesUtil.getTable("VisionSystems");
+        //NetworkTable Table = NetworkTablesUtil.getTable("VisionSystems");
         mostRecentPose2d = transformedPose;
-        Table.getEntry(limelightName + "Pose").setValue(transformedPose);
+        //Table.getEntry(limelightName + "Pose").setValue(transformedPose);
         // NetworkTablesUtil.put("VisionSystems", limelightName + "Pose", transformedPose);
 
         if (limelightName == "limelight-four") {
             limelightField2d.setRobotPose(transformedPose);
         }
-        Table.getEntry(limelightName + "FieldPose").setValue(limelightField2d);
-        NetworkTablesUtil.put("VisionSystems", limelightName + " FieldPose", limelightField2d);
+        //Table.getEntry(limelightName + "FieldPose").setValue(limelightField2d);
+        //NetworkTablesUtil.put("VisionSystems", limelightName + " FieldPose", limelightField2d);
 
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
     }
