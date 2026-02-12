@@ -7,6 +7,9 @@ package frc.robot;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorBulkActions;
@@ -16,6 +19,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -29,7 +33,7 @@ import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer robotContainer;
@@ -70,6 +74,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        // Starts recording a log file on the drive station laptop
+        DataLogManager.start();
+        Logger.start();
+
         currentAlliance = DriverStation.getAlliance();
 
         motorBulkActions.setNeutralModeBulk(Arrays.asList(

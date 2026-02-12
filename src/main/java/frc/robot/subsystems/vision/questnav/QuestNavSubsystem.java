@@ -1,5 +1,7 @@
 package frc.robot.subsystems.vision.questnav;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -78,13 +80,15 @@ public class QuestNavSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        Logger.recordOutput("QuestNav Latency", questNav.getLatency());
+        Logger.recordOutput("QuestNav is Tracking", questNav.isTracking());
+        Logger.recordOutput("QuestNav Battery", questNav.getBatteryPercent().orElse(0));
+        Logger.recordOutput("QuestNav Unread Pose Frames", questNav.getFrameCount().orElse(0));
+
         // Gets most recent pose frames from the Quest
         PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
 
-        // Debug logging to understand what's happening
-        System.out.println("[QuestNav] Got " + questFrames.length + " frames");
-
-        NetworkTablesUtil.put("QuestSubsystemInitialized", true);
+        NetworkTablesUtil.put("QuestNav is Connected", questNav.isConnected());
 
         for (PoseFrame questFrame : questFrames) {
             System.out.println("[QuestNav] Processing frame, tracking: " + questFrame.isTracking());
@@ -115,5 +119,6 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     public void setQuestPose(Pose3d pose3d) {
         questNav.setPose(pose3d.transformBy(QuestNavConstants.ROBOT_TO_QUEST));
+        Logger.recordOutput("QuestNav Pose Set", pose3d);
     }
 }
