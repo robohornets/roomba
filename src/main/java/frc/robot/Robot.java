@@ -84,9 +84,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        // Allow QuestNav library to progress internal state/commands
-        robotContainer.questNavSubsystem.questPeriodicCommand();
-
         pdp.clearStickyFaults();
 
         m_timeAndJoystickReplay.update();

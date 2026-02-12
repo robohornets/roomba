@@ -34,14 +34,17 @@ public class QuestNavSubsystem extends SubsystemBase {
     CommandSwerveDrivetrain drivetrain;
 
     /** Local QuestNav instance used to read pose frames. */
-    QuestNav questNav = new QuestNav();
+    QuestNav questNav;
 
     /**
      * Construct the QuestNavSubsystem.
      *
      * @param drivetrain the drivetrain subsystem that will consume vision measurements
      */
-    public QuestNavSubsystem(CommandSwerveDrivetrain drivetrain) {
+    public QuestNavSubsystem(
+        CommandSwerveDrivetrain drivetrain
+    ) {
+        this.questNav = new QuestNav();
         this.drivetrain = drivetrain;
     }
 
@@ -90,15 +93,10 @@ public class QuestNavSubsystem extends SubsystemBase {
             }
         }
         // Allow QuestNav library to progress internal state/commands
-        // questNav.commandPeriodic();
+        questNav.commandPeriodic();
     }
 
     public void setQuestPose(Pose3d pose3d) {
         questNav.setPose(pose3d.transformBy(QuestNavConstants.ROBOT_TO_QUEST));
-    }
-
-    public void questPeriodicCommand() {
-        questNav.commandPeriodic();
-        // NetworkTablesUtil.put("MostRecentQuestPose", mostRecentPose2d);
     }
 }
