@@ -77,7 +77,7 @@ public class RobotContainer {
     // MARK: Xbox Controllers
     public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, questNavSubsystem);
     public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain);
-    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain);
+    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, questNavSubsystem);
 
     
     // MARK: Subsystems
