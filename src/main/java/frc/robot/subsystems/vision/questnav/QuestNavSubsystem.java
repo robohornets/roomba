@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
@@ -46,6 +47,7 @@ public class QuestNavSubsystem extends SubsystemBase {
     ) {
         this.questNav = new QuestNav();
         this.drivetrain = drivetrain;
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     Pose2d mostRecentPose2d = new Pose2d();
@@ -67,8 +69,13 @@ public class QuestNavSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        // Allow QuestNav library to progress internal state/commands
+        questNav.commandPeriodic();
+        
         // Gets most recent pose frames from the Quest
         PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
+
+        NetworkTablesUtil.put("QuestSubsystemInitialized", true);
 
         for (PoseFrame questFrame : questFrames) {
             // Checks to make sure the Quest was actually tracking the pose in the frame
@@ -81,6 +88,7 @@ public class QuestNavSubsystem extends SubsystemBase {
                 Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
 
                 NetworkTable Table = NetworkTablesUtil.getTable("VisionSystems");
+                Table.getEntry("QuestNavPoseTest1").setValue(transformedPose);
                 mostRecentPose2d = transformedPose.toPose2d();
 
                 NetworkTablesUtil.put("QuestNavPose", transformedPose.toPose2d());
@@ -92,8 +100,6 @@ public class QuestNavSubsystem extends SubsystemBase {
                 drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
             }
         }
-        // Allow QuestNav library to progress internal state/commands
-        questNav.commandPeriodic();
     }
 
     public void setQuestPose(Pose3d pose3d) {

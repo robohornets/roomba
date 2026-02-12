@@ -127,7 +127,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        NetworkTablesUtil.put("QuestSubsystemInitialized", false);
+    }
 
     @Override
     public void disabledPeriodic() {}
