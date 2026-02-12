@@ -52,7 +52,16 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     Pose2d mostRecentPose2d = new Pose2d();
     Field2d questField2d = new Field2d();
-    
+
+    /**
+     * Allows the QuestNav library to progress its internal state and commands.
+     * This MUST be called BEFORE periodic() to populate the frame buffer.
+     * Called from Robot.robotPeriodic() before CommandScheduler runs.
+     */
+    public void questPeriodicCommand() {
+        questNav.commandPeriodic();
+    }
+
     /**
      * Periodic update (called roughly every 20ms). Reads unread pose frames from QuestNav and
      * forwards valid frames to the drivetrain's odometry.
@@ -69,15 +78,16 @@ public class QuestNavSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        // Allow QuestNav library to progress internal state/commands
-        questNav.commandPeriodic();
-        
         // Gets most recent pose frames from the Quest
         PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
+
+        // Debug logging to understand what's happening
+        System.out.println("[QuestNav] Got " + questFrames.length + " frames");
 
         NetworkTablesUtil.put("QuestSubsystemInitialized", true);
 
         for (PoseFrame questFrame : questFrames) {
+            System.out.println("[QuestNav] Processing frame, tracking: " + questFrame.isTracking());
             // Checks to make sure the Quest was actually tracking the pose in the frame
             if (questFrame.isTracking()) {
                 Pose3d questPose = questFrame.questPose3d();
@@ -98,6 +108,7 @@ public class QuestNavSubsystem extends SubsystemBase {
 
 
                 drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
+                System.out.println("[QuestNav] Added vision measurement: " + transformedPose.toPose2d());
             }
         }
     }

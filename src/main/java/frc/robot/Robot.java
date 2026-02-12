@@ -87,6 +87,10 @@ public class Robot extends TimedRobot {
         pdp.clearStickyFaults();
 
         m_timeAndJoystickReplay.update();
+
+        // Allow QuestNav library to progress - MUST be before scheduler to populate frame buffer
+        robotContainer.questNavSubsystem.questPeriodicCommand();
+
         CommandScheduler.getInstance().run();
 
         /*
