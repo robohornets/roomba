@@ -15,6 +15,9 @@ import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Subsystem that integrates QuestNav pose frames into the drivetrain's odometry.
  *
@@ -38,6 +41,15 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     /** Local QuestNav instance used to read pose frames. */
     QuestNav questNav;
+
+    /** Executor for timeout-protected QuestNav calls. */
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+    /** Maximum time in milliseconds to wait for QuestNav data before skipping. */
+    private static final long QUESTNAV_TIMEOUT_MS = 5;
+
+    /** Counter for timeouts. */
+    private final AtomicInteger timeoutCount = new AtomicInteger(0);
 
     /**
      * Construct the QuestNavSubsystem.
@@ -77,6 +89,9 @@ public class QuestNavSubsystem extends SubsystemBase {
      *   <li>call {@code drivetrain.addVisionMeasurement(...)} with the transformed pose, the frame's
      *       timestamp, and the configured measurement standard deviations.</li>
      * </ol>
+     *
+     * <p>This method uses a timeout to prevent blocking the robot loop if QuestNav is slow to respond.
+     * If the timeout is exceeded, the measurement is skipped to maintain robot responsiveness.
      */
     @Override
     public void periodic() {
@@ -85,10 +100,30 @@ public class QuestNavSubsystem extends SubsystemBase {
         Logger.recordOutput("QuestNav Battery", questNav.getBatteryPercent().orElse(0));
         Logger.recordOutput("QuestNav Unread Pose Frames", questNav.getFrameCount().orElse(0));
 
-        // Gets most recent pose frames from the Quest
-        PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
-
         NetworkTablesUtil.put("QuestNav is Connected", questNav.isConnected());
+
+        // Gets most recent pose frames from the Quest with timeout protection
+        PoseFrame[] questFrames = null;
+        try {
+            CompletableFuture<PoseFrame[]> future = CompletableFuture.supplyAsync(
+                () -> questNav.getAllUnreadPoseFrames(),
+                executor
+            );
+
+            questFrames = future.get(QUESTNAV_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            int count = timeoutCount.incrementAndGet();
+            System.err.println("[QuestNav] WARNING: Timed out waiting for pose frames (timeout #" + count + "). Skipping this cycle to prevent robot lag.");
+            Logger.recordOutput("QuestNav Timeout Count", count);
+            return;
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println("[QuestNav] ERROR: Exception while getting pose frames: " + e.getMessage());
+            return;
+        }
+
+        if (questFrames == null) {
+            return;
+        }
 
         for (PoseFrame questFrame : questFrames) {
             System.out.println("[QuestNav] Processing frame, tracking: " + questFrame.isTracking());
