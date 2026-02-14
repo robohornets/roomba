@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+import com.btwrobotics.WhatTime.frc.DashboardManagers.ShuffleboardUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -104,7 +105,7 @@ public class RobotContainer {
         registerCommands.registerCommands();
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
-        NetworkTablesUtil.put("Auto Mode", autoChooser);
+        ShuffleboardUtil.put("Auto Chooser", autoChooser);
 
         // MARK: Run Tests
         /* Disable tests on actual code */

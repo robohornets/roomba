@@ -45,8 +45,6 @@ public class Robot extends LoggedRobot {
         .withTimestampReplay()
         .withJoystickReplay();
 
-    private final boolean kUseLimelight = false;
-
     public double matchTimeRemainingSeconds = 160.0;
     public double matchTimeElapsedSeconds = 0.0;
 
@@ -66,7 +64,7 @@ public class Robot extends LoggedRobot {
 
     // MARK: Hub Manager
     public MatchTimeManager matchTimeManager = new MatchTimeManager();
-    // public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
+    public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
 
     public Robot() {
         robotContainer = new RobotContainer();
@@ -100,26 +98,6 @@ public class Robot extends LoggedRobot {
         robotContainer.questNavSubsystem.questPeriodicCommand();
 
         CommandScheduler.getInstance().run();
-
-        /*
-         * This example of adding Limelight is very simple and may not be sufficient for on-field use.
-         * Users typically need to provide a standard deviation that scales with the distance to target
-         * and changes with number of tags available.
-         *
-         * This example is sufficient to show that vision integration is possible, though exact implementation
-         * of how to use vision should be tuned per-robot and to the team's specification.
-         */
-        if (kUseLimelight) {
-            var driveState = robotContainer.drivetrain.getState();
-            double headingDeg = driveState.Pose.getRotation().getDegrees();
-            double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
-
-            LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
-            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-            if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-                robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
-            }
-        }
 
         matchTimeRemainingSeconds = DriverStation.getMatchTime();
         matchTimeElapsedSeconds = 160 - matchTimeRemainingSeconds;
@@ -173,8 +151,8 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopPeriodic() {
-        // NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
-        // NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
+        NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
+        NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
     }
 
     @Override
