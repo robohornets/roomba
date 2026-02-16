@@ -20,6 +20,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -61,7 +62,10 @@ public class Drive extends SubsystemBase {
     }
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
-        return drivetrain.applyRequest(request);
+        return Commands.run(
+            () -> drivetrain.setControl(request.get()),
+            this
+        );
     }
 
     public Pose2d getPose2d() {
