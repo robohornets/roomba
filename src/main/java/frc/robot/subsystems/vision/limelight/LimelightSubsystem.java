@@ -1,5 +1,7 @@
 package frc.robot.subsystems.vision.limelight;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.ctre.phoenix6.StatusSignal;
 
@@ -62,7 +64,6 @@ public class LimelightSubsystem extends SubsystemBase {
         this.angularVelocityZ = drivetrain.getPigeon2().getAngularVelocityZWorld();
     }
 
-    Pose2d mostRecentPose2d = new Pose2d();
     Field2d limelightField2d = new Field2d();
 
     /**
@@ -123,17 +124,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
         // Translate the pose by its offset from the centre of the robot
         Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.getTransformForLimelight(limelightName).inverse());
-
-        //NetworkTable Table = NetworkTablesUtil.getTable("VisionSystems");
-        mostRecentPose2d = transformedPose;
-        //Table.getEntry(limelightName + "Pose").setValue(transformedPose);
-        // NetworkTablesUtil.put("VisionSystems", limelightName + "Pose", transformedPose);
-
-        if (limelightName == "limelight-four") {
-            limelightField2d.setRobotPose(transformedPose);
-        }
-        //Table.getEntry(limelightName + "FieldPose").setValue(limelightField2d);
-        //NetworkTablesUtil.put("VisionSystems", limelightName + " FieldPose", limelightField2d);
+        Logger.recordOutput("Limelight/" + limelightName + "/Pose", transformedPose);
 
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
     }

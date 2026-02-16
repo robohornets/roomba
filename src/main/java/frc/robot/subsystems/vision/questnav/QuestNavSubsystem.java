@@ -78,7 +78,7 @@ public class QuestNavSubsystem extends SubsystemBase {
         questPeriodicCommand();
 
         Logger.recordOutput("QuestNav/Latency", getLatency());
-        Logger.recordOutput("Quest/Connected", questIsConnected());
+        Logger.recordOutput("QuestNav/Connected", questIsConnected());
 
         // Gets most recent pose frames from the Quest
         PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();

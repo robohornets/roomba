@@ -1,10 +1,13 @@
 package frc.robot.joysticks;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class DriverJoystick {
@@ -34,6 +37,17 @@ public class DriverJoystick {
         joystick.rightBumper();
 
         joystick.leftBumper();
+
+        // Reset pose to limelight output
+        joystick.povUp().onTrue(
+            Commands.runOnce(
+                () -> {
+                    Logger.recordOutput("SwerveDrive/SetSwervePoseLimelight", true);
+
+                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
+                }
+            )
+        );
 
         // Reset Field Centric Heading
         joystick.povDown().onTrue(drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric));

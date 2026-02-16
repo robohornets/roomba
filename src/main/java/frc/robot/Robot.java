@@ -24,6 +24,7 @@ import com.google.flatbuffers.Constants;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -117,7 +118,8 @@ public class Robot extends LoggedRobot {
             robotContainer.climberSubsystem.climberRight
         ), NeutralModeValue.Brake);
 
-        NetworkTablesUtil.put("Current Alliance", currentAlliance);
+
+        Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
     }
 
     @Override
@@ -211,10 +213,10 @@ public class Robot extends LoggedRobot {
         // double[] robotPose = NetworkTableInstance.getDefault().getTable("Pose").getEntry("robotPose").getDoubleArray(new double[]{0.0,0.0,0.0});
         // NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
 
-        NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
-        NetworkTablesUtil.put("Shooter Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
+        Logger.recordOutput("MatchInfo/TimeRemaining", DriverStation.getMatchTime());
+        Logger.recordOutput("ShooterSubsystem/Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
 
         //robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
-        NetworkTablesUtil.put("Main Robot Pose", robotField2d);
+        // NetworkTablesUtil.put("Main Robot Pose", robotField2d);
     }
 }

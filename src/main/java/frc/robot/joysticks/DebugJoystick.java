@@ -1,5 +1,8 @@
 package frc.robot.joysticks;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -47,8 +50,9 @@ public class DebugJoystick {
         joystick.povDown().onTrue(drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric));
 
         joystick.povLeft().onTrue(
-            Commands.run(
+            Commands.runOnce(
                 () -> {
+                    Logger.recordOutput("QuestNav/SetQuestPose", true);
                     // Reset QuestNav pose to Limelight position
                     questNavSubsystem.setQuestPose(LimelightHelpers.getBotPose3d("limelight-four"));
                 }

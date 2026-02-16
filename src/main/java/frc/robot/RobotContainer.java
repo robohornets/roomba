@@ -37,29 +37,29 @@ import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class RobotContainer {
-    public static double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    public static double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // MARK: Drivetrain
     // Create the swerve drivetrain subsystem for the robot
     public final Drive drivetrain = new Drive(TunerConstants.createDrivetrain());
 
     // MARK: Field Centric Drive
-    private static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1)
-            .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    // private static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    //         .withDeadband(MaxSpeed * 0.1)
+    //         .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
     // MARK: Robot Centric Drive
-    public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
-        .withDeadband(MaxSpeed * 0.1)
-        .withRotationalDeadband(MaxAngularRate * 0.1)
-        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    // public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
+    //     .withDeadband(MaxSpeed * 0.1)
+    //     .withRotationalDeadband(MaxAngularRate * 0.1)
+    //     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    private final Telemetry logger = new Telemetry(MaxSpeed);
+    private final Telemetry logger = new Telemetry(MAX_SPEED);
 
     // MARK: Vision
     // Uses the Quest to periodically add vision measurements
@@ -90,7 +90,7 @@ public class RobotContainer {
     // MARK: Tests
     public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
-    
+
     // private final SendableChooser<Command> autoChooser;
     private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -126,29 +126,12 @@ public class RobotContainer {
         // Positive X is forward, Positive Y is left according to WPILib
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverJoystick.joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverJoystick.joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverJoystick.joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                Drive.drive
+                    .withVelocityX(-driverJoystick.joystick.getLeftY() * MAX_SPEED) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverJoystick.joystick.getLeftX() * MAX_SPEED) // Drive left with negative X (left)
+                    .withRotationalRate(-driverJoystick.joystick.getRightX() * MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
             )
         );
-
-        driverJoystick.joystick.povUp().onTrue(
-            Commands.runOnce(
-                () -> {
-                    // NetworkTable Table = NetworkTablesUtil.getTable("limelight-two");
-                    // NetworkTableEntry Entry = Table.getEntry("botpose");
-                    // double[] pos = Entry.getDoubleArray(new double[]{0.0,0.0,0.0,0.0,0.0});
-                    // Translation2d translation2d = new Translation2d(pos[0], pos[1]);
-                    
-                    // Rotation2d rotation2d = new Rotation2d(drivetrain.getPigeon2().getYaw().getValueAsDouble());
-                    // LimelightHelpers.getRobotPose_FieldSpace2D()
-                    
-                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
-                }
-            )
-        );
-
-
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
