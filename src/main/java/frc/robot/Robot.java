@@ -7,8 +7,12 @@ package frc.robot;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
@@ -16,6 +20,7 @@ import com.btwrobotics.WhatTime.frc.MotorManagers.MotorBulkActions;
 import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.google.flatbuffers.Constants;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -28,6 +33,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.AdvantageKit.AdvantageKitConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -72,8 +78,40 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotInit() {
-        // Starts recording a log file on the drive station laptop
-        DataLogManager.start();
+        // Configure logging for AdvantageKit
+        Logger.recordMetadata("ProjectName", "1209Roomba");
+        if(isReal()) {
+            Logger.addDataReceiver(new WPILOGWriter());
+            Logger.addDataReceiver(new NT4Publisher());
+        }
+        else {
+            setUseTiming(false);
+            String logPath = LogFileUtil.findReplayLog();
+            Logger.setReplaySource(new WPILOGReader(logPath));
+            Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        }
+        switch (AdvantageKitConstants.currentMode) {
+            case REAL:
+                // Running on a real robot, log to a USB stick ("/U/logs")
+                Logger.addDataReceiver(new WPILOGWriter());
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
+
+            case SIM:
+                // Running a physics simulator, log to NT
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
+
+            case REPLAY:
+                // Replaying a log, set up replay source
+                setUseTiming(false);
+                String logPath = LogFileUtil.findReplayLog();
+                Logger.setReplaySource(new WPILOGReader(logPath));
+                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+                break;
+        }
+
+        // Start AdvantageKit logging
         Logger.start();
 
         currentAlliance = DriverStation.getAlliance();
@@ -93,9 +131,6 @@ public class Robot extends LoggedRobot {
         pdp.clearStickyFaults();
 
         m_timeAndJoystickReplay.update();
-
-        // Allow QuestNav library to progress - MUST be before scheduler to populate frame buffer
-        robotContainer.questNavSubsystem.questPeriodicCommand();
 
         CommandScheduler.getInstance().run();
 
@@ -117,9 +152,7 @@ public class Robot extends LoggedRobot {
     }
 
     @Override
-    public void disabledInit() {
-        NetworkTablesUtil.put("QuestSubsystemInitialized", false);
-    }
+    public void disabledInit() {}
 
     @Override
     public void disabledPeriodic() {}

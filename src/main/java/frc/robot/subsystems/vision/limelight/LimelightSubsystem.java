@@ -9,6 +9,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
 
 /**
@@ -40,7 +41,7 @@ import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
  */
 public class LimelightSubsystem extends SubsystemBase {
     /** Local reference to the drivetrain used for pose/state and adding vision measurements. */
-    private CommandSwerveDrivetrain drivetrain;
+    private Drive drivetrain;
     /** The configured Limelight instance name/key (NetworkTables entry name). */
     private final String limelightName;
     /** Cached signal that provides the robot's angular velocity around Z in world frame. */
@@ -53,7 +54,7 @@ public class LimelightSubsystem extends SubsystemBase {
      * @param limelightName the NetworkTables name for the Limelight instance (e.g. "limelight")
      */
     public LimelightSubsystem(
-        CommandSwerveDrivetrain drivetrain,
+        Drive drivetrain,
         String limelightName
     ) {
         this.drivetrain = drivetrain;

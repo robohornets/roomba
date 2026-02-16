@@ -4,14 +4,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class DriverJoystick {
     public final CommandXboxController joystick;
-    private final CommandSwerveDrivetrain drivetrain;
+    private final Drive drivetrain;
     private final QuestNavSubsystem questNavSubsystem;
 
-    public DriverJoystick(CommandXboxController joystick, CommandSwerveDrivetrain drivetrain, QuestNavSubsystem questNavSubsystem) {
+    public DriverJoystick(CommandXboxController joystick, Drive drivetrain, QuestNavSubsystem questNavSubsystem) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
         this.questNavSubsystem = questNavSubsystem;
@@ -35,7 +36,7 @@ public class DriverJoystick {
         joystick.leftBumper();
 
         // Reset Field Centric Heading
-        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric));
 
         //joystick.povDown();
 

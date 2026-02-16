@@ -6,24 +6,16 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
-import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
-import com.btwrobotics.WhatTime.frc.DashboardManagers.ShuffleboardUtil;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,6 +27,7 @@ import frc.robot.joysticks.DebugJoystick;
 import frc.robot.joysticks.DriverJoystick;
 import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
@@ -49,7 +42,7 @@ public class RobotContainer {
 
     // MARK: Drivetrain
     // Create the swerve drivetrain subsystem for the robot
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final Drive drivetrain = new Drive(TunerConstants.createDrivetrain());
 
     // Field centric drive
     private static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -73,7 +66,7 @@ public class RobotContainer {
 
     // Read AprilTags from the Limelight periodically to add vision measurements
     LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight-four");
-    LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
+    // LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
 
 
     // MARK: Xbox Controllers
@@ -98,15 +91,15 @@ public class RobotContainer {
 
 
     /* Path follower */
-    private final SendableChooser<Command> autoChooser;
+    // private final SendableChooser<Command> autoChooser;
+    private final LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
         
         registerCommands.registerCommands();
 
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        autoChooser = new LoggedDashboardChooser<>("Autonomous Mode", AutoBuilder.buildAutoChooser());
 
         // MARK: Run Tests
         /* Disable tests on actual code */
@@ -170,16 +163,16 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/strt and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        driverJoystick.joystick.back().and(driverJoystick.joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driverJoystick.joystick.back().and(driverJoystick.joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driverJoystick.joystick.start().and(driverJoystick.joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driverJoystick.joystick.start().and(driverJoystick.joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        driverJoystick.joystick.back().and(driverJoystick.joystick.y()).whileTrue(drivetrain.drivetrain.sysIdDynamic(Direction.kForward));
+        driverJoystick.joystick.back().and(driverJoystick.joystick.x()).whileTrue(drivetrain.drivetrain.sysIdDynamic(Direction.kReverse));
+        driverJoystick.joystick.start().and(driverJoystick.joystick.y()).whileTrue(drivetrain.drivetrain.sysIdQuasistatic(Direction.kForward));
+        driverJoystick.joystick.start().and(driverJoystick.joystick.x()).whileTrue(drivetrain.drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return autoChooser.getSelected();
+        return autoChooser.get();
     }
 }

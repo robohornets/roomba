@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.motor.MotorSubsystem;
 
 
@@ -30,13 +31,13 @@ import frc.robot.subsystems.motor.MotorSubsystem;
  */
 public class ShooterSubsystem extends SubsystemBase {
     /** Reference to the drivetrain for coordinated aiming. */
-    CommandSwerveDrivetrain drivetrain;
+    Drive drivetrain;
 
     /**
      * Constructs the ShooterSubsystem.
      * @param drivetrain the swerve drivetrain subsystem (for aiming/coordination)
      */
-    public ShooterSubsystem(CommandSwerveDrivetrain drivetrain) {
+    public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
     }
 

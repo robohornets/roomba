@@ -1,22 +1,24 @@
 package frc.robot.subsystems.vision.questnav;
 
-import org.littletonrobotics.junction.Logger;
+import java.util.concurrent.Flow.Publisher;
 
 import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
-
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Subsystem that integrates QuestNav pose frames into the drivetrain's odometry.
@@ -37,19 +39,10 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class QuestNavSubsystem extends SubsystemBase {
     /** Drivetrain used to query current state and to add vision measurements. */
-    CommandSwerveDrivetrain drivetrain;
+    Drive drivetrain;
 
     /** Local QuestNav instance used to read pose frames. */
     QuestNav questNav;
-
-    /** Executor for async QuestNav calls. */
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
-    /** The currently running async task, or null if none. */
-    private final AtomicReference<CompletableFuture<PoseFrame[]>> currentFuture = new AtomicReference<>(null);
-
-    /** Counter for skipped cycles when QuestNav is busy. */
-    private final AtomicInteger skipCount = new AtomicInteger(0);
 
     /**
      * Construct the QuestNavSubsystem.
@@ -57,7 +50,7 @@ public class QuestNavSubsystem extends SubsystemBase {
      * @param drivetrain the drivetrain subsystem that will consume vision measurements
      */
     public QuestNavSubsystem(
-        CommandSwerveDrivetrain drivetrain
+        Drive drivetrain
     ) {
         this.questNav = new QuestNav();
         this.drivetrain = drivetrain;
@@ -66,6 +59,15 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     Pose2d mostRecentPose2d = new Pose2d();
     Field2d questField2d = new Field2d();
+
+    Integer questEstimatesCounter = 0;
+
+    // Get the VisionSystems
+    public NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("VisionSystems");
+
+    StructPublisher<Pose2d> questNavPublisher = visionTable.getStructTopic("QuestNav Pose", Pose2d.struct).publish();
+    BooleanPublisher questConnectedPublisher = visionTable.getBooleanTopic("Quest is Connected").publish();
+    IntegerPublisher questEstimatesCounterPublisher = visionTable.getIntegerTopic("Number of QuestNav Estimates").publish();
 
     /**
      * Allows the QuestNav library to progress its internal state and commands.
@@ -89,82 +91,50 @@ public class QuestNavSubsystem extends SubsystemBase {
      *   <li>call {@code drivetrain.addVisionMeasurement(...)} with the transformed pose, the frame's
      *       timestamp, and the configured measurement standard deviations.</li>
      * </ol>
-     *
-     * <p>This method uses a timeout to prevent blocking the robot loop if QuestNav is slow to respond.
-     * If the timeout is exceeded, the measurement is skipped to maintain robot responsiveness.
      */
     @Override
     public void periodic() {
-        Logger.recordOutput("QuestNav Latency", questNav.getLatency());
-        Logger.recordOutput("QuestNav is Tracking", questNav.isTracking());
-        Logger.recordOutput("QuestNav Battery", questNav.getBatteryPercent().orElse(0));
-        Logger.recordOutput("QuestNav Unread Pose Frames", questNav.getFrameCount().orElse(0));
+        questPeriodicCommand();
 
-        NetworkTablesUtil.put("QuestNav is Connected", questNav.isConnected());
+        // Gets most recent pose frames from the Quest
+        PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
 
-        // Check if there's a previous call still running
-        CompletableFuture<PoseFrame[]> future = currentFuture.get();
+        NetworkTablesUtil.put("QuestSubsystemInitialized", true);
 
-        if (future != null && !future.isDone()) {
-            // Previous call still running - skip cycle
-            int count = skipCount.incrementAndGet();
-            Logger.recordOutput("QuestNav Skip Count", count);
-            if (count % 50 == 0) {
-                System.err.println("[QuestNav] WARNING: Previous frame fetch still running (skip #" + count + "). Skipping this cycle.");
-            }
-            return;
-        }
+        for (PoseFrame questFrame : questFrames) {
+            System.out.println("[QuestNav] Processing frame, tracking: " + questFrame.isTracking());
+            // Checks to make sure the Quest was actually tracking the pose in the frame
+            if (questFrame.isTracking()) {
+                Pose3d questPose = questFrame.questPose3d();
 
-        // Check if previous call completed with data
-        PoseFrame[] questFrames = null;
-        if (future != null && future.isDone()) {
-            try {
-                questFrames = future.getNow(null);
-                currentFuture.set(null);
-            } catch (CompletionException e) {
-                System.err.println("[QuestNav] ERROR: Previous frame fetch failed: " + e.getMessage());
-                currentFuture.set(null);
+                double timestamp = questFrame.dataTimestamp();
+
+                // Transform questPose by Transform3d based on the location of the Quest mount
+                Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
+
+                mostRecentPose2d = transformedPose.toPose2d();
+
+                // Publish values to NetworkTables
+                questNavPublisher.set(transformedPose.toPose2d());
+                questConnectedPublisher.set(questIsConnected());
+
+                drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
+                System.out.println("[QuestNav] Added vision measurement: " + transformedPose.toPose2d());
+                incrementPoseCounter();
             }
         }
-
-        // Process any frames we got from the previous call
-        if (questFrames != null) {
-            for (PoseFrame questFrame : questFrames) {
-                System.out.println("[QuestNav] Processing frame, tracking: " + questFrame.isTracking());
-                // Checks to make sure the Quest was tracking the pose in the frame
-                if (questFrame.isTracking()) {
-                    Pose3d questPose = questFrame.questPose3d();
-
-                    double timestamp = questFrame.dataTimestamp();
-
-                    Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
-
-                    NetworkTable Table = NetworkTablesUtil.getTable("VisionSystems");
-                    //Table.getEntry("QuestNavPoseTest1").setValue(transformedPose);
-                    mostRecentPose2d = transformedPose.toPose2d();
-
-                    NetworkTablesUtil.put("QuestNavPose", transformedPose.toPose2d());
-
-                    // questField2d.setRobotPose(transformedPose.toPose2d());
-                    // NetworkTablesUtil.put("QuestNavFieldPose", questField2d);
-
-
-                    drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
-                    System.out.println("[QuestNav] Added vision measurement: " + transformedPose.toPose2d());
-                }
-            }
-        }
-
-        // Start a new async call
-        CompletableFuture<PoseFrame[]> newFuture = CompletableFuture.supplyAsync(
-            () -> questNav.getAllUnreadPoseFrames(),
-            executor
-        );
-        currentFuture.set(newFuture);
     }
 
     public void setQuestPose(Pose3d pose3d) {
         questNav.setPose(pose3d.transformBy(QuestNavConstants.ROBOT_TO_QUEST));
-        Logger.recordOutput("QuestNav Pose Set", pose3d);
+    }
+
+    public boolean questIsConnected() {
+        return questNav.isConnected();
+    }
+
+    public void incrementPoseCounter() {
+        questEstimatesCounter++;
+        questEstimatesCounterPublisher.set(questEstimatesCounter);
     }
 }

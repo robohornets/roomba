@@ -3,6 +3,7 @@ package frc.robot.joysticks;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
@@ -10,12 +11,12 @@ import gg.questnav.questnav.QuestNav;
 
 public class DebugJoystick {
     public final CommandXboxController joystick;
-    private final CommandSwerveDrivetrain drivetrain;
+    private final Drive drivetrain;
     private final QuestNavSubsystem questNavSubsystem;
 
     public DebugJoystick(
         CommandXboxController joystick, 
-        CommandSwerveDrivetrain drivetrain,
+        Drive drivetrain,
         QuestNavSubsystem questNavSubsystem
     ) {
         this.joystick = joystick;
@@ -43,7 +44,7 @@ public class DebugJoystick {
         joystick.povUp();
 
         // Reset Field Centric Heading
-        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric));
 
         joystick.povLeft().onTrue(
             Commands.run(
