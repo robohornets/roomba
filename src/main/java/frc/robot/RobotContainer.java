@@ -44,12 +44,13 @@ public class RobotContainer {
     // Create the swerve drivetrain subsystem for the robot
     public final Drive drivetrain = new Drive(TunerConstants.createDrivetrain());
 
-    // Field centric drive
+    // MARK: Field Centric Drive
     private static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.1)
+            .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
-    // Robot centric drive
+    // MARK: Robot Centric Drive
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
         .withDeadband(MaxSpeed * 0.1)
         .withRotationalDeadband(MaxAngularRate * 0.1)
@@ -89,8 +90,7 @@ public class RobotContainer {
     // MARK: Tests
     public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
-
-    /* Path follower */
+    
     // private final SendableChooser<Command> autoChooser;
     private final LoggedDashboardChooser<Command> autoChooser;
 

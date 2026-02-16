@@ -80,16 +80,10 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         // Configure logging for AdvantageKit
         Logger.recordMetadata("ProjectName", "1209Roomba");
-        if(isReal()) {
-            Logger.addDataReceiver(new WPILOGWriter());
-            Logger.addDataReceiver(new NT4Publisher());
-        }
-        else {
-            setUseTiming(false);
-            String logPath = LogFileUtil.findReplayLog();
-            Logger.setReplaySource(new WPILOGReader(logPath));
-            Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-        }
+        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+
         switch (AdvantageKitConstants.currentMode) {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
@@ -184,8 +178,10 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopPeriodic() {
-        NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
-        NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
+        // NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
+        // NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
+        Logger.recordOutput("RebuiltHubManager/IsActive", rebuiltHubManager.hubIsActive());
+        Logger.recordOutput("RebuiltHubManager/InactiveFirst", rebuiltHubManager.getInactiveFirstAlliance().toString());
     }
 
     @Override
@@ -212,9 +208,9 @@ public class Robot extends LoggedRobot {
 
     public void updateNetworkTablesValues() {
         // MARK: use limelight to calculate this
-        double[] robotPose = NetworkTableInstance.getDefault().getTable("Pose").getEntry("robotPose").getDoubleArray(new double[]{0.0,0.0,0.0});
+        // double[] robotPose = NetworkTableInstance.getDefault().getTable("Pose").getEntry("robotPose").getDoubleArray(new double[]{0.0,0.0,0.0});
+        // NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
 
-        NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
         NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
         NetworkTablesUtil.put("Shooter Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
 

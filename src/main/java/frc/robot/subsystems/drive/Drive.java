@@ -31,7 +31,7 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         drivetrain.periodic();
 
-        Logger.recordOutput("Swerve Drive Pose", getPose2d());
+        Logger.recordOutput("SwerveDrive/Pose", getPose2d());
     }
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
@@ -43,10 +43,16 @@ public class Drive extends SubsystemBase {
     }
 
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
+        Logger.recordOutput("SwerveDrive/VisionMeasurement", visionRobotPoseMeters);
+        Logger.recordOutput("SwerveDrive/VisionTimestamp", timestampSeconds);
+
         drivetrain.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
     }
 
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds, Matrix<N3,N1> visionMeasurementStdDevs) {
+        Logger.recordOutput("SwerveDrive/VisionMeasurement", visionRobotPoseMeters);
+        Logger.recordOutput("SwerveDrive/VisionTimestamp", timestampSeconds);
+
         drivetrain.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
     }
 
@@ -59,6 +65,8 @@ public class Drive extends SubsystemBase {
     }
 
     public void resetPose(Pose2d pose) {
+        Logger.recordOutput("SwerveDrive/ResetPose", pose);
+
         drivetrain.resetPose(pose);
     }
 

@@ -1,22 +1,13 @@
 package frc.robot.subsystems.vision.questnav;
 
-import java.util.concurrent.Flow.Publisher;
-
-import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.networktables.BooleanPublisher;
-import edu.wpi.first.networktables.IntegerPublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 
@@ -57,17 +48,7 @@ public class QuestNavSubsystem extends SubsystemBase {
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 
-    Pose2d mostRecentPose2d = new Pose2d();
-    Field2d questField2d = new Field2d();
-
     Integer questEstimatesCounter = 0;
-
-    // Get the VisionSystems
-    public NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("VisionSystems");
-
-    StructPublisher<Pose2d> questNavPublisher = visionTable.getStructTopic("QuestNav Pose", Pose2d.struct).publish();
-    BooleanPublisher questConnectedPublisher = visionTable.getBooleanTopic("Quest is Connected").publish();
-    IntegerPublisher questEstimatesCounterPublisher = visionTable.getIntegerTopic("Number of QuestNav Estimates").publish();
 
     /**
      * Allows the QuestNav library to progress its internal state and commands.
@@ -96,14 +77,14 @@ public class QuestNavSubsystem extends SubsystemBase {
     public void periodic() {
         questPeriodicCommand();
 
+        Logger.recordOutput("QuestNav/Latency", getLatency());
+        Logger.recordOutput("Quest/Connected", questIsConnected());
+
         // Gets most recent pose frames from the Quest
         PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
 
-        NetworkTablesUtil.put("QuestSubsystemInitialized", true);
-
         for (PoseFrame questFrame : questFrames) {
-            System.out.println("[QuestNav] Processing frame, tracking: " + questFrame.isTracking());
-            // Checks to make sure the Quest was actually tracking the pose in the frame
+            // Checks to make sure the Quest was tracking the pose in the frame
             if (questFrame.isTracking()) {
                 Pose3d questPose = questFrame.questPose3d();
 
@@ -112,14 +93,10 @@ public class QuestNavSubsystem extends SubsystemBase {
                 // Transform questPose by Transform3d based on the location of the Quest mount
                 Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
 
-                mostRecentPose2d = transformedPose.toPose2d();
-
-                // Publish values to NetworkTables
-                questNavPublisher.set(transformedPose.toPose2d());
-                questConnectedPublisher.set(questIsConnected());
+                // Log pose with AdvantageKit and put to NetworkTables
+                Logger.recordOutput("QuestNav/Pose", transformedPose.toPose2d());
 
                 drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
-                System.out.println("[QuestNav] Added vision measurement: " + transformedPose.toPose2d());
                 incrementPoseCounter();
             }
         }
@@ -135,6 +112,10 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     public void incrementPoseCounter() {
         questEstimatesCounter++;
-        questEstimatesCounterPublisher.set(questEstimatesCounter);
+        Logger.recordOutput("QuestNav/EstimateCount", questEstimatesCounter);
+    }
+
+    public double getLatency() {
+        return questNav.getLatency();
     }
 }
