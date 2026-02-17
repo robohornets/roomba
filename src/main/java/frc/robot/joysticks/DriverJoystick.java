@@ -2,12 +2,15 @@ package frc.robot.joysticks;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
+import frc.robot.subsystems.vision.questnav.QuestNavConstants;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class DriverJoystick {
@@ -54,7 +57,22 @@ public class DriverJoystick {
 
         //joystick.povDown();
 
-        joystick.povLeft();
+        joystick.povLeft().onTrue(
+            Commands.runOnce(
+                () -> {
+                    Logger.recordOutput("QuestNav/SetQuestPose", true);
+                    // Reset QuestNav pose to Limelight position
+                    questNavSubsystem.setQuestPose(
+                        LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
+                            .transformBy(
+                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
+                            )
+                    );
+
+                    Logger.recordOutput("QuestNav/SetQuestPose", false);
+                }
+            )
+        );
 
         joystick.povRight();
     }
