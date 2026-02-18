@@ -1,7 +1,6 @@
 package frc.robot.joysticks;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Drive;
 
 public class OperatorJoystick {
