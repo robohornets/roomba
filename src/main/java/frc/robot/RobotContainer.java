@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -25,6 +23,7 @@ import frc.robot.joysticks.DebugJoystick;
 import frc.robot.joysticks.DriverJoystick;
 import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
@@ -33,8 +32,8 @@ import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class RobotContainer {
-    public static double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    public static double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    // public static double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    // public static double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // MARK: Drivetrain
     // Create the swerve drivetrain subsystem for the robot
@@ -55,7 +54,7 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    private final Telemetry logger = new Telemetry(MAX_SPEED);
+    private final Telemetry logger = new Telemetry(DriveConstants.MAX_SPEED);
 
     // MARK: Vision
     // Uses the Quest to periodically add vision measurements
@@ -123,9 +122,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
                 Drive.drive
-                    .withVelocityX(-driverJoystick.joystick.getLeftY() * MAX_SPEED) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverJoystick.joystick.getLeftX() * MAX_SPEED) // Drive left with negative X (left)
-                    .withRotationalRate(-driverJoystick.joystick.getRightX() * MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
+                    .withVelocityX(-driverJoystick.joystick.getLeftY() * DriveConstants.MAX_SPEED) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverJoystick.joystick.getLeftX() * DriveConstants.MAX_SPEED) // Drive left with negative X (left)
+                    .withRotationalRate(-driverJoystick.joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
             )
         );
 
