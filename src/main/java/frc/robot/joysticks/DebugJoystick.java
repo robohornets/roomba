@@ -50,7 +50,7 @@ public class DebugJoystick {
                 () -> {
                     Logger.recordOutput("QuestNav/SetQuestPose", true);
                     // Reset QuestNav pose to Limelight position
-                    questNavSubsystem.setQuestPose(LimelightHelpers.getBotPose3d("limelight-four"));
+                    questNavSubsystem.setQuestPose(LimelightHelpers.getBotPose3d_wpiBlue("limelight-four"));
                     
                     Logger.recordOutput("QuestNav/SetQuestPose", false);
                 }
