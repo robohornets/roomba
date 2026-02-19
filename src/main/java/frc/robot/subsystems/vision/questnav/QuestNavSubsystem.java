@@ -77,6 +77,7 @@ public class QuestNavSubsystem extends SubsystemBase {
 
         Logger.recordOutput("QuestNav/Latency", getLatency());
         Logger.recordOutput("QuestNav/Connected", questIsConnected());
+        Logger.recordOutput("QuestNav/Battery", getBatteryPercentage());
 
         // Gets most recent pose frames from the Quest
         PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
@@ -115,5 +116,9 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     public double getLatency() {
         return questNav.getLatency();
+    }
+
+    public int getBatteryPercentage() {
+        return questNav.getBatteryPercent().orElse(0);
     }
 }

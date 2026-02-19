@@ -22,7 +22,7 @@ public class LimelightConstants {
 
     // Position of Limelight relative to the centre of the robot in metres
     public static final Transform2d LIMELIGHT_4_TRANSFORM_FROM_CENTRE = new Transform2d(
-        new Translation2d(0.6858, 0.0), 
+        new Translation2d(0.3429, 0.0), 
         new Rotation2d(0)
     );
 
