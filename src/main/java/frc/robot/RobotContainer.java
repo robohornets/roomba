@@ -39,20 +39,7 @@ public class RobotContainer {
     // Create the swerve drivetrain subsystem for the robot
     public final Drive drivetrain = new Drive(TunerConstants.createDrivetrain());
 
-    // MARK: Field Centric Drive
-    // private static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-    //         .withDeadband(MaxSpeed * 0.1)
-    //         .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    
-    // MARK: Robot Centric Drive
-    // public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
-    //     .withDeadband(MaxSpeed * 0.1)
-    //     .withRotationalDeadband(MaxAngularRate * 0.1)
-    //     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(DriveConstants.MAX_SPEED);
 
@@ -136,7 +123,7 @@ public class RobotContainer {
         );
 
         driverJoystick.joystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverJoystick.joystick.getLeftY(), -driverJoystick.joystick.getLeftX()))
+            drivetrain.point.withModuleDirection(new Rotation2d(-driverJoystick.joystick.getLeftY(), -driverJoystick.joystick.getLeftX()))
         ));
 
         // Run SysId routines when holding back/strt and X/Y.
