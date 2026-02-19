@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.37219777199074133,
+        "y": 0.6346029369212964
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3721977719907414,
+        "y": 0.6346029369212962
+      },
+      "isLocked": false,
+      "linkedName": "HDH Point 2"
+    },
+    {
+      "anchor": {
+        "x": 2.4603841869212966,
+        "y": 2.5775276331018517
+      },
+      "prevControl": {
+        "x": 2.4603841869212966,
+        "y": 1.654830760080282
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 34.63187389435466
+  },
+  "reversed": false,
+  "folder": "1 - Hub, Depot, Hub (HDH)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
