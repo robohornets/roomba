@@ -45,7 +45,7 @@ public class RobotContainer {
 
     // MARK: Vision
     // Uses the Quest to periodically add vision measurements
-    public QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
+    // public QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
 
     // Read AprilTags from the Limelight periodically to add vision measurements
     LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight-four");
@@ -53,9 +53,9 @@ public class RobotContainer {
 
 
     // MARK: Xbox Controllers
-    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, questNavSubsystem);
+    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain);
     public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain);
-    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, questNavSubsystem);
+    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain);
 
     
     // MARK: Subsystems

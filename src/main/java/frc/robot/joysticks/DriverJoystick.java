@@ -13,12 +13,13 @@ import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 public class DriverJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
-    private final QuestNavSubsystem questNavSubsystem;
 
-    public DriverJoystick(CommandXboxController joystick, Drive drivetrain, QuestNavSubsystem questNavSubsystem) {
+    public DriverJoystick(
+        CommandXboxController joystick, 
+        Drive drivetrain
+    ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
-        this.questNavSubsystem = questNavSubsystem;
     }
 
     public void configureBindings() {
@@ -59,7 +60,7 @@ public class DriverJoystick {
                 () -> {
                     Logger.recordOutput("QuestNav/SetQuestPose", true);
                     // Reset QuestNav pose to Limelight position
-                    questNavSubsystem.setQuestPose(
+                    drivetrain.questNavSubsystem.setQuestPose(
                         LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
                             .transformBy(
                                 new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()

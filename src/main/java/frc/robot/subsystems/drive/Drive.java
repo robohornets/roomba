@@ -20,6 +20,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -30,12 +32,20 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.vision.limelight.LimelightConstants;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers;
+import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
+import gg.questnav.questnav.QuestNav;
 
 public class Drive extends SubsystemBase {
     public final CommandSwerveDrivetrain drivetrain;
 
+    public QuestNavSubsystem questNavSubsystem;
+
     public Drive(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
+
+        this.questNavSubsystem = new QuestNavSubsystem(this);
 
         configureAutoBuilder();
     }
@@ -110,8 +120,13 @@ public class Drive extends SubsystemBase {
     public void resetPose(Pose2d pose) {
         Logger.recordOutput("SwerveDrive/ResetPose", pose);
 
+        // Reset CommandSwerveDrivetrain pose
         drivetrain.resetPose(pose);
-        
+
+        // Reset QuestNav pose
+        questNavSubsystem.setQuestPose(
+            new Pose3d(pose)
+        );
     }
 
     public void registerTelemetry(Consumer<SwerveDriveState> telemetryFunction) {
