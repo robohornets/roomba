@@ -47,8 +47,6 @@ public class RobotContainer {
     // Uses the Quest to periodically add vision measurements
     // public QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
 
-    // Read AprilTags from the Limelight periodically to add vision measurements
-    LimelightSubsystem limelightSubsystem = new LimelightSubsystem(drivetrain, "limelight-four");
     // LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
 
 

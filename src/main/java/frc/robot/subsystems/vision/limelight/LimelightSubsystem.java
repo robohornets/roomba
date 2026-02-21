@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
+import frc.robot.subsystems.vision.questnav.QuestNavConstants;
+import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 /**
  * Subsystem that integrates a Limelight camera with the drivetrain's odometry.
@@ -41,6 +43,8 @@ import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
 public class LimelightSubsystem extends SubsystemBase {
     /** Local reference to the drivetrain used for pose/state and adding vision measurements. */
     private Drive drivetrain;
+    /** Local reference to the QuestNav system to add vision measurements */
+    private QuestNavSubsystem questNavSubsystem;
     /** The configured Limelight instance name/key (NetworkTables entry name). */
     private final String limelightName;
     /** Cached signal that provides the robot's angular velocity around Z in world frame. */
@@ -54,9 +58,11 @@ public class LimelightSubsystem extends SubsystemBase {
      */
     public LimelightSubsystem(
         Drive drivetrain,
+        QuestNavSubsystem questNavSubsystem,
         String limelightName
     ) {
         this.drivetrain = drivetrain;
+        this.questNavSubsystem = questNavSubsystem;
         this.limelightName = limelightName;
         this.angularVelocityZ = drivetrain.getPigeon2().getAngularVelocityZWorld();
     }
@@ -123,7 +129,13 @@ public class LimelightSubsystem extends SubsystemBase {
         Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.getTransformForLimelight(limelightName).inverse());
         Logger.recordOutput("Limelight/" + limelightName + "/Pose", transformedPose);
 
+        // Add measurement to drivetrain pose estimator
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
+
+        // Also add measurement to QuestNav pose estimator if enabled
+        if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
+            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
+        }
     }
 
     public Pose2d getPose2d() {

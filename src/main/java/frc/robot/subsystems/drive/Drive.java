@@ -34,6 +34,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
+import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 import gg.questnav.questnav.QuestNav;
 
@@ -41,11 +42,15 @@ public class Drive extends SubsystemBase {
     public final CommandSwerveDrivetrain drivetrain;
 
     public QuestNavSubsystem questNavSubsystem;
+    
+    LimelightSubsystem limelightSubsystem;
 
     public Drive(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
 
         this.questNavSubsystem = new QuestNavSubsystem(this);
+
+        this.limelightSubsystem = new LimelightSubsystem(this, questNavSubsystem, "limelight-four");
 
         configureAutoBuilder();
     }
