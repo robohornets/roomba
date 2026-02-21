@@ -7,10 +7,18 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
 
 public class LimelightConstants {
     // Standard deviations or sexually transmitted disease developments?
     public static final Matrix<N3, N1> VISION_STD_DEVS = 
+        VecBuilder.fill(
+            0.07, 
+            0.07, 
+            9999999
+    );
+
+    public static final Matrix<N3, N1> QUEST_UPDATE_VISION_STD_DEVS = 
         VecBuilder.fill(
             0.07, 
             0.07, 
@@ -38,5 +46,26 @@ public class LimelightConstants {
         else {
             return LIMELIGHT_4_TRANSFORM_FROM_CENTRE;
         }
+    }
+
+    public static Matrix<N3, N1> calculateQuestUpdateStdDevs(PoseEstimate estimate) {
+        double xyStdDev = 0.05;
+        double thetaStdDev = 9999999;
+
+        // Increase std devs with distance for less trust
+        double distanceFactor = Math.max(1.0, estimate.avgTagDist / 2.0);
+        xyStdDev *= distanceFactor;
+
+        // Decrease std devs with more tags for more trust
+        if (estimate.tagCount >= 2) {
+            xyStdDev*= 0.7;
+        }
+
+        // Increase std devs with smaller tags for less trust
+        if (estimate.avgTagArea < 0.3) {
+            xyStdDev *= 1.5;
+        }
+
+        return VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev);
     }
 }

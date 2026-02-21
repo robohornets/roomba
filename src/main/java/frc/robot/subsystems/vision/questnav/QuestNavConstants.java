@@ -10,7 +10,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 public class QuestNavConstants {
-    // 🏳️‍⚧️ TRANS-form
+    // 🏳️‍⚧️ TRANS-form 3d
     public static final Transform3d ROBOT_TO_QUEST = new Transform3d(
         new Translation3d(0.0, -0.4, 0.45),
         new Rotation3d(new Rotation2d(-0.5 * Math.PI))
@@ -41,4 +41,9 @@ public class QuestNavConstants {
     );
 
     public static final boolean USE_LIMELIGHT_FOR_VISION_MEASUREMENTS = true;
+
+    /**
+     * Minimum time (in seconds) between automatic QuestNav corrections.
+     */
+    public static final double MIN_CORRECTION_INTERVAL = 1.0;
 }
