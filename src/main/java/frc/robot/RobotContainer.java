@@ -28,8 +28,6 @@ import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.motor.MotorSubsystem;
-import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
-import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 public class RobotContainer {
     // public static double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed

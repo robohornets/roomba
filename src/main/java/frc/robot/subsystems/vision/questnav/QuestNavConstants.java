@@ -18,8 +18,7 @@ public class QuestNavConstants {
 
     /**
      * Standard deviations for odometry measurements (wheel encoders + gyro).
-     * Lower values = more trust in odometry.
-     * Format: [x (meters), y (meters), theta (radians)]
+     * Lower values mean more trust in odometry.
      */
     public static final Matrix<N3, N1> ODOMETRY_STD_DEVS =
         VecBuilder.fill(
@@ -30,20 +29,19 @@ public class QuestNavConstants {
 
     /**
      * Standard deviations for QuestNav vision measurements.
-     * Lower values = more trust in QuestNav.
-     * Format: [x (meters), y (meters), theta (radians)]
+     * Lower values mean more trust in QuestNav.
      */
     public static final Matrix<N3, N1> QUESTNAV_STD_DEVS =
         VecBuilder.fill(
-            0.02, // Trust down to 2cm in X direction
-            0.02, // Trust down to 2cm in Y direction
-            0.035 // Trust down to 2deg/0.035rad rotational
+            0.02, // 2cm standard deviation in X
+            0.02, // 2cm standard deviation in Y
+            0.035 // 2deg/0.035rad standard deviation in rotation
     );
 
     public static final boolean USE_LIMELIGHT_FOR_VISION_MEASUREMENTS = true;
 
     /**
-     * Minimum time (in seconds) between automatic QuestNav corrections.
+     * Minimum time (in seconds) between QuestNav estimates
      */
     public static final double MIN_CORRECTION_INTERVAL = 1.0;
 }

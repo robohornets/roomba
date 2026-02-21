@@ -80,8 +80,8 @@ public class QuestNavSubsystem extends SubsystemBase {
     Integer questEstimatesCounter = 0;
 
     /**
-     * Allows the QuestNav library to progress its internal state and commands.
-     * This MUST be called BEFORE periodic() to populate the frame buffer.
+     * Allows the QuestNav library to progress its internal state.
+     * Called BEFORE periodic() to populate the frame buffer.
      * Called from Robot.robotPeriodic() before CommandScheduler runs.
      */
     public void questPeriodicCommand() {
@@ -89,8 +89,7 @@ public class QuestNavSubsystem extends SubsystemBase {
     }
 
     /**
-     * Periodic update (called roughly every 20ms). Updates the pose estimator with odometry
-     * and reads unread pose frames from QuestNav.
+     * Updates the pose estimator with odometry and reads unread pose data from QuestNav.
      *
      * <p>For each unread {@link PoseFrame}:
      * <ol>
