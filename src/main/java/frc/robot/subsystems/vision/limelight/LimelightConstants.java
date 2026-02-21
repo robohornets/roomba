@@ -68,4 +68,21 @@ public class LimelightConstants {
 
         return VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev);
     }
+
+    /**
+     * Checks if a Limelight pose estimate is high-confidence enough to trigger
+     * a QuestNav correction.
+     *
+     * @param estimate the pose estimate from Limelight
+     * @return true if the estimate meets high-confidence criteria
+     */
+    public static boolean isHighConfidenceForQuestNavCorrection(PoseEstimate estimate) {
+        if (estimate == null) {
+            return false;
+        }
+
+        return estimate.tagCount >= 2 &&
+               estimate.avgTagDist < 2.5 &&
+               estimate.avgTagArea > 0.4;
+    }
 }

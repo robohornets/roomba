@@ -8,9 +8,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.limelight.LimelightConstants;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 
@@ -40,6 +43,15 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     /** Pose estimator that fuses QuestNav, Limelight, and drivetrain odometry */
     private SwerveDrivePoseEstimator poseEstimator;
+
+    /** Most recent Limelight pose estimate for confidence checking */
+    private PoseEstimate lastLimelightEstimate = null;
+
+    /** Most recent QuestNav hardware pose for drift calculation */
+    private Pose2d lastQuestHardwarePose = null;
+
+    /** Timestamp of the last QuestNav correction to enforce minimum interval */
+    private double lastCorrectionTime = 0.0;
 
     /**
      * Construct the QuestNavSubsystem.
@@ -104,6 +116,19 @@ public class QuestNavSubsystem extends SubsystemBase {
         Logger.recordOutput("QuestNav/Battery", getBatteryPercentage());
         Logger.recordOutput("QuestNav/EstimatedPose", getEstimatedPose());
 
+        // Log hardware pose and drift metrics
+        if (lastQuestHardwarePose != null) {
+            Logger.recordOutput("QuestNav/HardwarePose", lastQuestHardwarePose);
+
+            Pose2d fusedPose = getEstimatedPose();
+            double drift = fusedPose.getTranslation().getDistance(lastQuestHardwarePose.getTranslation());
+            Logger.recordOutput("QuestNav/Drift", drift);
+        }
+
+        Logger.recordOutput("QuestNav/HighConfidenceLimelight",
+            LimelightConstants.isHighConfidenceForQuestNavCorrection(lastLimelightEstimate));
+        Logger.recordOutput("QuestNav/LastCorrectionTime", lastCorrectionTime);
+
         // Gets most recent pose frames from the Quest
         PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
 
@@ -117,6 +142,9 @@ public class QuestNavSubsystem extends SubsystemBase {
                 // Transform questPose by Transform3d based on the location of the Quest mount
                 Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
 
+                // Store as the most recent hardware pose for drift calculation
+                lastQuestHardwarePose = transformedPose.toPose2d();
+
                 // Log pose with AdvantageKit and put to NetworkTables
                 Logger.recordOutput("QuestNav/Pose", transformedPose.toPose2d());
 
@@ -126,6 +154,46 @@ public class QuestNavSubsystem extends SubsystemBase {
                 incrementPoseCounter();
             }
         }
+
+        // Automatic QuestNav correction logic
+        correctQuestNavDrift();
+    }
+
+    /**
+     * Checks if QuestNav hardware should be corrected based on drift and
+     * high-confidence Limelight measurements. Applies correction if conditions are met.
+     */
+    private void correctQuestNavDrift() {
+        // Check if we have the necessary data
+        if (lastQuestHardwarePose == null || !questIsConnected()) {
+            Logger.recordOutput("QuestNav/CorrectionTriggered", false);
+            return;
+        }
+
+        // Get the fused estimate from the pose estimator
+        Pose2d fusedPose = getEstimatedPose();
+
+        // Check if enough time has passed since the last correction
+        double currentTime = Timer.getFPGATimestamp();
+        if (currentTime - lastCorrectionTime < QuestNavConstants.MIN_CORRECTION_INTERVAL) {
+            Logger.recordOutput("QuestNav/CorrectionTriggered", false);
+            return;
+        }
+
+        // Check if there is a high-confidence Limelight measurement
+        if (!LimelightConstants.isHighConfidenceForQuestNavCorrection(lastLimelightEstimate)) {
+            Logger.recordOutput("QuestNav/CorrectionTriggered", false);
+            return;
+        }
+
+        // Calculate the correction magnitude
+        double correctionMagnitude = fusedPose.getTranslation().getDistance(lastQuestHardwarePose.getTranslation());
+
+        setQuestPose(new Pose3d(fusedPose));
+        lastCorrectionTime = currentTime;
+
+        Logger.recordOutput("QuestNav/CorrectionTriggered", true);
+        Logger.recordOutput("QuestNav/CorrectionMagnitude", correctionMagnitude);
     }
 
     /**
@@ -138,6 +206,20 @@ public class QuestNavSubsystem extends SubsystemBase {
      */
     public void addVisionMeasurement(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {
         poseEstimator.addVisionMeasurement(visionPose, timestamp, stdDevs);
+    }
+
+    /**
+     * Adds a vision measurement to the local pose estimator with associated PoseEstimate data.
+     * This overload stores the PoseEstimate for confidence checking in automatic corrections.
+     *
+     * @param visionPose the pose measured by the vision system
+     * @param timestamp the timestamp of the measurement in seconds
+     * @param stdDevs the standard deviations for the measurement [x, y, theta]
+     * @param estimate the raw PoseEstimate from Limelight (contains tag count, distance, area, etc.)
+     */
+    public void addVisionMeasurement(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs, PoseEstimate estimate) {
+        lastLimelightEstimate = estimate;
+        addVisionMeasurement(visionPose, timestamp, stdDevs);
     }
 
     /**

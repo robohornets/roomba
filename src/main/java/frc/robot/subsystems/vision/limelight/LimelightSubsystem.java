@@ -134,7 +134,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
         // Also add measurement to QuestNav pose estimator if enabled
         if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
-            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
+            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS, estimate);
         }
     }
 
