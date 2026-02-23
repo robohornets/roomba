@@ -7,29 +7,30 @@ package frc.robot;
 import java.util.Arrays;
 import java.util.Optional;
 
-import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorBulkActions;
 import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.vision.limelight.LimelightHelpers;
-import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
-import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.AdvantageKit.AdvantageKitConstants;
 
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer robotContainer;
@@ -40,8 +41,6 @@ public class Robot extends TimedRobot {
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
         .withTimestampReplay()
         .withJoystickReplay();
-
-    private final boolean kUseLimelight = false;
 
     public double matchTimeRemainingSeconds = 160.0;
     public double matchTimeElapsedSeconds = 0.0;
@@ -62,7 +61,7 @@ public class Robot extends TimedRobot {
 
     // MARK: Hub Manager
     public MatchTimeManager matchTimeManager = new MatchTimeManager();
-    // public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
+    public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
 
     public Robot() {
         robotContainer = new RobotContainer();
@@ -70,6 +69,36 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        // Configure logging for AdvantageKit
+        Logger.recordMetadata("ProjectName", "1209Roomba");
+        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+
+        switch (AdvantageKitConstants.currentMode) {
+            case REAL:
+                // Running on a real robot, log to a USB stick ("/U/logs")
+                Logger.addDataReceiver(new WPILOGWriter());
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
+
+            case SIM:
+                // Running a physics simulator, log to NT
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
+
+            case REPLAY:
+                // Replaying a log, set up replay source
+                setUseTiming(false);
+                String logPath = LogFileUtil.findReplayLog();
+                Logger.setReplaySource(new WPILOGReader(logPath));
+                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+                break;
+        }
+
+        // Start AdvantageKit logging
+        Logger.start();
+
         currentAlliance = DriverStation.getAlliance();
 
         motorBulkActions.setNeutralModeBulk(Arrays.asList(
@@ -79,7 +108,8 @@ public class Robot extends TimedRobot {
             robotContainer.climberSubsystem.climberRight
         ), NeutralModeValue.Brake);
 
-        NetworkTablesUtil.put("Current Alliance", currentAlliance);
+
+        Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
     }
 
     @Override
@@ -87,40 +117,21 @@ public class Robot extends TimedRobot {
         pdp.clearStickyFaults();
 
         m_timeAndJoystickReplay.update();
+
         CommandScheduler.getInstance().run();
-
-        /*
-         * This example of adding Limelight is very simple and may not be sufficient for on-field use.
-         * Users typically need to provide a standard deviation that scales with the distance to target
-         * and changes with number of tags available.
-         *
-         * This example is sufficient to show that vision integration is possible, though exact implementation
-         * of how to use vision should be tuned per-robot and to the team's specification.
-         */
-        if (kUseLimelight) {
-            var driveState = robotContainer.drivetrain.getState();
-            double headingDeg = driveState.Pose.getRotation().getDegrees();
-            double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
-
-            LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
-            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-            if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-                robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
-            }
-        }
 
         matchTimeRemainingSeconds = DriverStation.getMatchTime();
         matchTimeElapsedSeconds = 160 - matchTimeRemainingSeconds;
 
         if (matchTimeElapsedSeconds - nextRumbleStartTime >= 0 && matchTimeElapsedSeconds - nextRumbleStartTime <= 2) {
-            robotContainer.driverJoystick.setRumble(RumbleType.kBothRumble, 1.0);
-            robotContainer.operatorJoystick.setRumble(RumbleType.kBothRumble, 1.0);
-            robotContainer.debugJoystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.driverJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.operatorJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
+            robotContainer.debugJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
         }
         else {
-            robotContainer.driverJoystick.setRumble(RumbleType.kBothRumble, 0.0);
-            robotContainer.operatorJoystick.setRumble(RumbleType.kBothRumble, 0.0);
-            robotContainer.debugJoystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.driverJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.operatorJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
+            robotContainer.debugJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
         }
 
         updateNetworkTablesValues();
@@ -161,6 +172,8 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         // NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
         // NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
+        Logger.recordOutput("RebuiltHubManager/IsActive", rebuiltHubManager.hubIsActive());
+        Logger.recordOutput("RebuiltHubManager/InactiveFirst", rebuiltHubManager.getInactiveFirstAlliance().toString());
     }
 
     @Override
@@ -181,22 +194,19 @@ public class Robot extends TimedRobot {
     public void simulationPeriodic() {}
 
     Field2d robotField2d = new Field2d();
-    Field2d questField2d = new Field2d();
+    
     Field2d limelight4Field2d = new Field2d();
     Field2d limelight2Field2d = new Field2d();
 
     public void updateNetworkTablesValues() {
         // MARK: use limelight to calculate this
-        double[] robotPose = NetworkTableInstance.getDefault().getTable("Pose").getEntry("robotPose").getDoubleArray(new double[]{0.0,0.0,0.0});
+        // double[] robotPose = NetworkTableInstance.getDefault().getTable("Pose").getEntry("robotPose").getDoubleArray(new double[]{0.0,0.0,0.0});
+        // NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
 
-        NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
-        NetworkTablesUtil.put("Time Remaining", DriverStation.getMatchTime());
-        NetworkTablesUtil.put("Shooter Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
+        Logger.recordOutput("MatchInfo/TimeRemaining", DriverStation.getMatchTime());
+        Logger.recordOutput("ShooterSubsystem/Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
 
-        robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
-        NetworkTablesUtil.put("Main Robot Pose", robotField2d);
-
-        questField2d.setRobotPose(robotContainer.limelightSubsystem.getMostRecentPose2d());
-        NetworkTablesUtil.put("QuestNav Pose", questField2d);
+        //robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
+        // NetworkTablesUtil.put("Main Robot Pose", robotField2d);
     }
 }

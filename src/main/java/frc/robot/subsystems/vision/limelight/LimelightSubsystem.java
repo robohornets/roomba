@@ -1,13 +1,17 @@
 package frc.robot.subsystems.vision.limelight;
 
-import com.btwrobotics.WhatTime.frc.DashboardManagers.NetworkTablesUtil;
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.StatusSignal;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
+import frc.robot.subsystems.vision.questnav.QuestNavConstants;
+import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
 
 /**
  * Subsystem that integrates a Limelight camera with the drivetrain's odometry.
@@ -38,7 +42,9 @@ import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
  */
 public class LimelightSubsystem extends SubsystemBase {
     /** Local reference to the drivetrain used for pose/state and adding vision measurements. */
-    private CommandSwerveDrivetrain drivetrain;
+    private Drive drivetrain;
+    /** Local reference to the QuestNav system to add vision measurements */
+    private QuestNavSubsystem questNavSubsystem;
     /** The configured Limelight instance name/key (NetworkTables entry name). */
     private final String limelightName;
     /** Cached signal that provides the robot's angular velocity around Z in world frame. */
@@ -51,15 +57,17 @@ public class LimelightSubsystem extends SubsystemBase {
      * @param limelightName the NetworkTables name for the Limelight instance (e.g. "limelight")
      */
     public LimelightSubsystem(
-        CommandSwerveDrivetrain drivetrain,
+        Drive drivetrain,
+        QuestNavSubsystem questNavSubsystem,
         String limelightName
     ) {
         this.drivetrain = drivetrain;
+        this.questNavSubsystem = questNavSubsystem;
         this.limelightName = limelightName;
         this.angularVelocityZ = drivetrain.getPigeon2().getAngularVelocityZWorld();
     }
 
-    Pose2d mostRecentPose2d = new Pose2d();
+    Field2d limelightField2d = new Field2d();
 
     /**
      * Periodic update called by the scheduler. Adds a vision odometry measurement each cycle.
@@ -118,15 +126,19 @@ public class LimelightSubsystem extends SubsystemBase {
         }
 
         // Translate the pose by its offset from the centre of the robot
-        Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.getTransformForLimelight(limelightName).inverse());
+        Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE.inverse());
+        Logger.recordOutput("Limelight/" + limelightName + "/Pose", transformedPose);
 
-        mostRecentPose2d = transformedPose;
-        NetworkTablesUtil.put("Vision Systems", limelightName + "Pose", transformedPose);
-
+        // Add measurement to drivetrain pose estimator
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
+
+        // Add measurement to QuestNav pose estimator if enabled
+        if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
+            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS, estimate);
+        }
     }
 
-    public Pose2d getMostRecentPose2d() {
-        return mostRecentPose2d;
+    public Pose2d getPose2d() {
+        return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
 }
