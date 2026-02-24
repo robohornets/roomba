@@ -21,14 +21,17 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
@@ -56,10 +59,19 @@ public class Drive extends SubsystemBase {
     public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // MARK: Field Centric Drive
-    public static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    public static final SwerveRequest.FieldCentric drive = 
+        new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1)
             .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
+    // MARK: Field Centric Drive with Heading Control
+    public static final SwerveRequest.FieldCentricFacingAngle driveFacingHub = 
+        new SwerveRequest.FieldCentricFacingAngle()
+            .withHeadingPID(5, 0, 0)
+            .withDeadband(MaxSpeed * 0.1)
+            .withRotationalDeadband(MaxAngularRate * 0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
     // MARK: Robot Centric Drive
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
@@ -72,6 +84,7 @@ public class Drive extends SubsystemBase {
 
     private boolean lockedToHub = false;
 
+    // MARK: Periodic Loop
     @Override
     public void periodic() {
         drivetrain.periodic();
@@ -92,10 +105,7 @@ public class Drive extends SubsystemBase {
         );
     }
 
-    public Pose2d getPose2d() {
-        return drivetrain.getState().Pose;
-    }
-
+    // MARK: Vision Measurements
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
         Logger.recordOutput("SwerveDrive/VisionMeasurement", visionRobotPoseMeters);
         Logger.recordOutput("SwerveDrive/VisionTimestamp", timestampSeconds);
@@ -110,14 +120,20 @@ public class Drive extends SubsystemBase {
         drivetrain.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
     }
 
+    // MARK: Get Drive Info
     public SwerveDriveState getState() {
         return drivetrain.getState();
+    }
+
+    public Pose2d getPose2d() {
+        return drivetrain.getState().Pose;
     }
 
     public Pigeon2 getPigeon2() {
         return drivetrain.getPigeon2();
     }
 
+    // MARK: Reset Pose
     public void resetPose(Pose2d pose) {
         Logger.recordOutput("SwerveDrive/ResetPose", pose);
 
@@ -134,11 +150,19 @@ public class Drive extends SubsystemBase {
         drivetrain.registerTelemetry(telemetryFunction);
     }
 
+    // MARK: Lock to hub
+    /** Returns true if the robot is locked to face the hub. */
+    public boolean isLockedToHub() {
+        return lockedToHub;
+    }
+
+    /** Toggles the state of locking the robot to face the hub. */
     public void toggleLockedToHub() {
         lockedToHub = !lockedToHub;
         Logger.recordOutput("SwerveDrive/LockedToHub", lockedToHub);
     }
 
+    // MARK: Auto Builder
     private void configureAutoBuilder() {
         try {
             var config = RobotConfig.fromGUISettings();
@@ -166,5 +190,63 @@ public class Drive extends SubsystemBase {
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+    }
+
+    // MARK: Default Command
+    public Command joysticksDefaultCommand(CommandXboxController joystick) {
+        if (isLockedToHub()) {
+            return this.applyRequest(
+                () ->
+                    driveFacingHub
+                        .withVelocityX(
+                            -joystick.getLeftY() * DriveConstants.MAX_SPEED
+                        ) // Drive forward with negative Y (forward)
+                        .withVelocityY(
+                            -joystick.getLeftX() * DriveConstants.MAX_SPEED
+                        ) // Drive left with negative X (left)
+                        .withTargetDirection(getAngleToHub())
+                );
+        }
+        else {
+            return this.applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(
+                            -joystick.getLeftY() * DriveConstants.MAX_SPEED
+                        ) // Drive forward with negative Y (forward)
+                        .withVelocityY(
+                            -joystick.getLeftX() * DriveConstants.MAX_SPEED
+                        ) // Drive left with negative X (left)
+                        .withRotationalRate(
+                            -joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE
+                        ) // Drive counterclockwise with negative X (left)
+            );
+        }
+    }
+
+    public Rotation2d getAngleToHub() {
+        Pose2d robotPose = flipAlliance(getPose2d());
+        // Get X distance
+        double xDistance = DriveConstants.HUB_BLUE_POSITION.getX() - robotPose.getX();
+        // Get Y distance
+        double yDistance = DriveConstants.HUB_BLUE_POSITION.getY() - robotPose.getY();
+
+        double rotationAngleDegrees = 
+            Math.atan2(
+                yDistance, xDistance
+            ) * (180/Math.PI);
+
+        return Rotation2d.fromDegrees(rotationAngleDegrees);
+    }
+
+    public static Pose2d flipAlliance(Pose2d pose) {
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            return new Pose2d(
+                DriveConstants.FIELD_LENGTH_METERS - pose.getX(),
+                pose.getY(),
+                new Rotation2d(-pose.getRotation().getCos(), pose.getRotation().getSin())
+            );
+        }
+        return pose;
     }
 }

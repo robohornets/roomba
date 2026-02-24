@@ -84,32 +84,27 @@ public class RobotContainer {
         tests.runTests();
 
         configureBindings();
-        configureDefaults();
 
         // Warmup PathPlanner to avoid Java pauses
         FollowPathCommand.warmupCommand().schedule();
     }
 
-
-    private void configureDefaults() {
-        
-        
-    }
-
+    // MARK: Configure Bindings
     private void configureBindings() {
         driverJoystick.configureBindings();
         operatorJoystick.configureBindings();
         debugJoystick.configureBindings();
 
         // Positive X is forward, Positive Y is left according to WPILib
-        drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() ->
-                Drive.drive
-                    .withVelocityX(-driverJoystick.joystick.getLeftY() * DriveConstants.MAX_SPEED) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverJoystick.joystick.getLeftX() * DriveConstants.MAX_SPEED) // Drive left with negative X (left)
-                    .withRotationalRate(-driverJoystick.joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
-            )
-        );
+        // drivetrain.setDefaultCommand(
+        //     drivetrain.applyRequest(() ->
+        //         Drive.drive
+        //             .withVelocityX(-driverJoystick.joystick.getLeftY() * DriveConstants.MAX_SPEED) // Drive forward with negative Y (forward)
+        //             .withVelocityY(-driverJoystick.joystick.getLeftX() * DriveConstants.MAX_SPEED) // Drive left with negative X (left)
+        //             .withRotationalRate(-driverJoystick.joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
+        //     )
+        // );
+        drivetrain.setDefaultCommand(drivetrain.joysticksDefaultCommand(driverJoystick.joystick));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
