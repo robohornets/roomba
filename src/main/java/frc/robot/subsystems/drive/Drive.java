@@ -194,23 +194,19 @@ public class Drive extends SubsystemBase {
 
     // MARK: Default Command
     public Command joysticksDefaultCommand(CommandXboxController joystick) {
-        if (isLockedToHub()) {
-            return this.applyRequest(
-                () ->
-                    driveFacingHub
+        return this.applyRequest(
+            () -> {
+                if (isLockedToHub()) {
+                    return driveFacingHub
                         .withVelocityX(
                             -joystick.getLeftY() * DriveConstants.MAX_SPEED
                         ) // Drive forward with negative Y (forward)
                         .withVelocityY(
                             -joystick.getLeftX() * DriveConstants.MAX_SPEED
                         ) // Drive left with negative X (left)
-                        .withTargetDirection(getAngleToHub())
-                );
-        }
-        else {
-            return this.applyRequest(
-                () ->
-                    drive
+                        .withTargetDirection(getAngleToHub());
+                } else {
+                    return drive
                         .withVelocityX(
                             -joystick.getLeftY() * DriveConstants.MAX_SPEED
                         ) // Drive forward with negative Y (forward)
@@ -219,9 +215,10 @@ public class Drive extends SubsystemBase {
                         ) // Drive left with negative X (left)
                         .withRotationalRate(
                             -joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE
-                        ) // Drive counterclockwise with negative X (left)
-            );
-        }
+                        ); // Drive counterclockwise with negative X (left)
+                }
+            }
+        );
     }
 
     public Rotation2d getAngleToHub() {
