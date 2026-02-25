@@ -15,9 +15,9 @@ public class DriveConstants {
     public static double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     // MARK: Coordinates of Hub
-    public static Translation2d HUB_RED_POSITION = new Translation2d(4.626, 4.034);
+    public static Translation2d HUB_RED_POSITION = new Translation2d(11.915, 4.034);
 
-    public static Translation2d HUB_BLUE_POSITION = new Translation2d(11.915, 4.034);
+    public static Translation2d HUB_BLUE_POSITION = new Translation2d(4.626, 4.034);
 
     public static double FIELD_LENGTH_METERS = 16.540988;
 }

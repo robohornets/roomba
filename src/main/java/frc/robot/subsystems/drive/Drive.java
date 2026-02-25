@@ -22,6 +22,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -66,7 +67,7 @@ public class Drive extends SubsystemBase {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
     // MARK: Field Centric Drive with Heading Control
-    public static final SwerveRequest.FieldCentricFacingAngle driveFacingHub = 
+    public final SwerveRequest.FieldCentricFacingAngle driveFacingHub = 
         new SwerveRequest.FieldCentricFacingAngle()
             .withHeadingPID(5, 0, 0)
             .withDeadband(MaxSpeed * 0.1)
@@ -96,6 +97,8 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("SwerveDrive/ModuleTargets", drivetrain.getState().ModuleTargets);
         Logger.recordOutput("SwerveDrive/ChassisSpeeds", drivetrain.getState().Speeds);
         Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
+
+        Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
     }
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
@@ -222,16 +225,23 @@ public class Drive extends SubsystemBase {
     }
 
     public Rotation2d getAngleToHub() {
-        Pose2d robotPose = flipAlliance(getPose2d());
+        Pose2d robotPose = getPose2d();
+
+        Translation2d targetHub = DriverStation.getAlliance()
+            .orElse(Alliance.Blue)
+            .equals(Alliance.Blue)
+            ? DriveConstants.HUB_BLUE_POSITION:
+            DriveConstants.HUB_RED_POSITION;
+
         // Get X distance
-        double xDistance = DriveConstants.HUB_BLUE_POSITION.getX() - robotPose.getX();
+        double xDistance = targetHub.getX() - robotPose.getX();
         // Get Y distance
-        double yDistance = DriveConstants.HUB_BLUE_POSITION.getY() - robotPose.getY();
+        double yDistance = targetHub.getY() - robotPose.getY();
 
         double rotationAngleDegrees = 
             Math.atan2(
                 yDistance, xDistance
-            ) * (180/Math.PI);
+            ) * (180/Math.PI) + 180;
 
         return Rotation2d.fromDegrees(rotationAngleDegrees);
     }
