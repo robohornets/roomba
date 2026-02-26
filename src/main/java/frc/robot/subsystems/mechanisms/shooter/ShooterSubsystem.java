@@ -1,7 +1,10 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import com.btwrobotics.WhatTime.frc.FlywheelPair;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
 import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -32,26 +35,38 @@ public class ShooterSubsystem extends SubsystemBase {
     /** Reference to the drivetrain for coordinated aiming. */
     Drive drivetrain;
 
+    TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
+
+    List<ShooterDataPoint> shooterDataPoints = List.of(
+        // TODO: Collect successful data points and add them here
+        new ShooterDataPoint(0, 0, 0)
+    );
+
     /**
      * Constructs the ShooterSubsystem.
      * @param drivetrain the swerve drivetrain subsystem (for aiming/coordination)
      */
     public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
+        
+        for (ShooterDataPoint point : shooterDataPoints) {
+            dataPoints.put(point.distance, point);
+        }
     }
 
     /** Utility for motion calculations (e.g., trajectory, angles). */
     MotorSubsystem motorSubsystem = new MotorSubsystem();
     
-    /** Motor controlling the shooter flywheel. */
-    public final MotorWrapper shooterMotor = new MotorWrapper(
-        new TalonFX(10),
-        false
-    );
     /** Motor controlling the shooter pitch (angle). */
     public final MotorWrapper shooterPitchMotor = new MotorWrapper(
-        new TalonFX(9),
+        new TalonFX(11),
         false
+    );
+
+    public FlywheelPair shooterMotors = new FlywheelPair(
+        new MotorWrapper(new TalonFX(12), false), // Left shooter motor
+        new MotorWrapper(new TalonFX(13), true), // Right shooter motor
+        0.4
     );
 
     /** IMU sensor for shooter orientation feedback. */
@@ -90,6 +105,7 @@ public class ShooterSubsystem extends SubsystemBase {
         List.of(shooterPitchMotor),
         0.2,
         0.0,
+        0.05,
         positionThreshold, 
         () -> getShooterPitchDeg()
     );
@@ -99,10 +115,9 @@ public class ShooterSubsystem extends SubsystemBase {
     /**
      * Returns a command to pitch the shooter to the specified angle (degrees).
      * @param angle target pitch angle in degrees
-     * @return a command that moves the shooter pitch to the given angle
      */
-    public Command pitchToAngleDeg(double angle) {
-        return shooterPositionManager.move(angle);
+    public void pitchToAngleDeg(double angle) {
+        shooterPositionManager.setTarget(angle);
     }
     
     /**
@@ -114,14 +129,13 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command aimAtHub() {
         return Commands.run(
             () -> {
-                // Get robot position (Should be implemented into WhatTime)
-                // Calculate distance to hub (Should be implemented into WhatTime)
+                // Calculate the angle and speed needed
+                ShooterDataPoint hubCalculateDataPoint = calculateShooterValues(
+                    shooterUpperLower(), 
+                    drivetrain.getDistanceToHub()
+                );
 
-                // Calculate required rotations to face hub
-                // Rotate to face hub
-
-                // Calculate required shooter pitch angle to hit hub
-                // Pitch shooter to required angle
+                pitchToAngleDeg(hubCalculateDataPoint.angle);
             }
         );
     }
@@ -141,8 +155,31 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return shooter pitch in degrees (roll axis)
      */
     public double getShooterPitchDeg() {
-        // MARK: Should be roll?
         return shooterPigeon.getRoll().getValueAsDouble();
     }
 
+    public UpperLowerPoint shooterUpperLower() {
+        double currentDistance = drivetrain.getDistanceToHub();
+        Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
+        Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
+
+        // Handle out-of-range cases by clamping to the nearest point
+        ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
+        ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
+
+        return new UpperLowerPoint(upper, lower);
+    }
+
+    public ShooterDataPoint calculateShooterValues(UpperLowerPoint upperLowerPoint, double currentDistance) {
+        double valueRange = Math.abs(upperLowerPoint.getUpperDistance() - upperLowerPoint.getLowerDistance());
+        double scaledValue = currentDistance - Math.min(upperLowerPoint.getUpperDistance(), upperLowerPoint.getLowerDistance());
+
+        double interpolationFactor = scaledValue/valueRange;
+
+        // Interpolate the angle and speed between the data points
+        double estimatedAngle = upperLowerPoint.getLowerAngle() + interpolationFactor * (upperLowerPoint.getUpperAngle() - upperLowerPoint.getLowerAngle());
+        double estimatedSpeed = upperLowerPoint.getLowerSpeed() + interpolationFactor * (upperLowerPoint.getUpperSpeed() - upperLowerPoint.getLowerSpeed());
+        
+        return new ShooterDataPoint(currentDistance, estimatedAngle, estimatedSpeed);
+    }
 }

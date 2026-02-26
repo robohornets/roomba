@@ -103,7 +103,6 @@ public class Robot extends LoggedRobot {
 
         motorBulkActions.setNeutralModeBulk(Arrays.asList(
             robotContainer.shooterSubsystem.shooterPitchMotor,
-            robotContainer.shooterSubsystem.shooterMotor,
             robotContainer.climberSubsystem.climberLeft,
             robotContainer.climberSubsystem.climberRight
         ), NeutralModeValue.Brake);

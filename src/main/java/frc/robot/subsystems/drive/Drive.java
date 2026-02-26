@@ -246,6 +246,23 @@ public class Drive extends SubsystemBase {
         return Rotation2d.fromDegrees(rotationAngleDegrees);
     }
 
+    public double getDistanceToHub() {
+        Pose2d robotPose = getPose2d();
+
+        Translation2d targetHub = DriverStation.getAlliance()
+            .orElse(Alliance.Blue)
+            .equals(Alliance.Blue)
+            ? DriveConstants.HUB_BLUE_POSITION:
+            DriveConstants.HUB_RED_POSITION;
+
+        // Get X distance
+        double xDistance = targetHub.getX() - robotPose.getX();
+        // Get Y distance
+        double yDistance = targetHub.getY() - robotPose.getY();
+
+        return Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
+    }
+
     public static Pose2d flipAlliance(Pose2d pose) {
         if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
             return new Pose2d(
