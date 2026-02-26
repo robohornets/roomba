@@ -2,9 +2,11 @@ package frc.robot.joysticks;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 
 public class DebugJoystick {
@@ -36,18 +38,34 @@ public class DebugJoystick {
 
         joystick.leftBumper();
 
-        joystick.povUp();
+        // Reset pose to limelight output
+        joystick.povUp().onTrue(
+            Commands.runOnce(
+                () -> {
+                    Logger.recordOutput("SwerveDrive/SetSwervePoseLimelight", true);
+
+                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
+                }
+            )
+        );
 
         // Reset Field Centric Heading
-        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric));
+        joystick.povDown().onTrue(
+            drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric)
+        );
 
         joystick.povLeft().onTrue(
             Commands.runOnce(
                 () -> {
                     Logger.recordOutput("QuestNav/SetQuestPose", true);
                     // Reset QuestNav pose to Limelight position
-                    drivetrain.questNavSubsystem.setQuestPose(LimelightHelpers.getBotPose3d_wpiBlue("limelight-four"));
-                    
+                    drivetrain.questNavSubsystem.setQuestPose(
+                        LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
+                            .transformBy(
+                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
+                            )
+                    );
+
                     Logger.recordOutput("QuestNav/SetQuestPose", false);
                 }
             )

@@ -46,38 +46,11 @@ public class DriverJoystick {
 
         joystick.leftBumper();
 
-        // Reset pose to limelight output
-        joystick.povUp().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("SwerveDrive/SetSwervePoseLimelight", true);
+        joystick.povUp();
 
-                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
-                }
-            )
-        );
+        joystick.povDown();
 
-        // Reset Field Centric Heading
-        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric));
-
-        //joystick.povDown();
-
-        joystick.povLeft().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("QuestNav/SetQuestPose", true);
-                    // Reset QuestNav pose to Limelight position
-                    drivetrain.questNavSubsystem.setQuestPose(
-                        LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
-                            .transformBy(
-                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
-                            )
-                    );
-
-                    Logger.recordOutput("QuestNav/SetQuestPose", false);
-                }
-            )
-        );
+        joystick.povLeft();
 
         joystick.povRight();
     }

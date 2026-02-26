@@ -13,7 +13,12 @@ public class RegisterCommands {
     ClimberSubsystem climberSubsystem;
     MotorSubsystem motorSubsystem;
 
-    public RegisterCommands(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, ClimberSubsystem climberSubsystem, MotorSubsystem motorSubsystem) {
+    public RegisterCommands(
+        IntakeSubsystem intakeSubsystem, 
+        ShooterSubsystem shooterSubsystem, 
+        ClimberSubsystem climberSubsystem, 
+        MotorSubsystem motorSubsystem
+    ) {
         this.intakeSubsystem = intakeSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         this.climberSubsystem = climberSubsystem;
@@ -21,7 +26,7 @@ public class RegisterCommands {
     }
     
     public void registerCommands(){
-        NamedCommands.registerCommand("shoot", shooterSubsystem.aimAtHub());
+        NamedCommands.registerCommand("AngleToHub", shooterSubsystem.aimAtHub());
         
     }
 }
