@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.motor.MotorSubsystem;
 
 
 
@@ -61,9 +60,14 @@ public class ShooterSubsystem extends SubsystemBase {
     );
 
     public FlywheelPair shooterMotors = new FlywheelPair(
-        new MotorWrapper(new TalonFX(12), false), // Left shooter motor
-        new MotorWrapper(new TalonFX(13), true), // Right shooter motor
+        new MotorWrapper(new TalonFX(13), false), // Left shooter motor
+        new MotorWrapper(new TalonFX(14), true), // Right shooter motor
         0.4
+    );
+
+    public MotorWrapper feedMotor = new MotorWrapper(
+        new TalonFX(12),
+        false
     );
 
     /** IMU sensor for shooter orientation feedback. */

@@ -84,6 +84,8 @@ public class Drive extends SubsystemBase {
 
     private boolean lockedToHub = false;
 
+    public boolean debugMode = false;
+
     // MARK: Periodic Loop
     @Override
     public void periodic() {
@@ -98,6 +100,8 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
 
         Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
+
+        Logger.recordOutput("Debug/Enabled", debugMode);
     }
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
@@ -271,5 +275,9 @@ public class Drive extends SubsystemBase {
             );
         }
         return pose;
+    }
+
+    public void toggleDebugMode() {
+        debugMode = !debugMode;
     }
 }
