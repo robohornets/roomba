@@ -37,6 +37,7 @@ public class RobotContainer {
     // Create the swerve drivetrain subsystem for the robot
     public final Drive drivetrain = new Drive(TunerConstants.createDrivetrain());
 
+
     // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(DriveConstants.MAX_SPEED);
@@ -47,18 +48,19 @@ public class RobotContainer {
 
     // LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
 
-
-    // MARK: Xbox Controllers
-    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain);
-    public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain);
-    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain);
-
-    
     // MARK: Subsystems
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final MotorSubsystem motorSubsystem = new MotorSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
+
+    // MARK: Xbox Controllers
+    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain);
+    public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain, intakeSubsystem);
+    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain);
+
+    
+    
     
     
     // MARK: Register Commands
@@ -84,32 +86,27 @@ public class RobotContainer {
         tests.runTests();
 
         configureBindings();
-        configureDefaults();
 
         // Warmup PathPlanner to avoid Java pauses
         FollowPathCommand.warmupCommand().schedule();
     }
 
-
-    private void configureDefaults() {
-        
-        
-    }
-
+    // MARK: Configure Bindings
     private void configureBindings() {
         driverJoystick.configureBindings();
         operatorJoystick.configureBindings();
         debugJoystick.configureBindings();
 
         // Positive X is forward, Positive Y is left according to WPILib
-        drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() ->
-                Drive.drive
-                    .withVelocityX(-driverJoystick.joystick.getLeftY() * DriveConstants.MAX_SPEED) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverJoystick.joystick.getLeftX() * DriveConstants.MAX_SPEED) // Drive left with negative X (left)
-                    .withRotationalRate(-driverJoystick.joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
-            )
-        );
+        // drivetrain.setDefaultCommand(
+        //     drivetrain.applyRequest(() ->
+        //         Drive.drive
+        //             .withVelocityX(-driverJoystick.joystick.getLeftY() * DriveConstants.MAX_SPEED) // Drive forward with negative Y (forward)
+        //             .withVelocityY(-driverJoystick.joystick.getLeftX() * DriveConstants.MAX_SPEED) // Drive left with negative X (left)
+        //             .withRotationalRate(-driverJoystick.joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
+        //     )
+        // );
+        drivetrain.setDefaultCommand(drivetrain.joysticksDefaultCommand(driverJoystick.joystick));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.

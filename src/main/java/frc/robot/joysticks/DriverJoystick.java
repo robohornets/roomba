@@ -26,7 +26,15 @@ public class DriverJoystick {
 
         joystick.b();
 
-        joystick.x();
+        // MARK: X - Lock to hub
+        joystick.x().onTrue(
+            Commands.runOnce(
+                () -> {
+                    drivetrain.toggleLockedToHub();
+                    Logger.recordOutput("SwerveDrive/LockedToHub", drivetrain.isLockedToHub());
+                }
+            )
+        );
 
         joystick.y();
 
