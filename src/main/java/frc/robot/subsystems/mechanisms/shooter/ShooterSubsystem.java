@@ -53,9 +53,6 @@ public class ShooterSubsystem extends SubsystemBase {
             dataPoints.put(point.distance, point);
         }
     }
-
-    /** Utility for motion calculations (e.g., trajectory, angles). */
-    MotorSubsystem motorSubsystem = new MotorSubsystem();
     
     /** Motor controlling the shooter pitch (angle). */
     public final MotorWrapper shooterPitchMotor = new MotorWrapper(
@@ -75,12 +72,12 @@ public class ShooterSubsystem extends SubsystemBase {
     // --- Shooter configuration and tuning fields ---
 
     /** Entry angle to the hub in degrees (TODO: calculate actual value). */
-    public double hubEnterAngle = -70;
+    // public double hubEnterAngle = -70;
 
     /** Speed for pitching the shooter (open-loop, 0..1). */
-    public double shooterPitchSpeed = 0.1;
+    // public double shooterPitchSpeed = 0.1;
     /** Hold speed for maintaining shooter pitch (open-loop, 0..1). */
-    public double shooterPitchHoldSpeed = 0.02;
+    public double shooterPitchHoldSpeed = 0.0;
 
     /** Maximum allowed shooter pitch (units depend on mechanism, e.g., rotations or percent). */
     public double shooterPitchMax = 0.3;
@@ -91,9 +88,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public double positionThreshold = 1.0;
 
     /** Height of the hub (target) in meters. */
-    public double hubHeight = 2;
+    // public double hubHeight = 2;
     /** Height of the shooter in meters. */
-    public double shooterHeight = 1;
+    // public double shooterHeight = 1;
 
     /**
      * PositionManager for controlling the shooter pitch motor to a target angle.
@@ -104,9 +101,9 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterPitchMax,
         List.of(shooterPitchMotor),
         0.2,
-        0.0,
-        0.05,
-        positionThreshold, 
+        shooterPitchHoldSpeed,
+        positionThreshold,
+        0.05, 
         () -> getShooterPitchDeg()
     );
 
@@ -136,6 +133,8 @@ public class ShooterSubsystem extends SubsystemBase {
                 );
 
                 pitchToAngleDeg(hubCalculateDataPoint.angle);
+
+                shooterMotors.setSpeed(hubCalculateDataPoint.speed);
             }
         );
     }
@@ -159,6 +158,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public UpperLowerPoint shooterUpperLower() {
+        if (dataPoints.isEmpty()) {
+            return new UpperLowerPoint(
+                new ShooterDataPoint(0, 0, 0),
+                new ShooterDataPoint(0, 0, 0)
+            );
+        }
         double currentDistance = drivetrain.getDistanceToHub();
         Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
         Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
@@ -172,6 +177,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterDataPoint calculateShooterValues(UpperLowerPoint upperLowerPoint, double currentDistance) {
         double valueRange = Math.abs(upperLowerPoint.getUpperDistance() - upperLowerPoint.getLowerDistance());
+        if (valueRange == 0) {
+            return new ShooterDataPoint(currentDistance, upperLowerPoint.getUpperAngle(), upperLowerPoint.getUpperSpeed());
+        }
+
         double scaledValue = currentDistance - Math.min(upperLowerPoint.getUpperDistance(), upperLowerPoint.getLowerDistance());
 
         double interpolationFactor = scaledValue/valueRange;
