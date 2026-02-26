@@ -1,0 +1,111 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.3952998653778249,
+        "y": 6.7493993864759885
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5322086464191353,
+        "y": 7.019345013370341
+      },
+      "isLocked": false,
+      "linkedName": "HDHOH - 1"
+    },
+    {
+      "anchor": {
+        "x": 2.06691660045904,
+        "y": 4.663688923463983
+      },
+      "prevControl": {
+        "x": 2.013865287368215,
+        "y": 5.407969223567639
+      },
+      "nextControl": {
+        "x": 2.114577540165961,
+        "y": 3.995032552083333
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.5759363413665257,
+        "y": 2.3252545131532485
+      },
+      "prevControl": {
+        "x": 1.6788570280910506,
+        "y": 2.589121599919883
+      },
+      "nextControl": {
+        "x": 1.4843147081995867,
+        "y": 2.0903558334226107
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.3866386387711864,
+        "y": 0.703621281338277
+      },
+      "prevControl": {
+        "x": 0.6692790215537343,
+        "y": 1.7680030816735008
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "HDHOH - 2"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.5793345494923854,
+      "maxWaypointRelativePos": 2.216301157994923,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 4.626,
+        "y": 4.034
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.6,
+      "maxWaypointRelativePos": 2.2081218274111687,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 88.67957408826696
+  },
+  "reversed": false,
+  "folder": "3 - Hub, Depot, Hub, Outpost, Hub (HDHOH)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

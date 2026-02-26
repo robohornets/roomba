@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.666775798905367,
-        "y": 6.3921116922669485
+        "x": 0.37219777199074133,
+        "y": 0.6346029369212964
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1429084260122266,
-        "y": 6.649324898279437
+        "x": 1.5086383595418487,
+        "y": 0.8460493881849196
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "HOH - 2"
     },
     {
       "anchor": {
-        "x": 1.7694349179025424,
-        "y": 6.753512259445622
+        "x": 2.4603841869212966,
+        "y": 2.5775276331018517
       },
       "prevControl": {
-        "x": 2.6898677817295176,
-        "y": 6.031772232809059
+        "x": 2.086335770806592,
+        "y": 2.3306133708545804
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "HDH - 1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -37,7 +37,7 @@
         "y": 4.034
       },
       "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.6040311706852791,
+      "minWaypointRelativePos": 0.4377082011421318,
       "maxWaypointRelativePos": 1.0,
       "name": "Point Towards Zone"
     }
@@ -53,13 +53,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -43.89633519981335
+    "rotation": 34.63187389435466
   },
   "reversed": false,
-  "folder": "2 - Hub, Depot, Hub (HDH)",
+  "folder": "1 - Hub, Outpost, Hub (HOH)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
