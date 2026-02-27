@@ -33,9 +33,9 @@ public class QuestNavConstants {
      */
     public static final Matrix<N3, N1> QUESTNAV_STD_DEVS =
         VecBuilder.fill(
-            0.02, // 2cm standard deviation in X
-            0.02, // 2cm standard deviation in Y
-            0.035 // 2deg/0.035rad standard deviation in rotation
+            0.05,
+            0.05,
+            0.1
     );
 
     public static final boolean USE_LIMELIGHT_FOR_VISION_MEASUREMENTS = true;
