@@ -191,7 +191,7 @@ public class Drive extends SubsystemBase {
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-                drivetrain // Subsystem for requirements
+                this // Subsystem for requirements
             );
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());

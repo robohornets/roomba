@@ -22,9 +22,9 @@ public class QuestNavConstants {
      */
     public static final Matrix<N3, N1> ODOMETRY_STD_DEVS =
         VecBuilder.fill(
-            0.05,  // 5cm standard deviation in X
-            0.05,  // 5cm standard deviation in Y
-            0.01   // ~0.57 degrees standard deviation in rotation
+            0.15,
+            0.15,
+            0.15
     );
 
     /**

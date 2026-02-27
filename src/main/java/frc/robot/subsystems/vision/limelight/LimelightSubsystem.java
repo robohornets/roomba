@@ -130,11 +130,11 @@ public class LimelightSubsystem extends SubsystemBase {
         Logger.recordOutput("Limelight/" + limelightName + "/Pose", transformedPose);
 
         // Add measurement to drivetrain pose estimator
-        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS);
+        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateQuestUpdateStdDevs(estimate));
 
         // Add measurement to QuestNav pose estimator if enabled
         if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
-            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.VISION_STD_DEVS, estimate);
+            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateQuestUpdateStdDevs(estimate), estimate);
         }
     }
 
