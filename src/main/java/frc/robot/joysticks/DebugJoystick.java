@@ -3,22 +3,34 @@ package frc.robot.joysticks;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 
 public class DebugJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
+    private final ShooterSubsystem shooterSubsystem;
+    private final DoubleEntry shooterTargetTest;
 
     public DebugJoystick(
         CommandXboxController joystick, 
-        Drive drivetrain
+        Drive drivetrain,
+        ShooterSubsystem shooterSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
+        this.shooterSubsystem = shooterSubsystem;
+
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
+
+        shooterTargetTest = table.getDoubleTopic("ShooterAngleEntry").getEntry(1.0);
     }
 
     public void configureBindings() {
@@ -26,7 +38,17 @@ public class DebugJoystick {
 
         joystick.b();
 
-        joystick.x();
+        joystick.x().onTrue(
+            Commands.runOnce(
+                () -> {
+                    System.out.println("adsifuhasdlifuhsadfliuhasdf");
+                    System.out.println(shooterTargetTest.get());
+                    System.out.println(shooterSubsystem.shooterPitchMotor.getMotor().get());
+                    shooterSubsystem.pitchToAngleDeg(shooterTargetTest.get());
+                    // shooterSubsystem.shooterPitchMotor.set(0.3);
+                }
+            )
+        );
 
         joystick.y();
 

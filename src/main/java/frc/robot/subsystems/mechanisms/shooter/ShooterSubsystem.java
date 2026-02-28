@@ -10,6 +10,9 @@ import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
 
+    private final DoubleEntry shooterTargetTest;
+
     List<ShooterDataPoint> shooterDataPoints = List.of(
         // TODO: Collect successful data points and add them here
         new ShooterDataPoint(0, 0, 0)
@@ -51,6 +56,12 @@ public class ShooterSubsystem extends SubsystemBase {
         for (ShooterDataPoint point : shooterDataPoints) {
             dataPoints.put(point.distance, point);
         }
+
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
+
+        shooterTargetTest = table.getDoubleTopic("ShooterAngleEntry").getEntry(1.0);
+
+        shooterTargetTest.set(1.0);
     }
     
     /** Motor controlling the shooter pitch (angle). */
@@ -108,8 +119,15 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterPitchHoldSpeed,
         positionThreshold,
         0.05, 
-        () -> getShooterPitchDeg()
+        //() -> getShooterPitchDeg()
+        () -> shooterPitchMotor.getMotor().get()
     );
+
+
+    @Override
+    public void periodic() {
+        // shooterPositionManager.positionTargetManagement();
+    }
 
     // --- Commands ---
 

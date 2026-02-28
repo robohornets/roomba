@@ -105,7 +105,7 @@ public class Robot extends LoggedRobot {
             robotContainer.shooterSubsystem.shooterPitchMotor,
             robotContainer.climberSubsystem.climberLeft,
             robotContainer.climberSubsystem.climberRight
-        ), NeutralModeValue.Brake);
+        ), NeutralModeValue.Coast);
 
 
         Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
