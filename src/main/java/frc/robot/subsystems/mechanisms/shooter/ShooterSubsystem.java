@@ -95,7 +95,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public double shooterPitchHoldSpeed = 0.0;
 
     /** Maximum allowed shooter pitch (units depend on mechanism, e.g., rotations or percent). */
-    public double shooterPitchMax = 0.3;
+    public double shooterPitchMax = 10.0;
     /** Minimum allowed shooter pitch. */
     public double shooterPitchMin = 0.0;
 
@@ -119,8 +119,9 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterPitchHoldSpeed,
         positionThreshold,
         0.05, 
+        0.01,
         //() -> getShooterPitchDeg()
-        () -> shooterPitchMotor.getMotor().get()
+        () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
     );
 
 

@@ -40,6 +40,7 @@ public class IntakeSubsystem extends SubsystemBase {
         0.0, 
         threshold,
         0.02, 
+        0.01,
         () -> intakeWheelsMotor.getPosition() // Use motor encoder for position
     );
 
