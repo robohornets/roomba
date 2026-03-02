@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.btwrobotics.WhatTime.frc.FlywheelPair;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
 import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -84,6 +88,8 @@ public class ShooterSubsystem extends SubsystemBase {
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34);
 
+    public final CANcoder shooterThroughBore = new CANcoder(36);
+
     // --- Shooter configuration and tuning fields ---
 
     /** Entry angle to the hub in degrees (TODO: calculate actual value). */
@@ -95,12 +101,12 @@ public class ShooterSubsystem extends SubsystemBase {
     public double shooterPitchHoldSpeed = 0.0;
 
     /** Maximum allowed shooter pitch (units depend on mechanism, e.g., rotations or percent). */
-    public double shooterPitchMax = 10.0;
+    public double shooterPitchMax = 0.6;
     /** Minimum allowed shooter pitch. */
     public double shooterPitchMin = 0.0;
 
     /** Threshold for position manager to consider the shooter "at position". */
-    public double positionThreshold = 1.0;
+    public double positionThreshold = 0.02;
 
     /** Height of the hub (target) in meters. */
     // public double hubHeight = 2;
@@ -119,14 +125,16 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterPitchHoldSpeed,
         positionThreshold,
         0.05, 
-        0.01,
-        //() -> getShooterPitchDeg()
-        () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
+        0.1,
+        () -> getThroughBorePosition()
+        // () -> getShooterPitchDeg()
+        // () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
     );
 
 
     @Override
     public void periodic() {
+        Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
         // shooterPositionManager.positionTargetManagement();
     }
 
@@ -138,6 +146,12 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void pitchToAngleDeg(double angle) {
         shooterPositionManager.setTarget(angle);
+    }
+
+    // MARK: Get Through Bore
+    public double getThroughBorePosition() {
+        double offset = 0.4;
+        return shooterThroughBore.getAbsolutePosition().getValueAsDouble() + offset;
     }
     
     /**
@@ -177,7 +191,8 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return shooter pitch in degrees (roll axis)
      */
     public double getShooterPitchDeg() {
-        return shooterPigeon.getRoll().getValueAsDouble();
+        // return shooterPigeon.getRoll().getValueAsDouble();
+        return shooterThroughBore.getAbsolutePosition().getValueAsDouble();
     }
 
     public UpperLowerPoint shooterUpperLower() {

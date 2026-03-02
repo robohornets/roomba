@@ -104,8 +104,9 @@ public class Robot extends LoggedRobot {
         motorBulkActions.setNeutralModeBulk(Arrays.asList(
             robotContainer.shooterSubsystem.shooterPitchMotor,
             robotContainer.climberSubsystem.climberLeft,
-            robotContainer.climberSubsystem.climberRight
-        ), NeutralModeValue.Coast);
+            robotContainer.climberSubsystem.climberRight,
+            robotContainer.intakeSubsystem.angleMotor
+        ), NeutralModeValue.Brake);
 
 
         Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());

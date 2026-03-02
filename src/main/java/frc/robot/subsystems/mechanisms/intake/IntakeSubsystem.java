@@ -11,19 +11,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final double minValue = 0.0;
-    private final double maxValue = 1.0;
-    private final double threshold = 0.2;
+    private final double minValue = -8.0;
+    private final double maxValue = -0.5;
+    private final double threshold = 0.5;
 
-    private List<MotorWrapper> angleMotors = List.of(
-        new MotorWrapper(
-            new TalonFX(9), false
-        )
+    public MotorWrapper angleMotor = new MotorWrapper(
+        new TalonFX(9), false
     );
 
     @Override
     public void periodic() {
-        Logger.recordOutput("IntakeSubsystem/Angle", angleMotors.get(0).getPosition());
+        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getPosition());
     }
 
     private MotorWrapper intakeWheelsMotor = new MotorWrapper(
@@ -35,13 +33,13 @@ public class IntakeSubsystem extends SubsystemBase {
     private PositionManager intakePositionManager = new PositionManager(
         minValue, 
         maxValue, 
-        angleMotors, 
+        List.of(angleMotor), 
         0.2, 
-        0.0, 
+        0.05, 
         threshold,
-        0.02, 
-        0.01,
-        () -> intakeWheelsMotor.getPosition() // Use motor encoder for position
+        0.1, 
+        0.1,
+        () -> angleMotor.getPosition() // Use motor encoder for position
     );
 
     public void setPosition(double targetPosition) {
@@ -49,7 +47,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intakePositionManager.setTarget(targetPosition);
     }
 
-    private double intakeSpeed = 0.5;
+    private double intakeSpeed = 0.2;
 
     public void setIntake(IntakeStates intakeState) {
         Logger.recordOutput("IntakeSubsystem/State", intakeState.toString());
