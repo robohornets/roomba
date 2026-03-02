@@ -172,7 +172,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 pitchToAngleDeg(hubCalculateDataPoint.angle);
 
                 shooterMotors.setSpeed(hubCalculateDataPoint.speed);
-            }
+            }, this
         );
     }
 

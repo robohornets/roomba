@@ -18,16 +18,13 @@ public class ClimberSubsystem extends SubsystemBase {
     public static final double minHeight = 0.0; 
     public static final double maxHeight = 65.0;
 
-    
-    
-    
     // TODO: VERY IMPORTANT!!!! Put the correct device ids
     public final MotorWrapper climberLeft = new MotorWrapper(
-        new TalonFX(12),
+        new TalonFX(63),
         true
     );
     public final MotorWrapper climberRight = new MotorWrapper(
-        new TalonFX(13),
+        new TalonFX(64),
         false
     );
     public final FlywheelPair climberPair = new FlywheelPair(climberLeft, climberRight, climberUpDownSpeed);
@@ -45,7 +42,6 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
 
-    // TODO: Caedmon mentioned something about this being implemented differently, needs to be done (like we dont have to make the motors rotate opposite)
     public Command climberUp() {
         return Commands.run(
             () -> {

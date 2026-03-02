@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
