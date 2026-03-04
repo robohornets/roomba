@@ -6,19 +6,27 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 
 public class DriverJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
+    private final ShooterSubsystem shooterSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
 
     public DriverJoystick(
         CommandXboxController joystick, 
-        Drive drivetrain
+        Drive drivetrain, 
+        ShooterSubsystem shooterSubsystem,
+        IntakeSubsystem intakeSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
+        this.shooterSubsystem = shooterSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
     }
 
     public void configureBindings() {
@@ -38,11 +46,35 @@ public class DriverJoystick {
 
         joystick.y();
 
-        joystick.rightTrigger();
+        joystick.rightTrigger().whileTrue(
+            Commands.run(
+                () -> {
+                    shooterSubsystem.feedMotor.set(0.5);
+                }
+            )
+        ).onFalse(
+            Commands.run(
+                () -> {
+                    shooterSubsystem.feedMotor.set(0.0);
+                }
+            )
+        );
 
-        joystick.leftTrigger();
+        joystick.leftTrigger().onTrue(
+            Commands.run(
+                () -> {
+                    intakeSubsystem.setIntake(null);
+                }
+            )
+        );
 
-        joystick.rightBumper();
+        joystick.rightBumper().onTrue(
+            Commands.runOnce(
+                () -> {
+                    shooterSubsystem.toggleShooterMotors();
+                }
+            )
+        );
 
         joystick.leftBumper();
 

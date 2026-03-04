@@ -131,11 +131,24 @@ public class ShooterSubsystem extends SubsystemBase {
         // () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
     );
 
+    public boolean shooterFlywheelsEnabled = false;
+
 
     @Override
     public void periodic() {
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
         // shooterPositionManager.positionTargetManagement();
+        if (shooterFlywheelsEnabled) {
+            shooterMotors.setSpeed(0.5);
+        }
+        else {
+            shooterMotors.setSpeed(0.0);
+        }
+    }
+    
+
+    public void toggleShooterMotors() {
+        shooterFlywheelsEnabled = !shooterFlywheelsEnabled;
     }
 
     // --- Commands ---

@@ -12,8 +12,8 @@ import edu.wpi.first.math.numbers.N3;
 public class QuestNavConstants {
     // 🏳️‍⚧️ TRANS-form 3d
     public static final Transform3d ROBOT_TO_QUEST = new Transform3d(
-        new Translation3d(0.0, -0.4, 0.45),
-        new Rotation3d(new Rotation2d(-0.5 * Math.PI))
+        new Translation3d(0.0762, 0.254, 0.3556),
+        new Rotation3d(0.5 * Math.PI, 0.0, 0.0)
     );
 
     /**
