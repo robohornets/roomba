@@ -28,8 +28,6 @@ public class IntakeSubsystem extends SubsystemBase {
         new TalonFX(10), false
     );
 
-    // private CANcoder angleEncoder = new CANcoder(35);
-
     private PositionManager intakePositionManager = new PositionManager(
         minValue, 
         maxValue, 

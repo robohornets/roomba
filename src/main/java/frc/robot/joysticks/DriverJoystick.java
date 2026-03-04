@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.limelight.LimelightConstants;
@@ -60,10 +61,16 @@ public class DriverJoystick {
             )
         );
 
-        joystick.leftTrigger().onTrue(
+        joystick.leftTrigger().whileTrue(
             Commands.run(
                 () -> {
-                    intakeSubsystem.setIntake(null);
+                    intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                }
+            )
+        ).onFalse(
+            Commands.runOnce(
+                () -> {
+                    intakeSubsystem.setIntake(IntakeStates.OFF);
                 }
             )
         );
