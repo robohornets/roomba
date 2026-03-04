@@ -24,10 +24,9 @@ import frc.robot.joysticks.DriverJoystick;
 import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
-import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
-import frc.robot.subsystems.motor.MotorSubsystem;
+
 
 public class RobotContainer {
     // public static double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -49,27 +48,22 @@ public class RobotContainer {
     // LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
 
     // MARK: Subsystems
-    public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+    // public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-    public final MotorSubsystem motorSubsystem = new MotorSubsystem();
+    // public final MotorSubsystem motorSubsystem = new MotorSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
 
     // MARK: Xbox Controllers
     public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, shooterSubsystem, intakeSubsystem);
     public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain, intakeSubsystem);
     public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, shooterSubsystem);
-
-    
-    
-    
     
     // MARK: Register Commands
-    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
+    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem);
     
 
     // MARK: Tests
-    public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
-
+    // public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
     // private final SendableChooser<Command> autoChooser;
     private final SendableChooser<Command> autoChooser;
@@ -85,7 +79,7 @@ public class RobotContainer {
 
         // MARK: Run Tests
         /* Disable tests on actual code */
-        tests.runTests();
+        // tests.runTests();
 
         configureBindings();
 

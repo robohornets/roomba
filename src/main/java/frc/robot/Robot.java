@@ -103,10 +103,12 @@ public class Robot extends LoggedRobot {
 
         motorBulkActions.setNeutralModeBulk(Arrays.asList(
             robotContainer.shooterSubsystem.shooterPitchMotor,
-            robotContainer.climberSubsystem.climberLeft,
-            robotContainer.climberSubsystem.climberRight,
             robotContainer.intakeSubsystem.angleMotor
         ), NeutralModeValue.Brake);
+
+        // Reset motor speeds to zero.
+        robotContainer.intakeSubsystem.angleMotor.set(0.0);
+        robotContainer.shooterSubsystem.shooterPitchMotor.set(0.0);
 
 
         Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());

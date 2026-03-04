@@ -10,19 +10,19 @@ import frc.robot.subsystems.motor.MotorSubsystem;
 public class RegisterCommands {
     IntakeSubsystem intakeSubsystem;
     ShooterSubsystem shooterSubsystem;
-    ClimberSubsystem climberSubsystem;
-    MotorSubsystem motorSubsystem;
+    // ClimberSubsystem climberSubsystem;
+    // MotorSubsystem motorSubsystem;
 
     public RegisterCommands(
         IntakeSubsystem intakeSubsystem, 
-        ShooterSubsystem shooterSubsystem, 
-        ClimberSubsystem climberSubsystem, 
-        MotorSubsystem motorSubsystem
+        ShooterSubsystem shooterSubsystem
+        // ClimberSubsystem climberSubsystem, 
+        // MotorSubsystem motorSubsystem
     ) {
         this.intakeSubsystem = intakeSubsystem;
         this.shooterSubsystem = shooterSubsystem;
-        this.climberSubsystem = climberSubsystem;
-        this.motorSubsystem = motorSubsystem;
+        // this.climberSubsystem = climberSubsystem;
+        // this.motorSubsystem = motorSubsystem;
     }
     
     public void registerCommands(){

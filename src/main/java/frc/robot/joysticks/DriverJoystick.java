@@ -54,7 +54,7 @@ public class DriverJoystick {
                 }
             )
         ).onFalse(
-            Commands.run(
+            Commands.runOnce(
                 () -> {
                     shooterSubsystem.feedMotor.set(0.0);
                 }
@@ -83,7 +83,13 @@ public class DriverJoystick {
             )
         );
 
-        joystick.leftBumper();
+        joystick.leftBumper().onTrue(
+            Commands.runOnce(
+                () -> {
+                    intakeSubsystem.setPosition(-6);
+                }
+            )
+        );
 
         joystick.povUp();
 

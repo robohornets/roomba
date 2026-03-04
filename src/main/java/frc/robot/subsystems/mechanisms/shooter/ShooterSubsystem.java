@@ -117,19 +117,19 @@ public class ShooterSubsystem extends SubsystemBase {
      * PositionManager for controlling the shooter pitch motor to a target angle.
      * Uses feedback from the shooter IMU.
      */
-    public PositionManager shooterPositionManager = new PositionManager(
-        shooterPitchMin,
-        shooterPitchMax,
-        List.of(shooterPitchMotor),
-        0.2,
-        shooterPitchHoldSpeed,
-        positionThreshold,
-        0.05, 
-        0.1,
-        () -> getThroughBorePosition()
-        // () -> getShooterPitchDeg()
-        // () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
-    );
+    // public PositionManager shooterPositionManager = new PositionManager(
+    //     shooterPitchMin,
+    //     shooterPitchMax,
+    //     List.of(shooterPitchMotor),
+    //     0.2,
+    //     shooterPitchHoldSpeed,
+    //     positionThreshold,
+    //     0.05, 
+    //     0.1,
+    //     () -> getThroughBorePosition()
+    //     // () -> getShooterPitchDeg()
+    //     // () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
+    // );
 
     public boolean shooterFlywheelsEnabled = false;
 
@@ -158,7 +158,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param angle target pitch angle in degrees
      */
     public void pitchToAngleDeg(double angle) {
-        shooterPositionManager.setTarget(angle);
+        // shooterPositionManager.setTarget(angle);
     }
 
     // MARK: Get Through Bore

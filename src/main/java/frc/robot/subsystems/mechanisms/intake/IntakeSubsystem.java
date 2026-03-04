@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final double minValue = -8.0;
-    private final double maxValue = -0.5;
+    private final double maxValue = 0.0;
     private final double threshold = 0.5;
 
     public MotorWrapper angleMotor = new MotorWrapper(
@@ -32,11 +32,11 @@ public class IntakeSubsystem extends SubsystemBase {
         minValue, 
         maxValue, 
         List.of(angleMotor), 
-        0.2, 
-        0.05, 
+        0.2, // Motor Speed
+        0.0, // Hold Speed
         threshold,
-        0.1, 
-        0.1,
+        0.1, // Min Speed
+        0.1, // Kim Possible (kP)
         () -> angleMotor.getPosition() // Use motor encoder for position
     );
 

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.40981588762358767,
-        "y": 5.010476694915254
+        "x": 0.4183219762731487,
+        "y": 6.927243489583334
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3816289629778247,
-        "y": 4.955293945190116
+        "x": 2.097426721643519,
+        "y": 6.502415292245371
       },
       "isLocked": false,
       "linkedName": "HDH - 2"
     },
     {
       "anchor": {
-        "x": 2.276431188206215,
-        "y": 6.445772587835452
+        "x": 3.6354688223379634,
+        "y": 4.255910662615741
       },
       "prevControl": {
-        "x": 1.3293245911501488,
-        "y": 5.973136390129629
+        "x": 2.313219762731482,
+        "y": 4.215888237847222
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,18 +30,7 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.626,
-        "y": 4.034
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.36584906408629436,
-      "maxWaypointRelativePos": 1.0,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.5,
@@ -53,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -48.676167316772535
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "2 - Hub, Depot, Hub (HDH)",
