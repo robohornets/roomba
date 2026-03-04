@@ -139,10 +139,12 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
         // shooterPositionManager.positionTargetManagement();
         if (shooterFlywheelsEnabled) {
-            shooterMotors.setSpeed(shooterSpeedTest.get());
+            shooterMotors.setSpeed(shooterSpeedTest.get()); // Sets speed
+            shooterMotors.runForward(); // Runs motors
         }
         else {
-            shooterMotors.setSpeed(0.0);
+            shooterMotors.setSpeed(0.0); // Sets speed
+            shooterMotors.runForward(); // Runs motors
         }
     }
     
