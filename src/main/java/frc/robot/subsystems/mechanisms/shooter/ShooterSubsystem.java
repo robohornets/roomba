@@ -43,7 +43,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
 
-    private final DoubleEntry shooterTargetTest;
+    private final DoubleEntry shooterSpeedTest;
 
     List<ShooterDataPoint> shooterDataPoints = List.of(
         // TODO: Collect successful data points and add them here
@@ -63,9 +63,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
 
-        shooterTargetTest = table.getDoubleTopic("ShooterAngleEntry").getEntry(1.0);
+        shooterSpeedTest = table.getDoubleTopic("ShooterSpeed").getEntry(0.5);
 
-        shooterTargetTest.set(1.0);
+        shooterSpeedTest.set(0.5);
     }
     
     /** Motor controlling the shooter pitch (angle). */
@@ -139,7 +139,7 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
         // shooterPositionManager.positionTargetManagement();
         if (shooterFlywheelsEnabled) {
-            shooterMotors.setSpeed(0.5);
+            shooterMotors.setSpeed(shooterSpeedTest.get());
         }
         else {
             shooterMotors.setSpeed(0.0);

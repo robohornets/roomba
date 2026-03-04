@@ -50,7 +50,7 @@ public class DriverJoystick {
         joystick.rightTrigger().whileTrue(
             Commands.run(
                 () -> {
-                    shooterSubsystem.feedMotor.set(0.5);
+                    shooterSubsystem.feedMotor.set(0.2);
                 }
             )
         ).onFalse(
