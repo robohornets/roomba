@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Testing Pose Path"
+            "pathName": "HNH - Part 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HNH - Part 2"
           }
         }
       ]

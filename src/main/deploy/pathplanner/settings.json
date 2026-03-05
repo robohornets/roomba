@@ -3,12 +3,13 @@
   "robotLength": 0.762,
   "holonomicMode": true,
   "pathFolders": [
-    "1 - Hub, Outpost, Hub (HOH)",
-    "2 - Hub, Depot, Hub (HDH)",
-    "3 - Hub, Depot, Hub, Outpost, Hub (HDHOH)"
+    "1 - Hub, Depot, Hub (HDH)",
+    "2- HDH",
+    "3 - Hub, Depot, Hub, Outpost, Hub (HDHOH)",
+    "4 - Hub, Neutral, Hub (HNH)"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 1.5,
+  "defaultMaxVel": 3.0,
   "defaultMaxAccel": 1.5,
   "defaultMaxAngVel": 180.0,
   "defaultMaxAngAccel": 100.0,
