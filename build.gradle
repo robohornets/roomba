@@ -88,6 +88,106 @@ test {
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 
+def simSoftwareGl = (project.findProperty("simSoftwareGl") ?: System.getenv("SIM_SOFTWARE_GL"))?.toString()?.toBoolean()
+def simGlxVendor = (project.findProperty("simGlxVendor") ?: System.getenv("SIM_GLX_VENDOR"))?.toString()
+def waylandSession = System.getenv("WAYLAND_DISPLAY") != null
+
+tasks.withType(JavaExec).configureEach {
+    if (!name.startsWith("simulate")) {
+        return
+    }
+
+    doFirst {
+        // Hyprland/Wayland sessions are more reliable when GLFW targets Xwayland.
+        if (waylandSession && !environment.containsKey("GLFW_PLATFORM")) {
+            environment("GLFW_PLATFORM", "x11")
+        }
+
+        if (simSoftwareGl) {
+            environment("LIBGL_ALWAYS_SOFTWARE", "1")
+        }
+
+        environment("LIBGL_DRI3_DISABLE", "1")
+        environment("__GLX_VENDOR_LIBRARY_NAME", "mesa")
+        environment("MESA_LOADER_DRIVER_OVERRIDE", "llvmpipe")
+        environment("GALLIUM_DRIVER", "llvmpipe")
+
+        if (simGlxVendor) {
+            environment("__GLX_VENDOR_LIBRARY_NAME", simGlxVendor)
+        }
+
+        // Remove empty path entries (e.g. trailing ':') that can break extension loading.
+        def rawExtensions = (environment["HALSIM_EXTENSIONS"] ?: System.getenv("HALSIM_EXTENSIONS") ?: "").toString()
+        def cleanedExtensions = rawExtensions.split(":").findAll { !it.trim().isEmpty() }.join(":")
+        if (rawExtensions != cleanedExtensions) {
+            environment("HALSIM_EXTENSIONS", cleanedExtensions)
+        }
+    }
+}
+
+def patchWpilibJavaSimJson = { File jsonFile ->
+    if (!jsonFile.exists()) {
+        return
+    }
+
+    def parsed = new groovy.json.JsonSlurper().parseText(jsonFile.text)
+    if (!(parsed instanceof List)) {
+        return
+    }
+
+    parsed.each { entry ->
+        if (!(entry instanceof Map)) {
+            return
+        }
+
+        if (!(entry.environment instanceof Map)) {
+            entry.environment = [:]
+        }
+
+        // Force X11-backed GLFW on Hyprland/Wayland.
+        if (waylandSession) {
+            entry.environment["GLFW_PLATFORM"] = "x11"
+        }
+
+        // Software rendering avoids broken GLX context creation on this Hyprland setup.
+        entry.environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
+        entry.environment["LIBGL_DRI3_DISABLE"] = "1"
+        entry.environment["__GLX_VENDOR_LIBRARY_NAME"] = "mesa"
+        entry.environment["MESA_LOADER_DRIVER_OVERRIDE"] = "llvmpipe"
+        entry.environment["GALLIUM_DRIVER"] = "llvmpipe"
+
+        if (simGlxVendor) {
+            entry.environment["__GLX_VENDOR_LIBRARY_NAME"] = simGlxVendor
+        }
+
+        def enabledExtensions = []
+        if (entry.extensions instanceof List) {
+            enabledExtensions = entry.extensions
+                .findAll { it instanceof Map && it.defaultEnabled && it.libName }
+                .collect { it.libName.toString() }
+        }
+
+        if (!enabledExtensions.isEmpty()) {
+            // Override WPILib extension launcher value to avoid trailing path delimiters.
+            entry.environment["HALSIM_EXTENSIONS"] = enabledExtensions.join(":")
+        }
+    }
+
+    jsonFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(parsed)) + System.lineSeparator()
+}
+
+tasks.matching { it.name == "simulateExternalJavaRelease" }.configureEach {
+    doLast {
+        patchWpilibJavaSimJson(file("$buildDir/sim/release_java.json"))
+    }
+}
+
+tasks.matching { it.name == "simulateExternalJavaDebug" }.configureEach {
+    doLast {
+        patchWpilibJavaSimJson(file("$buildDir/sim/debug_java.json"))
+    }
+}
+
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.

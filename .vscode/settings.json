@@ -27,6 +27,8 @@
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
   "java.import.gradle.annotationProcessing.enabled": false,
+  "wpilib.skipSelectSimulateExtension": true,
+  "wpilib.selectDefaultSimulateExtension": true,
   "java.completion.favoriteStaticMembers": [
     "org.junit.Assert.*",
     "org.junit.Assume.*",
