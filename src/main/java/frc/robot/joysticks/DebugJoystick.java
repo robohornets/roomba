@@ -39,6 +39,7 @@ public class DebugJoystick {
 
         shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
         shooterSpeed = shooterSpeedEntry.get();
+        shooterSpeedEntry.set(0.0);
 
         shooterSubsystem.setDefaultCommand(
             Commands.run(
@@ -47,9 +48,9 @@ public class DebugJoystick {
                     double leftJoystickValue = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY(): 0.0;
                     double rightJoystickValue = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY(): 0.0;
 
-                    double speedChangeAmountPerTick = 0.05;
+                    double speedChangeAmountPerTick = 0.005;
                     double change = Math.signum(leftJoystickValue) * speedChangeAmountPerTick;
-                    shooterSpeed = MathUtil.clamp(shooterSpeed + change, 0.0, 1.0);
+                    shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
                     shooterSpeedEntry.set(shooterSpeed);
 
 
