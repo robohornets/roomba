@@ -8,8 +8,6 @@ import org.littletonrobotics.junction.Logger;
 
 import com.btwrobotics.WhatTime.frc.FlywheelPair;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
-import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
-import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -74,9 +72,12 @@ public class ShooterSubsystem extends SubsystemBase {
         false
     );
 
+    public MotorWrapper leftShooterMotor = new MotorWrapper(new TalonFX(13), false);
+    public MotorWrapper rightShooterMotor = new MotorWrapper(new TalonFX(14), true);
+
     public FlywheelPair shooterMotors = new FlywheelPair(
-        new MotorWrapper(new TalonFX(13), false), // Left shooter motor
-        new MotorWrapper(new TalonFX(14), true), // Right shooter motor
+        leftShooterMotor,
+        rightShooterMotor,
         0.4
     );
 

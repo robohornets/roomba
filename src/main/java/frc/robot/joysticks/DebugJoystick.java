@@ -31,6 +31,15 @@ public class DebugJoystick {
         NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
 
         shooterTargetTest = table.getDoubleTopic("ShooterAngleEntry").getEntry(1.0);
+
+        shooterSubsystem.setDefaultCommand(
+            Commands.run(
+                () -> {
+                    shooterSubsystem.leftShooterMotor.set(Math.max(joystick.getLeftY(), 0.05));
+                    shooterSubsystem.rightShooterMotor.set(Math.max(joystick.getLeftY(), 0.05));
+                }
+            )
+        );
     }
 
     public void configureBindings() {
@@ -38,21 +47,17 @@ public class DebugJoystick {
 
         joystick.b();
 
-        joystick.x().onTrue(
-            Commands.runOnce(
-                () -> {
-                    System.out.println("adsifuhasdlifuhsadfliuhasdf");
-                    System.out.println(shooterTargetTest.get());
-                    System.out.println(shooterSubsystem.shooterPitchMotor.getMotor().get());
-                    shooterSubsystem.pitchToAngleDeg(shooterTargetTest.get());
-                    // shooterSubsystem.shooterPitchMotor.set(0.3);
-                }
-            )
-        );
+        joystick.x();
 
         joystick.y();
 
-        joystick.rightTrigger();
+        joystick.rightTrigger().whileTrue(
+            Commands.run(
+                () -> {
+                    shooterSubsystem.feedMotor.set(Math.min(joystick.getLeftTriggerAxis(), 0.5));
+                }
+            )
+        );
 
         joystick.leftTrigger();
 
