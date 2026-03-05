@@ -9,6 +9,12 @@
           "data": {
             "pathName": "Testing Pose Path"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootBallsClose"
+          }
         }
       ]
     }

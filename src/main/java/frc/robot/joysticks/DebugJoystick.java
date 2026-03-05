@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
@@ -17,16 +18,19 @@ public class DebugJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
     private final ShooterSubsystem shooterSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
     private final DoubleEntry shooterTargetTest;
 
     public DebugJoystick(
         CommandXboxController joystick, 
         Drive drivetrain,
-        ShooterSubsystem shooterSubsystem
+        ShooterSubsystem shooterSubsystem, 
+        IntakeSubsystem intakeSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
         this.shooterSubsystem = shooterSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
 
@@ -35,9 +39,20 @@ public class DebugJoystick {
         shooterSubsystem.setDefaultCommand(
             Commands.run(
                 () -> {
-                    shooterSubsystem.leftShooterMotor.set(joystick.getLeftY());
-                    shooterSubsystem.rightShooterMotor.set(joystick.getLeftY());
+                    double leftJoystickValue = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY(): 0.0;
+                    double rightJoystickValue = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY(): 0.0;
+                    shooterSubsystem.leftShooterMotor.set(leftJoystickValue);
+                    shooterSubsystem.rightShooterMotor.set(leftJoystickValue);
+                    shooterSubsystem.feedMotor.set(rightJoystickValue);
                 }, shooterSubsystem
+            )
+        );
+
+        intakeSubsystem.setDefaultCommand(
+            Commands.run(
+                () -> {
+                    intakeSubsystem.intakeWheelsMotor.set(joystick.getRightTriggerAxis());
+                }, intakeSubsystem
             )
         );
     }
@@ -51,13 +66,7 @@ public class DebugJoystick {
 
         joystick.y();
 
-        joystick.rightTrigger().whileTrue(
-            Commands.run(
-                () -> {
-                    shooterSubsystem.feedMotor.set(Math.min(joystick.getRightTriggerAxis(), 0.5));
-                }
-            )
-        );
+        // joystick.rightTrigger();
 
         joystick.leftTrigger();
 

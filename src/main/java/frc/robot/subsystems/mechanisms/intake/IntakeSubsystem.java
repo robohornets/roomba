@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getPosition());
     }
 
-    private MotorWrapper intakeWheelsMotor = new MotorWrapper(
+    public MotorWrapper intakeWheelsMotor = new MotorWrapper(
         new TalonFX(10), false
     );
 
