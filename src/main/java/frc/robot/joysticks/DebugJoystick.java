@@ -2,6 +2,7 @@ package frc.robot.joysticks;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -19,7 +20,8 @@ public class DebugJoystick {
     private final Drive drivetrain;
     private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-    private final DoubleEntry shooterTargetTest;
+    private final DoubleEntry shooterSpeedEntry;
+    private double shooterSpeed;
 
     public DebugJoystick(
         CommandXboxController joystick, 
@@ -31,18 +33,28 @@ public class DebugJoystick {
         this.drivetrain = drivetrain;
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+        this.shooterSpeed = 0.0;
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
 
-        shooterTargetTest = table.getDoubleTopic("ShooterAngleEntry").getEntry(1.0);
+        shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
+        shooterSpeed = shooterSpeedEntry.get();
 
         shooterSubsystem.setDefaultCommand(
             Commands.run(
                 () -> {
+
                     double leftJoystickValue = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY(): 0.0;
                     double rightJoystickValue = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY(): 0.0;
-                    shooterSubsystem.leftShooterMotor.set(leftJoystickValue);
-                    shooterSubsystem.rightShooterMotor.set(leftJoystickValue);
+
+                    double speedChangeAmountPerTick = 0.05;
+                    double change = Math.signum(leftJoystickValue) * speedChangeAmountPerTick;
+                    shooterSpeed = MathUtil.clamp(shooterSpeed + change, 0.0, 1.0);
+                    shooterSpeedEntry.set(shooterSpeed);
+
+
+                    shooterSubsystem.leftShooterMotor.set(shooterSpeed);
+                    shooterSubsystem.rightShooterMotor.set(shooterSpeed);
                     shooterSubsystem.feedMotor.set(rightJoystickValue);
                 }, shooterSubsystem
             )
