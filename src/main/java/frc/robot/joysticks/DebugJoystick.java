@@ -35,9 +35,9 @@ public class DebugJoystick {
         shooterSubsystem.setDefaultCommand(
             Commands.run(
                 () -> {
-                    shooterSubsystem.leftShooterMotor.set(Math.max(joystick.getLeftY(), 0.05));
-                    shooterSubsystem.rightShooterMotor.set(Math.max(joystick.getLeftY(), 0.05));
-                }
+                    shooterSubsystem.leftShooterMotor.set(joystick.getLeftY());
+                    shooterSubsystem.rightShooterMotor.set(joystick.getLeftY());
+                }, shooterSubsystem
             )
         );
     }
@@ -54,7 +54,7 @@ public class DebugJoystick {
         joystick.rightTrigger().whileTrue(
             Commands.run(
                 () -> {
-                    shooterSubsystem.feedMotor.set(Math.min(joystick.getLeftTriggerAxis(), 0.5));
+                    shooterSubsystem.feedMotor.set(Math.min(joystick.getRightTriggerAxis(), 0.5));
                 }
             )
         );
