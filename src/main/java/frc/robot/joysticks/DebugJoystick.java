@@ -48,7 +48,7 @@ public class DebugJoystick {
                     double leftJoystickValue = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY(): 0.0;
                     double rightJoystickValue = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY(): 0.0;
 
-                    double speedChangeAmountPerTick = 0.005;
+                    double speedChangeAmountPerTick = 0.0025;
                     double change = Math.signum(leftJoystickValue) * speedChangeAmountPerTick;
                     shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
                     shooterSpeedEntry.set(shooterSpeed);
