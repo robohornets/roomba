@@ -11,10 +11,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final double minValue = -8.0;
-    private final double maxValue = 0.0;
-    private final double threshold = 0.5;
-
     public MotorWrapper angleMotor = new MotorWrapper(
         new TalonFX(9), false
     );
@@ -29,12 +25,12 @@ public class IntakeSubsystem extends SubsystemBase {
     );
 
     private PositionManager intakePositionManager = new PositionManager(
-        minValue, 
-        maxValue, 
+        IntakeConstants.minValue, 
+        IntakeConstants.maxValue, 
         List.of(angleMotor), 
         0.2, // Motor Speed
         0.0, // Hold Speed
-        threshold,
+        IntakeConstants.threshold,
         0.1, // Min Speed
         0.1, // Kim Possible (kP)
         () -> angleMotor.getPosition() // Use motor encoder for position
