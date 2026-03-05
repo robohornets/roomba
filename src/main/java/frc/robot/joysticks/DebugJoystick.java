@@ -77,7 +77,13 @@ public class DebugJoystick {
 
         joystick.x();
 
-        joystick.y();
+        joystick.y().onTrue(
+            Commands.runOnce(
+                () -> {
+                    intakeSubsystem.setPosition(0.0);
+                }
+            )
+        );
 
         // joystick.rightTrigger();
 
