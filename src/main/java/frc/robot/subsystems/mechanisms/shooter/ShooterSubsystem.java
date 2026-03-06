@@ -62,12 +62,12 @@ public class ShooterSubsystem extends SubsystemBase {
     
     /** Motor controlling the shooter pitch (angle). */
     public final MotorWrapper shooterPitchMotor = new MotorWrapper(
-        new TalonFX(11, "Mechanisms"),
+        new TalonFX(11),
         false
     );
 
-    public MotorWrapper leftShooterMotor = new MotorWrapper(new TalonFX(13, "Mechanisms"), false);
-    public MotorWrapper rightShooterMotor = new MotorWrapper(new TalonFX(14, "Mechanisms"), true);
+    public MotorWrapper leftShooterMotor = new MotorWrapper(new TalonFX(13), false);
+    public MotorWrapper rightShooterMotor = new MotorWrapper(new TalonFX(14), true);
 
     public FlywheelPair shooterMotors = new FlywheelPair(
         leftShooterMotor,
@@ -76,7 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
     );
 
     public MotorWrapper feedMotor = new MotorWrapper(
-        new TalonFX(12, "Mechanisms"),
+        new TalonFX(12),
         false
     );
 

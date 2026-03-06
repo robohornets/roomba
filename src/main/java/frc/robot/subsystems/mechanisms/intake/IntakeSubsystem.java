@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
     public MotorWrapper angleMotor = new MotorWrapper(
-        new TalonFX(9, "Mechanisms"), false
+        new TalonFX(9), false
     );
 
     @Override
@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public MotorWrapper intakeWheelsMotor = new MotorWrapper(
-        new TalonFX(10, "Mechanisms"), false
+        new TalonFX(10), false
     );
 
     private PositionManager intakePositionManager = new PositionManager(

@@ -64,7 +64,8 @@ public class DebugJoystick {
         intakeSubsystem.setDefaultCommand(
             Commands.run(
                 () -> {
-                    intakeSubsystem.intakeWheelsMotor.set(joystick.getRightTriggerAxis());
+                    double triggerDirection = joystick.getLeftTriggerAxis() > joystick.getRightTriggerAxis() ? -joystick.getLeftTriggerAxis(): joystick.getRightTriggerAxis();
+                    intakeSubsystem.intakeWheelsMotor.set(triggerDirection);
                 }, intakeSubsystem
             )
         );
