@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.math.MathSubsystem;
 
 
 
@@ -36,6 +37,8 @@ public class ShooterSubsystem extends SubsystemBase {
     Drive drivetrain;
 
     TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
+
+    public ShooterConstants shooterConstants = new ShooterConstants();
 
     // MARK: Constructor
     /**
@@ -75,41 +78,28 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public final CANcoder shooterThroughBore = new CANcoder(36);
 
-    /**
-     * PositionManager for controlling the shooter pitch motor to a target angle.
-     * Uses feedback from the shooter IMU.
-     */
-    // public PositionManager shooterPositionManager = new PositionManager(
-    //     shooterPitchMin,
-    //     shooterPitchMax,
-    //     List.of(shooterPitchMotor),
-    //     0.2,
-    //     shooterPitchHoldSpeed,
-    //     positionThreshold,
-    //     0.05, 
-    //     0.1,
-    //     () -> getThroughBorePosition()
-    //     // () -> getShooterPitchDeg()
-    //     // () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
-    // );
-
-    // public boolean shooterFlywheelsEnabled = false;
-
-
     @Override
     public void periodic() {
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
-        // shooterPositionManager.positionTargetManagement();
     }
 
-    // --- Commands ---
+    // --- Commands --- \\
 
-    /**
-     * Returns a command to pitch the shooter to the specified angle (degrees).
-     * @param angle target pitch angle in degrees
-     */
-    public void pitchToAngleDeg(double angle) {
-        // shooterPositionManager.setTarget(angle);
+    public void setFeeder(FeederState feederState) {
+        Logger.recordOutput("ShooterSubsystem/Feeder/State", feederState.toString());
+        switch(feederState) {
+            case FEEDER_IN:
+                feedMotor.set(shooterConstants.feederInSpeed);
+                break;
+            case FEEDER_OUT:
+                feedMotor.set(shooterConstants.feederOutSpeed);
+                break;
+            case OFF:
+                feedMotor.set(0.0);
+                break;
+            default:
+                break;
+        }
     }
 
     // MARK: Get Through Bore
@@ -117,56 +107,25 @@ public class ShooterSubsystem extends SubsystemBase {
         double offset = 0.4;
         return shooterThroughBore.getAbsolutePosition().getValueAsDouble() + offset;
     }
-    
-    /**
-     * Returns a command to aim the shooter at the hub.
-     * Currently a placeholder: should calculate robot position, distance to hub,
-     * required rotation, and pitch, then command the shooter and drivetrain.
-     * @return a command that aims the shooter at the hub
-     */
-    public Command aimAtHub() {
-        return Commands.run(
-            () -> {
-                // Calculate the angle and speed needed
-                ShooterDataPoint hubCalculateDataPoint = calculateShooterValues(
-                    shooterUpperLower(), 
-                    drivetrain.getDistanceToHub()
-                );
-
-                pitchToAngleDeg(hubCalculateDataPoint.angle);
-
-                shooterMotors.setSpeed(hubCalculateDataPoint.speed);
-            }, this
-        );
-    }
-
-    // --- Sensor feedback ---
-
-    /**
-     * Gets the shooter pitch motor's position in degrees.
-     * @return shooter pitch (motor) position in degrees
-     */
-    public double getShooterMotorPitchDeg() {
-        return shooterPitchMotor.getPosition() * 360;
-    }
-
-    /**
-     * Gets the current shooter pitch in degrees from the Pigeon2 IMU.
-     * @return shooter pitch in degrees (roll axis)
-     */
-    public double getShooterPitchDeg() {
-        // return shooterPigeon.getRoll().getValueAsDouble();
-        return shooterThroughBore.getAbsolutePosition().getValueAsDouble();
-    }
 
     public UpperLowerPoint shooterUpperLower() {
+        // MARK: NEEDS REFACTORING
         if (dataPoints.isEmpty()) {
+
+            double currentDistance = drivetrain.getDistanceToHub();
+            double aimHeight = (6 + 1 - 20 / 12) / 3.281;
+
+            double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
+
+
             return new UpperLowerPoint(
-                new ShooterDataPoint(0, 0, 0),
-                new ShooterDataPoint(0, 0, 0)
+                new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
+                new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
             );
         }
         double currentDistance = drivetrain.getDistanceToHub();
+
+
         Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
         Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
 

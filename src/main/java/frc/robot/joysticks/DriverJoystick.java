@@ -4,11 +4,16 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.FeederState;
+import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class DriverJoystick {
@@ -16,6 +21,8 @@ public class DriverJoystick {
     private final Drive drivetrain;
     private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+
+    private final DoubleEntry shooterSpeedEntry;
 
     public DriverJoystick(
         CommandXboxController joystick, 
@@ -27,6 +34,11 @@ public class DriverJoystick {
         this.drivetrain = drivetrain;
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("DriverJoystick");
+
+        shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
+        shooterSpeedEntry.set(0.0);
     }
 
     public void configureBindings() {
@@ -46,41 +58,67 @@ public class DriverJoystick {
 
         joystick.y();
 
-        joystick.rightTrigger().whileTrue(
-            Commands.run(
-                () -> {
-                    shooterSubsystem.feedMotor.set(1.0);
-                }
-            )
-        ).onFalse(
-            Commands.runOnce(
-                () -> {
-                    shooterSubsystem.feedMotor.set(0.0);
-                }
-            )
-        );
+        final double[] shooterSpeed = {0.0};
 
-        joystick.leftTrigger().whileTrue(
-            Commands.run(
-                () -> {
-                    intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                }
-            )
-        ).onFalse(
-            Commands.runOnce(
-                () -> {
-                    intakeSubsystem.setIntake(IntakeStates.OFF);
-                }
-            )
-        );
+        // MARK: RT - Shooter shoot
+        joystick.rightTrigger()
+            .whileTrue(
+                Commands.startRun(
+                    () -> {
+                        // calculate required shooter speed
+                        ShooterDataPoint shooterDataPoint = shooterSubsystem.calculateShooterValues(shooterSubsystem.shooterUpperLower(), drivetrain.getDistanceToHub());
+                        
+                        // calculate required speed (0-1)
 
-        joystick.rightBumper().onTrue(
-            NamedCommands.getCommand("IntakeDown")
-        );
+                        shooterSpeed[0] = 1.0;
+                    },
+                    () -> {
+                        // maintain motor speed
+                        shooterSubsystem.shooterMotors.setSpeed(shooterSpeed[0]);
+                    },
+                    shooterSubsystem, drivetrain
+                )
+            )
+            .onFalse(
+                Commands.run(
+                    () -> {
+                        shooterSpeed[0] = Math.max(0.0, shooterSpeed[0] - 0.05);
+                        shooterSubsystem.shooterMotors.setSpeed(shooterSpeed[0]);
+                    },
+                    shooterSubsystem
+                )
+                .until(() -> shooterSpeed[0] <= 0.0)
+            );
 
-        joystick.leftBumper().onTrue(
-            NamedCommands.getCommand("IntakeUp")
-        );
+        // MARK: LT - Intake
+        joystick.leftTrigger()
+            .whileTrue(
+                Commands.runEnd(
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                    },
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.OFF);
+                    },
+                    intakeSubsystem
+                )
+            );
+
+        // MARK: RB - Shooter feeder
+        joystick.rightBumper()
+            .whileTrue(
+                Commands.runEnd(
+                    () -> {
+                        shooterSubsystem.setFeeder(FeederState.FEEDER_IN);
+                    }, 
+                    () -> {
+                        shooterSubsystem.setFeeder(FeederState.OFF);
+                    },
+                    shooterSubsystem
+                )
+            );
+
+        joystick.leftBumper();
 
         joystick.povUp();
 

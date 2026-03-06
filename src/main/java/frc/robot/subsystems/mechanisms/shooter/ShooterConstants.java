@@ -26,8 +26,16 @@ public class ShooterConstants {
     /** Threshold for position manager to consider the shooter "at position". */
     public double positionThreshold = 0.02;
 
+    public double feederInSpeed = 0.2;
+    public double feederOutSpeed = -0.05;
+    
+
+
+
     /** Height of the hub (target) in meters. */
-    // public double hubHeight = 2;
+    public double hubHeight = 6 / 3.281; // 6 feet to meters
+    /** Aim above hub in meters */
+    public double aimAbove = 1 / 3.281; // 1 foot to meters
     /** Height of the shooter in meters. */
-    // public double shooterHeight = 1;
+    public double shooterHeight = 20 / 12 / 3.281; // 26 inches to meters
 }

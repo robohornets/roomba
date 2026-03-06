@@ -1,16 +1,21 @@
 package frc.robot.joysticks;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class OperatorJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
     private final IntakeSubsystem intakeSubsystem;
-
+    
     public OperatorJoystick(
         CommandXboxController joystick, 
         Drive drivetrain,
@@ -19,42 +24,34 @@ public class OperatorJoystick {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
         this.intakeSubsystem = intakeSubsystem;
+
+
     }
 
     public void configureBindings() {
-        joystick.a();
+        // MARK: Intake Down
+        joystick.a().onTrue(
+            NamedCommands.getCommand("IntakeDown")
+        );
 
-        joystick.b();
+        // MARK: Intake Up
+        joystick.b().onTrue(
+            NamedCommands.getCommand("IntakeUp")
+        );
+
 
         joystick.x();
 
         joystick.y();
 
-        // MARK: Intake out
-        joystick.rightTrigger().onTrue(
-            Commands.runOnce(
-                () -> {
-                    intakeSubsystem.setIntake(IntakeStates.INTAKE_OUT);
-                }
-            )
-        );
+        // MARK: Shooter accelerate
+        joystick.rightTrigger();
 
         // MARK: Intake in
-        joystick.leftTrigger().onTrue(
-            Commands.runOnce(
-                () -> {
-                    intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                }
-            )
-        );
+        joystick.leftTrigger();
 
-        joystick.rightBumper().onTrue(
-            Commands.runOnce(
-                () -> {
-                    
-                }
-            )
-        );
+        // MARK: Shooter feeder
+        joystick.rightBumper();
 
         joystick.leftBumper();
 

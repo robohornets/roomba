@@ -22,7 +22,7 @@ public class DebugJoystick {
     private final Drive drivetrain;
     private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-    private final DoubleEntry shooterSpeedEntry;
+    // private final DoubleEntry shooterSpeedEntry;
     private double shooterSpeed;
 
     public DebugJoystick(
@@ -37,10 +37,11 @@ public class DebugJoystick {
         this.intakeSubsystem = intakeSubsystem;
         this.shooterSpeed = 0.0;
 
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
+        // NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
 
-        shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
-        shooterSpeedEntry.set(0.0);
+        // shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
+        // shooterSpeedEntry.set(0.0);
+    
 
         shooterSubsystem.setDefaultCommand(
             Commands.run(
@@ -52,11 +53,10 @@ public class DebugJoystick {
                     double speedChangeAmountPerTick = 0.0025;
                     double change = Math.signum(leftJoystickValue) * speedChangeAmountPerTick;
                     shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
-                    shooterSpeedEntry.set(shooterSpeed);
+                    // shooterSpeedEntry.set(shooterSpeed);
 
 
-                    shooterSubsystem.leftShooterMotor.set(shooterSpeed);
-                    shooterSubsystem.rightShooterMotor.set(shooterSpeed);
+                    shooterSubsystem.shooterMotors.setSpeed(shooterSpeed);
                     shooterSubsystem.feedMotor.set(rightJoystickValue);
 
                     Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterSpeed);

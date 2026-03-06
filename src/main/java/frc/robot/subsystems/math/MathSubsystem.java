@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems.motor;
+package frc.robot.subsystems.math;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * 
  * In the future this should be moved to WhatTime
  */
-public class MotorSubsystem extends SubsystemBase {
+public class MathSubsystem extends SubsystemBase {
     /**
      * Calculates the signed angular difference (in degrees) required to rotate from a
      * reference heading to face a target described by a 2D position vector.
@@ -75,6 +75,30 @@ public class MotorSubsystem extends SubsystemBase {
         
         return new double[]{launchSpeed, outputAngle * 180 / Math.PI};
         
+    }
+
+    /**
+     * Calculates trajectory values when the shooter exit angle is provided as input.
+     *
+     * The method returns an array:
+     * [launchSpeed (m/s), enterAngle (degrees)].
+     *
+     * @param distanceX  Horizontal distance to the target (meters)
+     * @param distanceY  Vertical distance to the target (meters)
+     * @param exitAngle  Shooter exit angle in degrees (0 = horizontal)
+     * @return           double[] where index 0 is launch speed (m/s), index 1 is enter angle (degrees)
+     */
+    public double[] calculateTrajectoryFromExitAngle(double distanceX, double distanceY, double exitAngle){
+        exitAngle = exitAngle * Math.PI / 180;
+        double enterAngle = Math.atan(2 * distanceY / distanceX - Math.tan(exitAngle));
+
+        double launchSpeed = Math.sqrt(
+            ( 9.81 * distanceX * distanceY ) /
+            ( 2 * Math.cos(exitAngle) * Math.cos(exitAngle)
+            * ( distanceX * Math.tan(exitAngle) - distanceY )
+        ));
+
+        return new double[]{launchSpeed, enterAngle * 180 / Math.PI};
     }
 
 }
