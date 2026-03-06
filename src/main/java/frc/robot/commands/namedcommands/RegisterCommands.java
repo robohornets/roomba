@@ -19,8 +19,6 @@ public class RegisterCommands {
     }
     
     public void registerCommands(){
-        NamedCommands.registerCommand("AngleToHub", shooterSubsystem.aimAtHub());
-
         // MARK: ShootBallsClose
         NamedCommands.registerCommand("ShootFullSpeed",
             Commands.run(

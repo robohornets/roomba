@@ -102,5 +102,6 @@
     {
       "guid": "Keyboard2"
     }
-  ]
+  ],
+  "zeroDisconnectedJoysticks": false
 }

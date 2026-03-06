@@ -56,7 +56,7 @@ public class RobotContainer {
     // MARK: Xbox Controllers
     public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, shooterSubsystem, intakeSubsystem);
     public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain, intakeSubsystem);
-    // public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, shooterSubsystem, intakeSubsystem);
+    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, shooterSubsystem, intakeSubsystem);
     
     // MARK: Register Commands
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem);

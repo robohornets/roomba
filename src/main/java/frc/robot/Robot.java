@@ -206,7 +206,6 @@ public class Robot extends LoggedRobot {
         // NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
 
         Logger.recordOutput("MatchInfo/TimeRemaining", DriverStation.getMatchTime());
-        Logger.recordOutput("ShooterSubsystem/Pitch", robotContainer.shooterSubsystem.getShooterMotorPitchDeg());
 
         //robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
         // NetworkTablesUtil.put("Main Robot Pose", robotField2d);
