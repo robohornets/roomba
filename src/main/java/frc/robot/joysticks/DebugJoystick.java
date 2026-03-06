@@ -2,6 +2,8 @@ package frc.robot.joysticks;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.DoubleEntry;
@@ -38,7 +40,6 @@ public class DebugJoystick {
         NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
 
         shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
-        shooterSpeed = shooterSpeedEntry.get();
         shooterSpeedEntry.set(0.0);
 
         shooterSubsystem.setDefaultCommand(
@@ -57,6 +58,9 @@ public class DebugJoystick {
                     shooterSubsystem.leftShooterMotor.set(shooterSpeed);
                     shooterSubsystem.rightShooterMotor.set(shooterSpeed);
                     shooterSubsystem.feedMotor.set(rightJoystickValue);
+
+                    Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterSpeed);
+                    Logger.recordOutput("ShooterSubsystem/FeederSpeed", rightJoystickValue);
                 }, shooterSubsystem
             )
         );
@@ -64,27 +68,27 @@ public class DebugJoystick {
         intakeSubsystem.setDefaultCommand(
             Commands.run(
                 () -> {
-                    double triggerDirection = joystick.getLeftTriggerAxis() > joystick.getRightTriggerAxis() ? -joystick.getLeftTriggerAxis(): joystick.getRightTriggerAxis();
-                    intakeSubsystem.intakeWheelsMotor.set(triggerDirection);
+                    double triggerSpeed = joystick.getLeftTriggerAxis() > joystick.getRightTriggerAxis() ? -joystick.getLeftTriggerAxis(): joystick.getRightTriggerAxis();
+                    intakeSubsystem.intakeWheelsMotor.set(triggerSpeed);
+
+                    Logger.recordOutput("IntakeSubsystem/WheelSpeed", triggerSpeed);
                 }, intakeSubsystem
             )
         );
     }
 
     public void configureBindings() {
-        joystick.a();
+        joystick.a().onTrue(
+            NamedCommands.getCommand("IntakeDown")
+        );
 
-        joystick.b();
+        joystick.b().onTrue(
+            NamedCommands.getCommand("IntakeUp")
+        );
 
         joystick.x();
 
-        joystick.y().onTrue(
-            Commands.runOnce(
-                () -> {
-                    intakeSubsystem.setPosition(0.0);
-                }
-            )
-        );
+        joystick.y();
 
         // joystick.rightTrigger();
 

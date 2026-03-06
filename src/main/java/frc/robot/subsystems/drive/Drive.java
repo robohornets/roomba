@@ -58,14 +58,14 @@ public class Drive extends SubsystemBase {
     public static double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    // MARK: Field Centric Drive
+    // MARK: Field Centric
     public static final SwerveRequest.FieldCentric drive = 
         new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1)
             .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-    // MARK: Field Centric Drive with Heading Control
+    // MARK: Heading Control
     public final SwerveRequest.FieldCentricFacingAngle driveFacingHub = 
         new SwerveRequest.FieldCentricFacingAngle()
             .withHeadingPID(5, 0, 0)
@@ -73,7 +73,7 @@ public class Drive extends SubsystemBase {
             .withRotationalDeadband(MaxAngularRate * 0.1)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
-    // MARK: Robot Centric Drive
+    // MARK: Robot Centric
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
         .withDeadband(MaxSpeed * 0.1)
         .withRotationalDeadband(MaxAngularRate * 0.1)
@@ -83,8 +83,6 @@ public class Drive extends SubsystemBase {
     public final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private boolean lockedToHub = false;
-
-    public boolean debugMode = false;
 
     // MARK: Periodic Loop
     @Override
@@ -100,8 +98,6 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
 
         Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
-
-        Logger.recordOutput("Debug/Enabled", debugMode);
     }
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
@@ -227,6 +223,7 @@ public class Drive extends SubsystemBase {
         );
     }
 
+    // MARK: Get Angle to Hub
     public Rotation2d getAngleToHub() {
         Pose2d robotPose = getPose2d();
 
@@ -249,6 +246,7 @@ public class Drive extends SubsystemBase {
         return Rotation2d.fromDegrees(rotationAngleDegrees);
     }
 
+    // MARK: Get Distance to Hub
     public double getDistanceToHub() {
         Pose2d robotPose = getPose2d();
 
@@ -266,6 +264,7 @@ public class Drive extends SubsystemBase {
         return Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
     }
 
+    // MARK: Flip Alliance
     public static Pose2d flipAlliance(Pose2d pose) {
         if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
             return new Pose2d(
@@ -275,9 +274,5 @@ public class Drive extends SubsystemBase {
             );
         }
         return pose;
-    }
-
-    public void toggleDebugMode() {
-        debugMode = !debugMode;
     }
 }

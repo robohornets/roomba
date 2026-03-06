@@ -11,9 +11,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.networktables.DoubleEntry;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,8 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
 
-    private final DoubleEntry shooterSpeedTest;
-
+    // MARK: Constructor
     /**
      * Constructs the ShooterSubsystem.
      * @param drivetrain the swerve drivetrain subsystem (for aiming/coordination)
@@ -52,12 +48,6 @@ public class ShooterSubsystem extends SubsystemBase {
         for (ShooterDataPoint point : ShooterConstants.shooterDataPoints) {
             dataPoints.put(point.distance, point);
         }
-
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
-
-        shooterSpeedTest = table.getDoubleTopic("ShooterSpeed").getEntry(0.5);
-
-        shooterSpeedTest.set(0.5);
     }
     
     /** Motor controlling the shooter pitch (angle). */
@@ -103,25 +93,13 @@ public class ShooterSubsystem extends SubsystemBase {
     //     // () -> shooterPitchMotor.getMotor().getPosition().getValueAsDouble()
     // );
 
-    public boolean shooterFlywheelsEnabled = false;
+    // public boolean shooterFlywheelsEnabled = false;
 
 
     @Override
     public void periodic() {
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
         // shooterPositionManager.positionTargetManagement();
-        if (shooterFlywheelsEnabled) {
-            shooterMotors.setSpeed(shooterSpeedTest.get()); // Sets speed
-            shooterMotors.runForward(); // Runs motors
-        }
-        else {
-            shooterMotors.setSpeed(0.0); // Sets speed
-            shooterMotors.runForward(); // Runs motors
-        }
-    }
-    
-    public void toggleShooterMotors() {
-        shooterFlywheelsEnabled = !shooterFlywheelsEnabled;
     }
 
     // --- Commands ---
