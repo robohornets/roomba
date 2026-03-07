@@ -60,7 +60,7 @@ public class DriverJoystick {
 
         joystick.y();
 
-        final double[] shooterSpeed = {0.0};
+        final double[] shooter = {0.0, 0.25};
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()
@@ -72,12 +72,15 @@ public class DriverJoystick {
                         
                         // calculate required speed (0-1)
 
-                        shooterSpeed[0] = 0.5;
+                        shooter[0] = 0.5;
+                        shooter[1] = 0.25;
                     },
                     () -> {
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterSpeed[0]);
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooter[0]);
+                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooter[1]);
                         // maintain motor speed
-                        shooterSubsystem.shooterMotors.drive(shooterSpeed[0]);
+                        shooterSubsystem.shooterMotors.drive(shooter[0]);
+                        shooterSubsystem.shooterPitchMotor.goTo(shooter[1]);
                     },
                     shooterSubsystem, drivetrain
                 )
@@ -85,13 +88,15 @@ public class DriverJoystick {
             .onFalse(
                 Commands.run(
                     () -> {
-                        shooterSpeed[0] = Math.max(0.0, shooterSpeed[0] - 0.05);
-                        shooterSubsystem.shooterMotors.drive(shooterSpeed[0]);
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterSpeed[0]);
+                        shooter[0] = Math.max(0.0, shooter[0] - 0.05);
+                        shooterSubsystem.shooterMotors.drive(shooter[0]);
+                        shooterSubsystem.shooterPitchMotor.goTo(0.0);
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooter[0]);
+                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooter[1]);
                     },
                     shooterSubsystem
                 )
-                .until(() -> shooterSpeed[0] <= 0.0)
+                .until(() -> shooter[0] <= 0.0)
             );
 
         // MARK: LT - Intake

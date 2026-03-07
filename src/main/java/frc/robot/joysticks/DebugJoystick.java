@@ -21,6 +21,7 @@ public class DebugJoystick {
     private final IntakeSubsystem intakeSubsystem;
     // private final DoubleEntry shooterSpeedEntry;
     private double shooterSpeed;
+    private double shooterPitch;
 
     public DebugJoystick(
         CommandXboxController joystick, 
@@ -32,7 +33,9 @@ public class DebugJoystick {
         this.drivetrain = drivetrain;
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+
         this.shooterSpeed = 0.0;
+        this.shooterPitch = 0.0;
 
         shooterSubsystem.setDefaultCommand(
             Commands.run(
@@ -41,13 +44,14 @@ public class DebugJoystick {
                     double leftJoystickValue = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY(): 0.0;
                     double rightJoystickValue = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY(): 0.0;
 
-                    double speedChangeAmountPerTick = 0.0025;
-                    double change = Math.signum(leftJoystickValue) * speedChangeAmountPerTick;
+                    double changeAmountPerTick = 0.0025;
+                    double change = Math.signum(leftJoystickValue) * changeAmountPerTick;
                     shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
 
+                    shooterPitch = MathUtil.clamp(shooterPitch + Math.signum(rightJoystickValue) * changeAmountPerTick, 0.0 ,0.5);
 
                     shooterSubsystem.shooterMotors.drive(shooterSpeed);
-                    shooterSubsystem.feedMotor.drive(rightJoystickValue);
+                    shooterSubsystem.shooterPitchMotor.goTo(shooterPitch);
 
                     Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterSpeed);
                     Logger.recordOutput("ShooterSubsystem/FeederSpeed", rightJoystickValue);

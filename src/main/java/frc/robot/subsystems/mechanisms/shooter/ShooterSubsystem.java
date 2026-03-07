@@ -59,7 +59,9 @@ public class ShooterSubsystem extends SubsystemBase {
     /** Motor controlling the shooter pitch (angle). */
 
     public final Motor shooterPitchMotor = new Motor(11)
-        .setFree(false);
+        .setFree(false)
+        .setRange(0.0, 0.5)
+        .setMotorSpeed(0.1);
 
     public final Motor leftShooterMotor = new Motor(13);
     public final Motor rightShooterMotor = new Motor(14, true);
