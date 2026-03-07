@@ -96,7 +96,7 @@ public class ShooterSubsystem extends SubsystemBase {
         if (dataPoints.isEmpty()) {
 
             double currentDistance = drivetrain.getDistanceToHub();
-            double aimHeight = (6 + 1 - 20 / 12) / 3.281;
+            double aimHeight = (6 - 20 / 12) / 3.281;
 
             double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
 
@@ -134,5 +134,10 @@ public class ShooterSubsystem extends SubsystemBase {
         double estimatedSpeed = upperLowerPoint.getLowerSpeed() + interpolationFactor * (upperLowerPoint.getUpperSpeed() - upperLowerPoint.getLowerSpeed());
         
         return new ShooterDataPoint(currentDistance, estimatedAngle, estimatedSpeed);
+    }
+
+    public double getRequiredRPM(ShooterDataPoint shooterDataPoint){
+        double vWheel = 2 * shooterDataPoint.speed;
+        return vWheel * 60 / (Math.PI * 4 * 0.0254); // get rpm required for wheel with diameter of 4 inches
     }
 }

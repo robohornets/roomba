@@ -65,6 +65,8 @@ public class DriverJoystick {
                         
                         // calculate required speed and angle
 
+                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+
                         shooter[0] = 0.5; // speed
                         shooter[1] = 0.25; // angle (0.5 = 180deg)
                     },
