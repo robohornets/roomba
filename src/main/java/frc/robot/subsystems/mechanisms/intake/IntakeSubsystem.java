@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
     public Motor angleMotor = new Motor(9)
-        .setFree(true);
+        .setFree(false);
 
     @Override
     public void periodic() {
@@ -16,7 +16,6 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Motor intakeWheelsMotor = new Motor(10)
-        .setFree(true)
         .setMinValue(IntakeConstants.minValue)
         .setMaxValue(IntakeConstants.maxValue)
         .setMotorSpeed(0.2)

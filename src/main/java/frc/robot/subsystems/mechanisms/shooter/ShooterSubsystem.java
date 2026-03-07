@@ -58,21 +58,17 @@ public class ShooterSubsystem extends SubsystemBase {
     
     /** Motor controlling the shooter pitch (angle). */
 
-    public final Motor shooterPitchMotor = new Motor(11);
+    public final Motor shooterPitchMotor = new Motor(11)
+        .setFree(false);
 
-    public final Motor leftShooterMotor = new Motor(13)
-        .setFree(true)
-        .setMotorSpeed(0.4);
-    public final Motor rightShooterMotor = new Motor(14, true)
-        .setFree(true)
-        .setMotorSpeed(0.4);
+    public final Motor leftShooterMotor = new Motor(13);
+    public final Motor rightShooterMotor = new Motor(14, true);
 
     public final MotorGroup shooterMotors = new MotorGroup(
         Arrays.asList(leftShooterMotor, rightShooterMotor)
-    );
+    ).setMotorSpeed(0.4);
 
-    public Motor feedMotor = new Motor(12)
-        .setFree(true);
+    public Motor feedMotor = new Motor(12);
 
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34);
@@ -90,13 +86,13 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("ShooterSubsystem/Feeder/State", feederState.toString());
         switch(feederState) {
             case FEEDER_IN:
-                feedMotor.set(shooterConstants.feederInSpeed);
+                feedMotor.drive(shooterConstants.feederInSpeed);
                 break;
             case FEEDER_OUT:
-                feedMotor.set(shooterConstants.feederOutSpeed);
+                feedMotor.drive(shooterConstants.feederOutSpeed);
                 break;
             case OFF:
-                feedMotor.set(0.0);
+                feedMotor.drive(0.0);
                 break;
             default:
                 break;
