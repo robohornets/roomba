@@ -65,12 +65,12 @@ public class DriverJoystick {
             .whileTrue(
                 Commands.startRun(
                     () -> {
-                        // calculate required shooter speed
+                        // calculate required shooter speed and angle
                         ShooterDataPoint shooterDataPoint = shooterSubsystem.calculateShooterValues(shooterSubsystem.shooterUpperLower(), drivetrain.getDistanceToHub());
                         
                         // calculate required speed (0-1)
 
-                        shooterSpeed[0] = 1.0;
+                        shooterSpeed[0] = 0.5;
                     },
                     () -> {
                         // maintain motor speed
