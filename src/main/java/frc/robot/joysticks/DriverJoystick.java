@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
-import frc.robot.subsystems.mechanisms.shooter.FeederState;
 import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
