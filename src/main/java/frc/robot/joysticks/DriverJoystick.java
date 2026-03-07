@@ -52,31 +52,40 @@ public class DriverJoystick {
 
         joystick.y();
 
-        final double[] shooter = {0.0, 0.25};
+        final ShooterDataPoint[] saveShooterDataPoint = {new ShooterDataPoint(0.0, 0.0, 0.0)};
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()
             .whileTrue(
                 Commands.startRun(
                     () -> {
-                        // calculate required shooter speed and angle
-                        ShooterDataPoint shooterDataPoint = shooterSubsystem.calculateShooterValues(shooterSubsystem.shooterUpperLower(), drivetrain.getDistanceToHub());
-                        
-                        // calculate required speed and angle
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+
+                        shooterDataPoint = shooterSubsystem.calculateShooterValues(
+                            shooterSubsystem.shooterUpperLower(), 
+                            drivetrain.getDistanceToHub()
+                        );
 
                         double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
 
-                        shooter[0] = 0.5; // speed
-                        shooter[1] = 0.25; // angle (0.5 = 180deg)
+                        double maxRPM = 1000; // MARK: Populate max rpm
+                        
+                        shooterDataPoint.speed = rpm / maxRPM;
+                        shooterDataPoint.angle = shooterDataPoint.angle / 180; // angle (0.5 = 180deg)
+
+                        saveShooterDataPoint[0] = shooterDataPoint;
                     },
                     () -> {
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooter[0]);
-                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooter[1]);
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
+                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.speed);
 
                         // maintain motor speed
-                        shooterSubsystem.shooterMotors.drive(shooter[0]);
-                        shooterSubsystem.shooterFeedMotor.drive(shooter[0]);
-                        shooterSubsystem.shooterPitchMotor.goTo(shooter[1]);
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                        shooterSubsystem.shooterFeedMotor.drive(shooterDataPoint.speed);
+                        shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
+
+                        saveShooterDataPoint[0] = shooterDataPoint;
                     },
                     shooterSubsystem, drivetrain
                 )
@@ -84,19 +93,22 @@ public class DriverJoystick {
             .onFalse(
                 Commands.run(
                     () -> {
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
 
-                        shooter[0] = Math.max(0.0, shooter[0] - 0.05);
-                        shooterSubsystem.shooterMotors.drive(shooter[0]);
-                        shooterSubsystem.shooterFeedMotor.drive(shooter[0]);
+                        shooterDataPoint.speed = Math.max(0.0, shooterDataPoint.speed - 0.05);
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                        shooterSubsystem.shooterFeedMotor.drive(shooterDataPoint.speed);
 
                         shooterSubsystem.shooterPitchMotor.goTo(0.0);
 
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooter[0]);
-                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooter[1]);
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
+                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.angle);
+
+                        saveShooterDataPoint[0] = shooterDataPoint;
                     },
                     shooterSubsystem
                 )
-                .until(() -> shooter[0] <= 0.0)
+                .until(() -> saveShooterDataPoint[0].speed <= 0.0)
             );
 
         // MARK: LT - Intake

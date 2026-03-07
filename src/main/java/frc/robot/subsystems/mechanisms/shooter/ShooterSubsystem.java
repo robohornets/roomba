@@ -93,7 +93,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public UpperLowerPoint shooterUpperLower() {
         // MARK: NEEDS REFACTORING
-        if (dataPoints.isEmpty()) {
+        // if (dataPoints.isEmpty()) {
 
             double currentDistance = drivetrain.getDistanceToHub();
             double aimHeight = (6 - 20 / 12) / 3.281;
@@ -105,35 +105,35 @@ public class ShooterSubsystem extends SubsystemBase {
                 new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
                 new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
             );
-        }
-        double currentDistance = drivetrain.getDistanceToHub();
+        // }
+        // double currentDistance = drivetrain.getDistanceToHub();
 
 
-        Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
-        Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
+        // Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
+        // Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
 
-        // Handle out-of-range cases by clamping to the nearest point
-        ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
-        ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
+        // // Handle out-of-range cases by clamping to the nearest point
+        // ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
+        // ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
 
-        return new UpperLowerPoint(upper, lower);
+        // return new UpperLowerPoint(upper, lower);
     }
 
     public ShooterDataPoint calculateShooterValues(UpperLowerPoint upperLowerPoint, double currentDistance) {
-        double valueRange = Math.abs(upperLowerPoint.getUpperDistance() - upperLowerPoint.getLowerDistance());
-        if (valueRange == 0) {
+        // double valueRange = Math.abs(upperLowerPoint.getUpperDistance() - upperLowerPoint.getLowerDistance());
+        // if (valueRange == 0) {
             return new ShooterDataPoint(currentDistance, upperLowerPoint.getUpperAngle(), upperLowerPoint.getUpperSpeed());
-        }
+        // }
 
-        double scaledValue = currentDistance - Math.min(upperLowerPoint.getUpperDistance(), upperLowerPoint.getLowerDistance());
+        // double scaledValue = currentDistance - Math.min(upperLowerPoint.getUpperDistance(), upperLowerPoint.getLowerDistance());
 
-        double interpolationFactor = scaledValue/valueRange;
+        // double interpolationFactor = scaledValue/valueRange;
 
-        // Interpolate the angle and speed between the data points
-        double estimatedAngle = upperLowerPoint.getLowerAngle() + interpolationFactor * (upperLowerPoint.getUpperAngle() - upperLowerPoint.getLowerAngle());
-        double estimatedSpeed = upperLowerPoint.getLowerSpeed() + interpolationFactor * (upperLowerPoint.getUpperSpeed() - upperLowerPoint.getLowerSpeed());
+        // // Interpolate the angle and speed between the data points
+        // double estimatedAngle = upperLowerPoint.getLowerAngle() + interpolationFactor * (upperLowerPoint.getUpperAngle() - upperLowerPoint.getLowerAngle());
+        // double estimatedSpeed = upperLowerPoint.getLowerSpeed() + interpolationFactor * (upperLowerPoint.getUpperSpeed() - upperLowerPoint.getLowerSpeed());
         
-        return new ShooterDataPoint(currentDistance, estimatedAngle, estimatedSpeed);
+        // return new ShooterDataPoint(currentDistance, estimatedAngle, estimatedSpeed);
     }
 
     public double getRequiredRPM(ShooterDataPoint shooterDataPoint){
