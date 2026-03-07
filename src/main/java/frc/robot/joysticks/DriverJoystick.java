@@ -22,8 +22,6 @@ public class DriverJoystick {
     private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
 
-    private final DoubleEntry shooterSpeedEntry;
-
     public DriverJoystick(
         CommandXboxController joystick, 
         Drive drivetrain, 
@@ -34,11 +32,6 @@ public class DriverJoystick {
         this.drivetrain = drivetrain;
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
-
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("DriverJoystick");
-        
-        shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
-        shooterSpeedEntry.set(0.0);
         
         Logger.recordOutput("DriverJoystick/ShooterSpeed", 0.0);
     }
@@ -70,16 +63,18 @@ public class DriverJoystick {
                         // calculate required shooter speed and angle
                         ShooterDataPoint shooterDataPoint = shooterSubsystem.calculateShooterValues(shooterSubsystem.shooterUpperLower(), drivetrain.getDistanceToHub());
                         
-                        // calculate required speed (0-1)
+                        // calculate required speed and angle
 
-                        shooter[0] = 0.5;
-                        shooter[1] = 0.25;
+                        shooter[0] = 0.5; // speed
+                        shooter[1] = 0.25; // angle (0.5 = 180deg)
                     },
                     () -> {
                         Logger.recordOutput("DriverJoystick/ShooterSpeed", shooter[0]);
                         Logger.recordOutput("DriverJoystick/ShooterPitch", shooter[1]);
+
                         // maintain motor speed
                         shooterSubsystem.shooterMotors.drive(shooter[0]);
+                        shooterSubsystem.shooterFeedMotor.drive(shooter[0]);
                         shooterSubsystem.shooterPitchMotor.goTo(shooter[1]);
                     },
                     shooterSubsystem, drivetrain
@@ -88,9 +83,13 @@ public class DriverJoystick {
             .onFalse(
                 Commands.run(
                     () -> {
+
                         shooter[0] = Math.max(0.0, shooter[0] - 0.05);
                         shooterSubsystem.shooterMotors.drive(shooter[0]);
+                        shooterSubsystem.shooterFeedMotor.drive(shooter[0]);
+
                         shooterSubsystem.shooterPitchMotor.goTo(0.0);
+
                         Logger.recordOutput("DriverJoystick/ShooterSpeed", shooter[0]);
                         Logger.recordOutput("DriverJoystick/ShooterPitch", shooter[1]);
                     },
@@ -113,19 +112,7 @@ public class DriverJoystick {
                 )
             );
 
-        // MARK: RB - Shooter feeder
-        joystick.rightBumper()
-            .whileTrue(
-                Commands.runEnd(
-                    () -> {
-                        shooterSubsystem.setFeeder(FeederState.FEEDER_IN);
-                    }, 
-                    () -> {
-                        shooterSubsystem.setFeeder(FeederState.OFF);
-                    },
-                    shooterSubsystem
-                )
-            );
+        joystick.rightBumper();
 
         joystick.leftBumper();
 

@@ -58,9 +58,10 @@ public class ShooterSubsystem extends SubsystemBase {
     
     /** Motor controlling the shooter pitch (angle). */
 
-    public final Motor shooterPitchMotor = new Motor(11)
+    // this is reversed in real life so its inverted in the code
+    public final Motor shooterPitchMotor = new Motor(11, true)
         .setFree(false)
-        .setRange(0.0, 0.5)
+        .setRange(-0.5, 0)
         .setMotorSpeed(0.1);
 
     public final Motor leftShooterMotor = new Motor(13);
@@ -70,7 +71,7 @@ public class ShooterSubsystem extends SubsystemBase {
         Arrays.asList(leftShooterMotor, rightShooterMotor)
     ).setMotorSpeed(0.4);
 
-    public Motor feedMotor = new Motor(12);
+    public Motor shooterFeedMotor = new Motor(12);
 
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34);
@@ -83,23 +84,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     // --- Commands --- \\
-
-    public void setFeeder(FeederState feederState) {
-        Logger.recordOutput("ShooterSubsystem/Feeder/State", feederState.toString());
-        switch(feederState) {
-            case FEEDER_IN:
-                feedMotor.drive(shooterConstants.feederInSpeed);
-                break;
-            case FEEDER_OUT:
-                feedMotor.drive(shooterConstants.feederOutSpeed);
-                break;
-            case OFF:
-                feedMotor.drive(0.0);
-                break;
-            default:
-                break;
-        }
-    }
 
     // MARK: Get Through Bore
     public double getThroughBorePosition() {

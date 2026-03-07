@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.limelight.LimelightConstants;
@@ -19,7 +20,7 @@ public class DebugJoystick {
     private final Drive drivetrain;
     private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-    // private final DoubleEntry shooterSpeedEntry;
+
     private double shooterSpeed;
     private double shooterPitch;
 
@@ -84,9 +85,20 @@ public class DebugJoystick {
 
         joystick.y();
 
-        // joystick.rightTrigger();
+        joystick.rightTrigger();
 
-        joystick.leftTrigger();
+        joystick.leftTrigger()
+            .whileTrue(
+                Commands.runEnd(
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                    },
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.OFF);
+                    },
+                    intakeSubsystem
+                )
+            );
 
         joystick.rightBumper();
 
