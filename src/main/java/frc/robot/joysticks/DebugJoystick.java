@@ -6,9 +6,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.networktables.DoubleEntry;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -37,12 +34,6 @@ public class DebugJoystick {
         this.intakeSubsystem = intakeSubsystem;
         this.shooterSpeed = 0.0;
 
-        // NetworkTable table = NetworkTableInstance.getDefault().getTable("ShooterSubsystem");
-
-        // shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
-        // shooterSpeedEntry.set(0.0);
-    
-
         shooterSubsystem.setDefaultCommand(
             Commands.run(
                 () -> {
@@ -53,11 +44,10 @@ public class DebugJoystick {
                     double speedChangeAmountPerTick = 0.0025;
                     double change = Math.signum(leftJoystickValue) * speedChangeAmountPerTick;
                     shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
-                    // shooterSpeedEntry.set(shooterSpeed);
 
 
-                    shooterSubsystem.shooterMotors.setSpeed(shooterSpeed);
-                    shooterSubsystem.feedMotor.set(rightJoystickValue);
+                    shooterSubsystem.shooterMotors.drive(shooterSpeed);
+                    shooterSubsystem.feedMotor.drive(rightJoystickValue);
 
                     Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterSpeed);
                     Logger.recordOutput("ShooterSubsystem/FeederSpeed", rightJoystickValue);
@@ -69,7 +59,7 @@ public class DebugJoystick {
             Commands.run(
                 () -> {
                     double triggerSpeed = joystick.getLeftTriggerAxis() > joystick.getRightTriggerAxis() ? -joystick.getLeftTriggerAxis(): joystick.getRightTriggerAxis();
-                    intakeSubsystem.intakeWheelsMotor.set(triggerSpeed);
+                    intakeSubsystem.intakeWheelsMotor.drive(triggerSpeed);
 
                     Logger.recordOutput("IntakeSubsystem/WheelSpeed", triggerSpeed);
                 }, intakeSubsystem

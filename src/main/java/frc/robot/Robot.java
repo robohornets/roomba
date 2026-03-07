@@ -15,7 +15,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
-import com.btwrobotics.WhatTime.frc.MotorManagers.MotorBulkActions;
 import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -55,7 +54,6 @@ public class Robot extends LoggedRobot {
     // Manages rumble for Xbox controller
     // Start high so it doesn't trigger randomly
     public double nextRumbleStartTime = 1000;
-    public MotorBulkActions motorBulkActions = new MotorBulkActions();
     
 
 
@@ -101,10 +99,8 @@ public class Robot extends LoggedRobot {
 
         currentAlliance = DriverStation.getAlliance();
 
-        motorBulkActions.setNeutralModeBulk(Arrays.asList(
-            robotContainer.shooterSubsystem.shooterPitchMotor,
-            robotContainer.intakeSubsystem.angleMotor
-        ), NeutralModeValue.Brake);
+        robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(NeutralModeValue.Brake);
+        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(NeutralModeValue.Brake);
 
         // Reset motor speeds to zero.
         robotContainer.intakeSubsystem.angleMotor.set(0.0);

@@ -1,12 +1,15 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.btwrobotics.WhatTime.frc.FlywheelPair;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
+import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
+import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -54,24 +57,22 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     
     /** Motor controlling the shooter pitch (angle). */
-    public final MotorWrapper shooterPitchMotor = new MotorWrapper(
-        new TalonFX(11),
-        false
+
+    public final Motor shooterPitchMotor = new Motor(11);
+
+    public final Motor leftShooterMotor = new Motor(13)
+        .setFree(true)
+        .setMotorSpeed(0.4);
+    public final Motor rightShooterMotor = new Motor(14, true)
+        .setFree(true)
+        .setMotorSpeed(0.4);
+
+    public final MotorGroup shooterMotors = new MotorGroup(
+        Arrays.asList(leftShooterMotor, rightShooterMotor)
     );
 
-    public MotorWrapper leftShooterMotor = new MotorWrapper(new TalonFX(13), false);
-    public MotorWrapper rightShooterMotor = new MotorWrapper(new TalonFX(14), true);
-
-    public FlywheelPair shooterMotors = new FlywheelPair(
-        leftShooterMotor,
-        rightShooterMotor,
-        0.4
-    );
-
-    public MotorWrapper feedMotor = new MotorWrapper(
-        new TalonFX(12),
-        false
-    );
+    public Motor feedMotor = new Motor(12)
+        .setFree(true);
 
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34);

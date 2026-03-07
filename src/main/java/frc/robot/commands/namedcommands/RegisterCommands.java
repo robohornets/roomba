@@ -23,7 +23,7 @@ public class RegisterCommands {
         NamedCommands.registerCommand("ShootFullSpeed",
             Commands.run(
                 () -> {
-                    shooterSubsystem.shooterMotors.runForward();
+                    shooterSubsystem.shooterMotors.drive();
                 }
             ).withTimeout(5)
         );

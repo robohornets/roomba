@@ -36,9 +36,11 @@ public class DriverJoystick {
         this.intakeSubsystem = intakeSubsystem;
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("DriverJoystick");
-
+        
         shooterSpeedEntry = table.getDoubleTopic("ShooterSpeed").getEntry(0.0);
         shooterSpeedEntry.set(0.0);
+        
+        Logger.recordOutput("DriverJoystick/ShooterSpeed", 0.0);
     }
 
     public void configureBindings() {
@@ -73,8 +75,9 @@ public class DriverJoystick {
                         shooterSpeed[0] = 0.5;
                     },
                     () -> {
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterSpeed[0]);
                         // maintain motor speed
-                        shooterSubsystem.shooterMotors.setSpeed(shooterSpeed[0]);
+                        shooterSubsystem.shooterMotors.drive(shooterSpeed[0]);
                     },
                     shooterSubsystem, drivetrain
                 )
@@ -83,7 +86,8 @@ public class DriverJoystick {
                 Commands.run(
                     () -> {
                         shooterSpeed[0] = Math.max(0.0, shooterSpeed[0] - 0.05);
-                        shooterSubsystem.shooterMotors.setSpeed(shooterSpeed[0]);
+                        shooterSubsystem.shooterMotors.drive(shooterSpeed[0]);
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterSpeed[0]);
                     },
                     shooterSubsystem
                 )
