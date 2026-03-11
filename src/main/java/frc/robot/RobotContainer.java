@@ -48,7 +48,6 @@ public class RobotContainer {
     // LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
 
     // MARK: Subsystems
-    // public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     // public final MotorSubsystem motorSubsystem = new MotorSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
@@ -61,7 +60,6 @@ public class RobotContainer {
     // MARK: Register Commands
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem);
     
-
     // MARK: Tests
     // public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 

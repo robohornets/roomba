@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import org.littletonrobotics.junction.LogFileUtil;
@@ -22,8 +21,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AdvantageKit.AdvantageKitConstants;
@@ -51,12 +48,6 @@ public class Robot extends LoggedRobot {
     // The current alliance for the robot
     public Optional<Alliance> currentAlliance;
 
-    // Manages rumble for Xbox controller
-    // Start high so it doesn't trigger randomly
-    public double nextRumbleStartTime = 1000;
-    
-
-
     // MARK: Hub Manager
     public MatchTimeManager matchTimeManager = new MatchTimeManager();
     public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
@@ -65,6 +56,7 @@ public class Robot extends LoggedRobot {
         robotContainer = new RobotContainer();
     }
 
+    // MARK: Robot Init
     @Override
     public void robotInit() {
         // Configure logging for AdvantageKit
@@ -110,6 +102,7 @@ public class Robot extends LoggedRobot {
         Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
     }
 
+    // MARK: Robot Periodic
     @Override
     public void robotPeriodic() {
         pdp.clearStickyFaults();
@@ -118,32 +111,22 @@ public class Robot extends LoggedRobot {
 
         CommandScheduler.getInstance().run();
 
-        matchTimeRemainingSeconds = DriverStation.getMatchTime();
-        matchTimeElapsedSeconds = 160 - matchTimeRemainingSeconds;
-
-        if (matchTimeElapsedSeconds - nextRumbleStartTime >= 0 && matchTimeElapsedSeconds - nextRumbleStartTime <= 2) {
-            robotContainer.driverJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
-            robotContainer.operatorJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
-            robotContainer.debugJoystick.joystick.setRumble(RumbleType.kBothRumble, 1.0);
-        }
-        else {
-            robotContainer.driverJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
-            robotContainer.operatorJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
-            robotContainer.debugJoystick.joystick.setRumble(RumbleType.kBothRumble, 0.0);
-        }
-
-        updateNetworkTablesValues();
+        logDriveStationValues();
     }
 
+    // MARK: Disabled Init
     @Override
     public void disabledInit() {}
 
+    // MARK: Disabled Periodic
     @Override
     public void disabledPeriodic() {}
 
+    // MARK: Disabled Exit
     @Override
     public void disabledExit() {}
 
+    // MARK: Autonomous Init
     @Override
     public void autonomousInit() {
         m_autonomousCommand = robotContainer.getAutonomousCommand();
@@ -153,12 +136,15 @@ public class Robot extends LoggedRobot {
         }
     }
 
+    // MARK: Autonomous Periodic
     @Override
     public void autonomousPeriodic() {}
 
+    // MARK: Autonomous Exit
     @Override
     public void autonomousExit() {}
 
+    // MARK: Teleop Init
     @Override
     public void teleopInit() {
         if (m_autonomousCommand != null) {
@@ -166,6 +152,7 @@ public class Robot extends LoggedRobot {
         }
     }
 
+    // MARK: Teleop Periodic
     @Override
     public void teleopPeriodic() {
         // NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
@@ -174,36 +161,37 @@ public class Robot extends LoggedRobot {
         Logger.recordOutput("RebuiltHubManager/InactiveFirst", rebuiltHubManager.getInactiveFirstAlliance().toString());
     }
 
+    // MARK: Teleop Exit
     @Override
     public void teleopExit() {}
 
+    // MARK: Test Init
     @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
     }
 
+    // MARK: Test Periodic
     @Override
     public void testPeriodic() {}
 
+    // MARK: Test Exit
     @Override
     public void testExit() {}
 
+    // MARK: Simulation Periodic
     @Override
     public void simulationPeriodic() {}
 
-    Field2d robotField2d = new Field2d();
-    
-    Field2d limelight4Field2d = new Field2d();
-    Field2d limelight2Field2d = new Field2d();
 
-    public void updateNetworkTablesValues() {
-        // MARK: use limelight to calculate this
-        // double[] robotPose = NetworkTableInstance.getDefault().getTable("Pose").getEntry("robotPose").getDoubleArray(new double[]{0.0,0.0,0.0});
-        // NetworkTableInstance.getDefault().getTable("CustomDashboard").getEntry("Pose").setDoubleArray(robotPose);
-
-        Logger.recordOutput("MatchInfo/TimeRemaining", DriverStation.getMatchTime());
-
-        //robotField2d.setRobotPose(robotContainer.drivetrain.getState().Pose);
-        // NetworkTablesUtil.put("Main Robot Pose", robotField2d);
+    private void logDriveStationValues() {
+        Logger.recordOutput("DriverStation/GameSpecificMessage", DriverStation.getGameSpecificMessage());
+        Logger.recordOutput("DriverStation/MatchTime", DriverStation.getMatchTime());
+        Logger.recordOutput("DriverStation/MatchType", DriverStation.getMatchType());
+        Logger.recordOutput("DriverStation/MatchNumber", DriverStation.getMatchNumber());
+        Logger.recordOutput("DriverStation/IsAutonomous", DriverStation.isAutonomous());
+        Logger.recordOutput("DriverStation/AutonomousEnabled", DriverStation.isAutonomousEnabled());
+        Logger.recordOutput("DriverStation/IsEnabled", DriverStation.isEnabled());
+        Logger.recordOutput("DriverStation/IsEStopped", DriverStation.isEStopped());
     }
 }

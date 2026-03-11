@@ -2,14 +2,9 @@ package frc.robot.joysticks;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.networktables.DoubleEntry;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
-import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class OperatorJoystick {
     public final CommandXboxController joystick;

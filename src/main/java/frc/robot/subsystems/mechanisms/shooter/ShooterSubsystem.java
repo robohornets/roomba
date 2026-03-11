@@ -1,21 +1,16 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.math.MathSubsystem;

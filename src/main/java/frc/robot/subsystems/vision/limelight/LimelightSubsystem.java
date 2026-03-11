@@ -69,6 +69,9 @@ public class LimelightSubsystem extends SubsystemBase {
 
     Field2d limelightField2d = new Field2d();
 
+    private int totalLimelightEstimates = 0;
+    private int estimatesAddedToQuest = 0;
+
     /**
      * Periodic update called by the scheduler. Adds a vision odometry measurement each cycle.
      * <p>Delegates to {@link #addOdometryMeasurement()} to perform the actual read/filter/submit
@@ -132,8 +135,13 @@ public class LimelightSubsystem extends SubsystemBase {
         // Add measurement to drivetrain pose estimator
         drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateQuestUpdateStdDevs(estimate));
 
+        totalLimelightEstimates++;
+        Logger.recordOutput("Limelight/TotalEstimates", totalLimelightEstimates);
+
         // Add measurement to QuestNav pose estimator if enabled
         if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
+            estimatesAddedToQuest++;
+            Logger.recordOutput("QuestNav/LimelightEstimates", estimatesAddedToQuest);
             questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateQuestUpdateStdDevs(estimate), estimate);
         }
     }

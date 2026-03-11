@@ -2,11 +2,6 @@ package frc.robot.joysticks;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.networktables.DoubleEntry;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
