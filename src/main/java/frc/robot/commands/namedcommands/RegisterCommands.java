@@ -3,6 +3,7 @@ package frc.robot.commands.namedcommands;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
@@ -19,7 +20,7 @@ public class RegisterCommands {
     }
     
     public void registerCommands(){
-        // MARK: ShootBallsClose
+        // MARK: ShootFullSpeed
         NamedCommands.registerCommand("ShootFullSpeed",
             Commands.run(
                 () -> {
@@ -42,6 +43,15 @@ public class RegisterCommands {
             Commands.runOnce(
                 () -> {
                     intakeSubsystem.setPosition(-6.0);
+                }
+            )
+        );
+
+        // MARK: RunIntakeIn
+        NamedCommands.registerCommand("IntakeIn",
+            Commands.runOnce(
+                () -> {
+                    intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
                 }
             )
         );

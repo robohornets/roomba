@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -25,35 +28,24 @@ import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
+import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 
 
 public class RobotContainer {
-    // public static double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    // public static double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
     // MARK: Drivetrain
     // Create the swerve drivetrain subsystem for the robot
     public final Drive drivetrain = new Drive(TunerConstants.createDrivetrain());
 
-
-    // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
     private final Telemetry logger = new Telemetry(DriveConstants.MAX_SPEED);
 
-    // MARK: Vision
-    // Uses the Quest to periodically add vision measurements
-    // public QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
-
-    // LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
-
     // MARK: Subsystems
-    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-    // public final MotorSubsystem motorSubsystem = new MotorSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
+    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+    public final FeederSubsystem feederSubsystem = new FeederSubsystem();
 
     // MARK: Xbox Controllers
-    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, shooterSubsystem, intakeSubsystem);
+    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);
     public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain, intakeSubsystem);
     public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, shooterSubsystem, intakeSubsystem);
     
@@ -63,16 +55,22 @@ public class RobotContainer {
     // MARK: Tests
     // public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
-    // private final SendableChooser<Command> autoChooser;
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        DriverStation.silenceJoystickConnectionWarning(true);
-        
         registerCommands.registerCommands();
 
-        // autoChooser = new LoggedDashboardChooser<>("Autonomous Mode", AutoBuilder.buildAutoChooser());
+        // MARK: Auto Chooser
         autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser.onChange(
+            command -> {
+                Commands.runOnce(
+                    () -> {
+                        Logger.recordOutput("Autonomous/SelectedAuto", autoChooser.getSelected().getName());
+                    }
+                );
+            }
+        );
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         // MARK: Run Tests
@@ -89,17 +87,7 @@ public class RobotContainer {
     private void configureBindings() {
         driverJoystick.configureBindings();
         operatorJoystick.configureBindings();
-        // debugJoystick.configureBindings();
-
-        // Positive X is forward, Positive Y is left according to WPILib
-        // drivetrain.setDefaultCommand(
-        //     drivetrain.applyRequest(() ->
-        //         Drive.drive
-        //             .withVelocityX(-driverJoystick.joystick.getLeftY() * DriveConstants.MAX_SPEED) // Drive forward with negative Y (forward)
-        //             .withVelocityY(-driverJoystick.joystick.getLeftX() * DriveConstants.MAX_SPEED) // Drive left with negative X (left)
-        //             .withRotationalRate(-driverJoystick.joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
-        //     )
-        // );
+        
         drivetrain.setDefaultCommand(drivetrain.joysticksDefaultCommand(driverJoystick.joystick));
 
         // Idle while the robot is disabled. This ensures the configured

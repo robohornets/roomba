@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
@@ -15,17 +16,20 @@ public class DriverJoystick {
     private final Drive drivetrain;
     private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+    private final FeederSubsystem feederSubsystem;
 
     public DriverJoystick(
         CommandXboxController joystick, 
         Drive drivetrain, 
         ShooterSubsystem shooterSubsystem,
-        IntakeSubsystem intakeSubsystem
+        IntakeSubsystem intakeSubsystem,
+        FeederSubsystem feederSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+        this.feederSubsystem = feederSubsystem;
         
         Logger.recordOutput("DriverJoystick/ShooterSpeed", 0.0);
     }
@@ -77,7 +81,7 @@ public class DriverJoystick {
 
                         // maintain motor speed
                         shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                        shooterSubsystem.shooterFeedMotor.drive(shooterDataPoint.speed);
+                        feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
                         shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
 
                         saveShooterDataPoint[0] = shooterDataPoint;
@@ -92,7 +96,7 @@ public class DriverJoystick {
 
                         shooterDataPoint.speed = Math.max(0.0, shooterDataPoint.speed - 0.05);
                         shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                        shooterSubsystem.shooterFeedMotor.drive(shooterDataPoint.speed);
+                        feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
 
                         shooterSubsystem.shooterPitchMotor.goTo(0.0);
 

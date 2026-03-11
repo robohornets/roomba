@@ -89,6 +89,8 @@ public class Robot extends LoggedRobot {
         // Start AdvantageKit logging
         Logger.start();
 
+        DriverStation.silenceJoystickConnectionWarning(true);
+
         currentAlliance = DriverStation.getAlliance();
 
         robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(NeutralModeValue.Brake);

@@ -1,8 +1,6 @@
 
 package frc.robot.subsystems.math;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 /**
  * MotorSubsystem provides utility methods for motion-related calculations used by
  * other subsystems and commands. It includes helpers to compute the signed angle
@@ -14,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * 
  * In the future this should be moved to WhatTime
  */
-public class MathSubsystem extends SubsystemBase {
+public class MathSubsystem {
     /**
      * Calculates the signed angular difference (in degrees) required to rotate from a
      * reference heading to face a target described by a 2D position vector.
