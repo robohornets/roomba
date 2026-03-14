@@ -30,3 +30,13 @@ git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs 
 ![GitHub Release](https://img.shields.io/github/v/release/robohornets/WhatTime)
 
 [https://github.com/robohornets/WhatTime](https://github.com/robohornets/WhatTime)
+
+# QuestNav
+![GitHub Release](https://img.shields.io/github/v/release/QuestNav/QuestNav)
+
+[https://github.com/QuestNav/QuestNav/releases](https://github.com/QuestNav/QuestNav/releases)
+
+# AdvantageKit
+![GitHub Release](https://img.shields.io/github/v/release/Mechanical-Advantage/AdvantageKit)
+
+[https://github.com/Mechanical-Advantage/AdvantageKit/releases](https://github.com/Mechanical-Advantage/AdvantageKit/releases)

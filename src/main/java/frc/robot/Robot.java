@@ -91,17 +91,12 @@ public class Robot extends LoggedRobot {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        currentAlliance = DriverStation.getAlliance();
-
         robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(NeutralModeValue.Brake);
         robotContainer.intakeSubsystem.angleMotor.setNeutralMode(NeutralModeValue.Brake);
 
         // Reset motor speeds to zero.
         robotContainer.intakeSubsystem.angleMotor.set(0.0);
         robotContainer.shooterSubsystem.shooterPitchMotor.set(0.0);
-
-
-        Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
     }
 
     // MARK: Robot Periodic
@@ -114,11 +109,26 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
 
         logDriveStationValues();
+
+        if (!currentAlliance.equals(DriverStation.getAlliance())) {
+            currentAlliance = DriverStation.getAlliance();
+            Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
+        }
     }
 
     // MARK: Disabled Init
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        NeutralModeValue settingNeutralModeValue = NeutralModeValue.Coast;
+        robotContainer.feederSubsystem.feederBedMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.feederSubsystem.feederFeederMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.feederSubsystem.shooterFeederMotor.setNeutralMode(settingNeutralModeValue);
+
+        robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(settingNeutralModeValue);
+        
+        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.intakeSubsystem.intakeWheelsMotor.setNeutralMode(settingNeutralModeValue);
+    }
 
     // MARK: Disabled Periodic
     @Override
@@ -126,7 +136,20 @@ public class Robot extends LoggedRobot {
 
     // MARK: Disabled Exit
     @Override
-    public void disabledExit() {}
+    public void disabledExit() {
+        NeutralModeValue settingNeutralModeValue = NeutralModeValue.Brake;
+        robotContainer.feederSubsystem.feederBedMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.feederSubsystem.feederFeederMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.feederSubsystem.shooterFeederMotor.setNeutralMode(settingNeutralModeValue);
+
+        robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(settingNeutralModeValue);
+        
+        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.intakeSubsystem.intakeWheelsMotor.setNeutralMode(settingNeutralModeValue);
+
+        robotContainer.shooterSubsystem.leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        robotContainer.shooterSubsystem.rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+    }
 
     // MARK: Autonomous Init
     @Override
@@ -186,6 +209,7 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {}
 
 
+    // MARK: Log DriverStation
     private void logDriveStationValues() {
         Logger.recordOutput("DriverStation/GameSpecificMessage", DriverStation.getGameSpecificMessage());
         Logger.recordOutput("DriverStation/MatchTime", DriverStation.getMatchTime());
