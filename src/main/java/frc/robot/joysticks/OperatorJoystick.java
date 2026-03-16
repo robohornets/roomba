@@ -4,21 +4,29 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class OperatorJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
+    private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+    private final FeederSubsystem feederSubsystem;
     
     public OperatorJoystick(
         CommandXboxController joystick, 
-        Drive drivetrain,
-        IntakeSubsystem intakeSubsystem
+        Drive drivetrain, 
+        ShooterSubsystem shooterSubsystem,
+        IntakeSubsystem intakeSubsystem,
+        FeederSubsystem feederSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
+        this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+        this.feederSubsystem = feederSubsystem;
 
 
     }
