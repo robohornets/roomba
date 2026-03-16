@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.feeder.FeederState;
+import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
@@ -20,6 +22,7 @@ public class DebugJoystick {
     private final Drive drivetrain;
     private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+    private final FeederSubsystem feederSubsystem;
 
     private double shooterSpeed;
     private double shooterPitch;
@@ -28,12 +31,14 @@ public class DebugJoystick {
         CommandXboxController joystick, 
         Drive drivetrain,
         ShooterSubsystem shooterSubsystem, 
-        IntakeSubsystem intakeSubsystem
+        IntakeSubsystem intakeSubsystem,
+        FeederSubsystem feederSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+        this.feederSubsystem = feederSubsystem;
 
         this.shooterSpeed = 0.0;
         this.shooterPitch = 0.0;
@@ -81,7 +86,9 @@ public class DebugJoystick {
             NamedCommands.getCommand("IntakeUp")
         );
 
-        joystick.x();
+        joystick.x().whileTrue(
+            NamedCommands.getCommand("RunAllFeederIn")
+        );
 
         joystick.y();
 
