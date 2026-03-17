@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
@@ -35,6 +36,11 @@ public class FeederSubsystem extends SubsystemBase {
         feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+
+        // WhatTime's Motor default command calls set(0) every loop after periodic() runs,
+        // overwriting the direct TalonFX.set() calls in runSpecifiedMotors. Replace with a no-op.
+        feederFeederMotor.setDefaultCommand(Commands.run(() -> {}, feederFeederMotor));
+        shooterFeederMotor.setDefaultCommand(Commands.run(() -> {}, shooterFeederMotor));
 
         bedAgitationTimer.start();
     }
