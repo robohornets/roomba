@@ -110,10 +110,10 @@ public class Robot extends LoggedRobot {
 
         logDriveStationValues();
 
-        if (!currentAlliance.equals(DriverStation.getAlliance())) {
-            currentAlliance = DriverStation.getAlliance();
-            Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
-        }
+        // if (!currentAlliance.equals(DriverStation.getAlliance())) {
+        //     currentAlliance = DriverStation.getAlliance();
+        //     Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
+        // }
     }
 
     // MARK: Disabled Init

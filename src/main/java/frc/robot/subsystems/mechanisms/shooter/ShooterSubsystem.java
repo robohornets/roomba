@@ -78,7 +78,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        Logger.recordOutput("ShooterSubsystem/MotorConnected", shooterPitchMotor.getMotor().isConnected());
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
+        Logger.recordOutput("ShooterSubsystem/MotorAngle", shooterPitchMotor.getMotor().getPosition().getValueAsDouble());
     }
 
     // --- Commands --- \\
