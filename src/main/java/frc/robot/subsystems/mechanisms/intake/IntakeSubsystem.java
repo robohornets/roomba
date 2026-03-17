@@ -17,7 +17,7 @@ public class IntakeSubsystem extends SubsystemBase {
         .setHoldSpeed(0.0)
         .setThreshold(IntakeConstants.threshold)
         .setMinSpeed(0.3)
-        .setPG(0.5);
+        .setPG(0.8);
 
     // MARK: Intake Wheels
     public Motor intakeWheelsMotor = new Motor(10, "Mechanisms")
@@ -25,6 +25,8 @@ public class IntakeSubsystem extends SubsystemBase {
         .setMotorSpeed(0.2);
 
     public IntakeSubsystem() {
+        angleMotor.setPositionSupplier(() -> angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
+
         angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
         
