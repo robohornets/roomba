@@ -54,7 +54,7 @@ public class DebugJoystick {
                     double change = Math.signum(leftJoystickValue) * changeAmountPerTick;
                     shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
 
-                    // shooterPitch = MathUtil.clamp(shooterPitch + Math.signum(rightJoystickValue) * changeAmountPerTick, 0.0 ,0.5);
+                    shooterPitch = MathUtil.clamp(shooterPitch + Math.signum(rightJoystickValue) * changeAmountPerTick, 5.0 ,65.0);
 
                     shooterSubsystem.shooterMotors.drive(shooterSpeed);
 
