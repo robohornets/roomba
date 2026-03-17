@@ -13,7 +13,7 @@ public class IntakeSubsystem extends SubsystemBase {
         .setFree(false)
         .setMinValue(IntakeConstants.minValue)
         .setMaxValue(IntakeConstants.maxValue)
-        .setMotorSpeed(0.3)
+        .setMotorSpeed(1.0)
         .setHoldSpeed(0.0)
         .setThreshold(IntakeConstants.threshold)
         .setMinSpeed(0.05)
@@ -36,6 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getCurrentValue());
+        Logger.recordOutput("IntakeSubsystem/IntakeAngleSpeed", angleMotor.getMotor().get());
     }
 
     public void setPosition(double targetPosition) {
