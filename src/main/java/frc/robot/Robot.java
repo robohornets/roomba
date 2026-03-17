@@ -91,17 +91,17 @@ public class Robot extends LoggedRobot {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(NeutralModeValue.Brake);
-        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(NeutralModeValue.Brake);
+        // Enable motors (WhatTime Motor.isEnabled defaults to false — drive/goTo do nothing until this is called)
+        robotContainer.shooterSubsystem.shooterPitchMotor.toggleEnabled(true);
+        robotContainer.shooterSubsystem.leftShooterMotor.toggleEnabled(true);
+        robotContainer.shooterSubsystem.rightShooterMotor.toggleEnabled(true);
+        robotContainer.intakeSubsystem.angleMotor.toggleEnabled(true);
 
-        // Reset motor speeds to zero.
-        robotContainer.intakeSubsystem.angleMotor.set(0.0);
-        robotContainer.shooterSubsystem.shooterPitchMotor.set(0.0);
-
-        // Re-apply Phoenix 6 configuration last so WhatTime initialization cannot overwrite it.
+        // Apply full motor config here (after CAN bus is stable — constructor-time apply() silently fails)
         robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        robotContainer.intakeSubsystem.angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
     }
 
     // MARK: Robot Periodic

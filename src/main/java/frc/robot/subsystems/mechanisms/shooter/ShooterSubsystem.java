@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.math.MathSubsystem;
 
@@ -67,10 +66,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
 
-        shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        
         shooterPitchMotor.toggleEnabled(true);
         leftShooterMotor.toggleEnabled(true);
         rightShooterMotor.toggleEnabled(true);
