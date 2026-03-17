@@ -57,7 +57,6 @@ public class DebugJoystick {
                     shooterPitch = MathUtil.clamp(shooterPitch + Math.signum(rightJoystickValue) * changeAmountPerTick, 0.0 ,0.5);
 
                     shooterSubsystem.shooterMotors.drive(shooterSpeed);
-                    shooterSubsystem.shooterPitchMotor.goTo(shooterPitch);
 
                     Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterSpeed);
                     Logger.recordOutput("ShooterSubsystem/FeederSpeed", rightJoystickValue);
