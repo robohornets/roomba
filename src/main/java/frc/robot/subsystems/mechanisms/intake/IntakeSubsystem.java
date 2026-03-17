@@ -13,11 +13,11 @@ public class IntakeSubsystem extends SubsystemBase {
         .setFree(false)
         .setMinValue(IntakeConstants.minValue)
         .setMaxValue(IntakeConstants.maxValue)
-        .setMotorSpeed(1.0)
+        .setMotorSpeed(0.8)
         .setHoldSpeed(0.0)
         .setThreshold(IntakeConstants.threshold)
-        .setMinSpeed(0.05)
-        .setPG(0.1);
+        .setMinSpeed(0.3)
+        .setPG(0.5);
 
     // MARK: Intake Wheels
     public Motor intakeWheelsMotor = new Motor(10, "Mechanisms")
