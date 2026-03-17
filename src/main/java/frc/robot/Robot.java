@@ -97,6 +97,19 @@ public class Robot extends LoggedRobot {
         // Reset motor speeds to zero.
         robotContainer.intakeSubsystem.angleMotor.set(0.0);
         robotContainer.shooterSubsystem.shooterPitchMotor.set(0.0);
+
+        NeutralModeValue settingNeutralModeValue = NeutralModeValue.Brake;
+        robotContainer.feederSubsystem.feederBedMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.feederSubsystem.feederFeederMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.feederSubsystem.shooterFeederMotor.setNeutralMode(settingNeutralModeValue);
+
+        robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(settingNeutralModeValue);
+        
+        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(settingNeutralModeValue);
+        robotContainer.intakeSubsystem.intakeWheelsMotor.setNeutralMode(settingNeutralModeValue);
+
+        robotContainer.shooterSubsystem.leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        robotContainer.shooterSubsystem.rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
     }
 
     // MARK: Robot Periodic
@@ -119,15 +132,6 @@ public class Robot extends LoggedRobot {
     // MARK: Disabled Init
     @Override
     public void disabledInit() {
-        NeutralModeValue settingNeutralModeValue = NeutralModeValue.Coast;
-        robotContainer.feederSubsystem.feederBedMotor.setNeutralMode(settingNeutralModeValue);
-        robotContainer.feederSubsystem.feederFeederMotor.setNeutralMode(settingNeutralModeValue);
-        robotContainer.feederSubsystem.shooterFeederMotor.setNeutralMode(settingNeutralModeValue);
-
-        robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(settingNeutralModeValue);
-        
-        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(settingNeutralModeValue);
-        robotContainer.intakeSubsystem.intakeWheelsMotor.setNeutralMode(settingNeutralModeValue);
     }
 
     // MARK: Disabled Periodic
@@ -137,18 +141,6 @@ public class Robot extends LoggedRobot {
     // MARK: Disabled Exit
     @Override
     public void disabledExit() {
-        NeutralModeValue settingNeutralModeValue = NeutralModeValue.Brake;
-        robotContainer.feederSubsystem.feederBedMotor.setNeutralMode(settingNeutralModeValue);
-        robotContainer.feederSubsystem.feederFeederMotor.setNeutralMode(settingNeutralModeValue);
-        robotContainer.feederSubsystem.shooterFeederMotor.setNeutralMode(settingNeutralModeValue);
-
-        robotContainer.shooterSubsystem.shooterPitchMotor.setNeutralMode(settingNeutralModeValue);
-        
-        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(settingNeutralModeValue);
-        robotContainer.intakeSubsystem.intakeWheelsMotor.setNeutralMode(settingNeutralModeValue);
-
-        robotContainer.shooterSubsystem.leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        robotContainer.shooterSubsystem.rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
     }
 
     // MARK: Autonomous Init

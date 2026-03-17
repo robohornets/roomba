@@ -46,6 +46,7 @@ public class ShooterSubsystem extends SubsystemBase {
         .setFree(false)
         .setRange(ShooterConstants.SHOOTER_MAX_ANGLE, ShooterConstants.SHOOTER_MIN_ANGLE)
         .setMotorSpeed(0.1)
+        .setThreshold(ShooterConstants.POSITION_THRESHOLD)
         .setPositionSupplier(() -> getThroughBorePosition());
 
     public final Motor leftShooterMotor = new Motor(13, "Mechanisms");

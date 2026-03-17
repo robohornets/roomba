@@ -36,7 +36,7 @@ public class ShooterConstants {
     public static final double SHOOTER_PITCH_MIN_SPEED = 0.0;
 
     /** Threshold for position manager to consider the shooter "at position". */
-    public static final double POSITION_THRESHOLD = 0.02;
+    public static final double POSITION_THRESHOLD = 1.0;
 
     public static final double FEEDER_IN_SPEED = 0.2;
     public static final double FEEDER_OUT_SPEED = -0.05;
