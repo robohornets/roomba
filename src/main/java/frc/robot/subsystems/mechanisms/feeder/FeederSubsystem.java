@@ -33,7 +33,7 @@ public class FeederSubsystem extends SubsystemBase {
         feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
 
-        motorBedAgitationRoutine();
+        motorBedAgitationRoutine().schedule();
     }
 
     // MARK: Periodic Loop

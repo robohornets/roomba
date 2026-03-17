@@ -96,20 +96,26 @@ public class Robot extends LoggedRobot {
         robotContainer.shooterSubsystem.leftShooterMotor.toggleEnabled(true);
         robotContainer.shooterSubsystem.rightShooterMotor.toggleEnabled(true);
         robotContainer.intakeSubsystem.angleMotor.toggleEnabled(true);
+        robotContainer.intakeSubsystem.intakeWheelsMotor.toggleEnabled(true);
+        robotContainer.feederSubsystem.feederBedMotor.toggleEnabled(true);
+        robotContainer.feederSubsystem.feederFeederMotor.toggleEnabled(true);
+        robotContainer.feederSubsystem.shooterFeederMotor.toggleEnabled(true);
 
         // Apply full motor config here (after CAN bus is stable — constructor-time apply() silently fails)
         // StatusCodes are logged so you can verify success in AdvantageScope under MotorConfig/
-        Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/LeftShooter",  robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/RightShooter", robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/IntakeAngle",  robotContainer.intakeSubsystem.angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/ShooterPitch",    robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/LeftShooter",     robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/RightShooter",    robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/IntakeAngle",     robotContainer.intakeSubsystem.angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/IntakeWheels",    robotContainer.intakeSubsystem.intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/FeederBed",       robotContainer.feederSubsystem.feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/FeederFeeder",    robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/ShooterFeeder",   robotContainer.feederSubsystem.shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
     }
 
     // MARK: Robot Periodic
     @Override
     public void robotPeriodic() {
-        pdp.clearStickyFaults();
-
         m_timeAndJoystickReplay.update();
 
         CommandScheduler.getInstance().run();
@@ -129,7 +135,9 @@ public class Robot extends LoggedRobot {
 
     // MARK: Disabled Periodic
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        pdp.clearStickyFaults();
+    }
 
     // MARK: Disabled Exit
     @Override

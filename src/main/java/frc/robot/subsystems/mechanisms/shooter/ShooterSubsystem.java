@@ -95,11 +95,11 @@ public class ShooterSubsystem extends SubsystemBase {
     // MARK: Get Through Bore
     public double getThroughBorePosition() {
         double offset = 0.4;
-        return shooterThroughBore.getAbsolutePosition().getValueAsDouble() + offset;
+        return shooterThroughBore.getAbsolutePosition().refresh().getValueAsDouble() + offset;
     }
 
     public double getPigeonPosition() {
-        return shooterPigeon.getRoll().getValueAsDouble() * -1;
+        return shooterPigeon.getRoll().refresh().getValueAsDouble() * -1;
     }
 
     // For testing shooter angle manually
