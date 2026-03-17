@@ -71,6 +71,10 @@ public class ShooterSubsystem extends SubsystemBase {
         leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         
+        shooterPitchMotor.toggleEnabled(true);
+        leftShooterMotor.toggleEnabled(true);
+        rightShooterMotor.toggleEnabled(true);
+
         for (ShooterDataPoint point : ShooterConstants.shooterDataPoints) {
             dataPoints.put(point.distance, point);
         }

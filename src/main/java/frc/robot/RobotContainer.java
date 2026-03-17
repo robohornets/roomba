@@ -9,7 +9,9 @@ import static edu.wpi.first.units.Units.Amps;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -63,6 +65,10 @@ public class RobotContainer {
                 .withSupplyCurrentLimit(Amps.of(40))
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimitEnable(true)
+        )
+        .withMotorOutput(
+            new MotorOutputConfigs()
+                .withNeutralMode(NeutralModeValue.Brake)
         );
     
     // MARK: Tests

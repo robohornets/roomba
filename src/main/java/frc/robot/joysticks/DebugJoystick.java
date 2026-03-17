@@ -54,7 +54,7 @@ public class DebugJoystick {
                     double change = Math.signum(leftJoystickValue) * changeAmountPerTick;
                     shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
 
-                    shooterPitch = MathUtil.clamp(shooterPitch + Math.signum(rightJoystickValue) * changeAmountPerTick, 0.0 ,0.5);
+                    // shooterPitch = MathUtil.clamp(shooterPitch + Math.signum(rightJoystickValue) * changeAmountPerTick, 0.0 ,0.5);
 
                     shooterSubsystem.shooterMotors.drive(shooterSpeed);
 
@@ -86,7 +86,13 @@ public class DebugJoystick {
         );
 
         joystick.x().whileTrue(
-            shooterSubsystem.accelerateToSpeed(0.5)
+            // shooterSubsystem.accelerateToSpeed(0.5)
+            Commands.run(
+                () -> {
+                    shooterSubsystem.leftShooterMotor.getMotor().set(0.5);
+                    shooterSubsystem.leftShooterMotor.getMotor().set(-0.5);
+                }
+            )
         );
 
         joystick.y().whileTrue(
