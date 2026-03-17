@@ -97,6 +97,11 @@ public class Robot extends LoggedRobot {
         // Reset motor speeds to zero.
         robotContainer.intakeSubsystem.angleMotor.set(0.0);
         robotContainer.shooterSubsystem.shooterPitchMotor.set(0.0);
+
+        // Re-apply Phoenix 6 configuration last so WhatTime initialization cannot overwrite it.
+        robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
     }
 
     // MARK: Robot Periodic
