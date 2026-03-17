@@ -11,6 +11,9 @@ import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
@@ -150,6 +153,18 @@ public class ShooterSubsystem extends SubsystemBase {
         // double estimatedSpeed = upperLowerPoint.getLowerSpeed() + interpolationFactor * (upperLowerPoint.getUpperSpeed() - upperLowerPoint.getLowerSpeed());
         
         // return new ShooterDataPoint(currentDistance, estimatedAngle, estimatedSpeed);
+    }
+
+    public Command accelerateToSpeed(double targetSpeed) {
+        Timer timer = new Timer();
+        return Commands.startRun(
+            () -> timer.restart(),
+            () -> {
+                double rampedSpeed = Math.min(timer.get() / 5.0, 1.0) * targetSpeed;
+                shooterMotors.drive(rampedSpeed);
+            },
+            this
+        ).until(() -> timer.hasElapsed(5.0));
     }
 
     public double getRequiredRPM(ShooterDataPoint shooterDataPoint){
