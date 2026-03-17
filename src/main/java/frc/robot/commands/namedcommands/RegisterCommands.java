@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
+import frc.robot.subsystems.mechanisms.intake.IntakeConstants;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
@@ -38,7 +39,7 @@ public class RegisterCommands {
         NamedCommands.registerCommand("IntakeDown",
             Commands.runOnce(
                 () -> {
-                    intakeSubsystem.setPosition(0.0);
+                    intakeSubsystem.setPosition(IntakeConstants.minValue);
                 }
             )
         );
@@ -47,7 +48,7 @@ public class RegisterCommands {
         NamedCommands.registerCommand("IntakeUp",
             Commands.runOnce(
                 () -> {
-                    intakeSubsystem.setPosition(-6.0);
+                    intakeSubsystem.setPosition(IntakeConstants.maxValue);
                 }
             )
         );

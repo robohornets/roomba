@@ -46,6 +46,7 @@ public class FeederSubsystem extends SubsystemBase {
     // MARK: Periodic Loop
     @Override
     public void periodic() {
+        logValues();
         runBedAgitation();
 
         switch (feederState) {
