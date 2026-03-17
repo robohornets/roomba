@@ -98,8 +98,7 @@ public class DebugJoystick {
         joystick.y().whileTrue(
             Commands.run(
                 () -> {
-                    shooterPitch = MathUtil.clamp(shooterPitch - 0.0025, -0.5, 0.0);
-                    shooterSubsystem.shooterPitchMotor.goTo(shooterPitch);
+                    shooterSubsystem.shooterPitchMotor.goTo(50);
                 }, shooterSubsystem
             )
         );
