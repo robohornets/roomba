@@ -37,8 +37,6 @@ public class FeederSubsystem extends SubsystemBase {
         feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
 
-        // WhatTime's Motor default command calls set(0) every loop after periodic() runs,
-        // overwriting the direct TalonFX.set() calls in runSpecifiedMotors. Replace with a no-op.
         feederFeederMotor.setDefaultCommand(Commands.run(() -> {}, feederFeederMotor));
         shooterFeederMotor.setDefaultCommand(Commands.run(() -> {}, shooterFeederMotor));
 

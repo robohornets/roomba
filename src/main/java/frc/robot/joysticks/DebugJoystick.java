@@ -83,7 +83,11 @@ public class DebugJoystick {
         );
 
         joystick.b().onTrue(
-            NamedCommands.getCommand("IntakeUp")
+            Commands.runOnce(
+                () -> {
+                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT);
+                }
+            )
         );
 
         joystick.x().onTrue(
