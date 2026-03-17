@@ -65,16 +65,16 @@ public class DebugJoystick {
             )
         );
 
-        intakeSubsystem.setDefaultCommand(
-            Commands.run(
-                () -> {
-                    double triggerSpeed = joystick.getLeftTriggerAxis() > joystick.getRightTriggerAxis() ? -joystick.getLeftTriggerAxis(): joystick.getRightTriggerAxis();
-                    intakeSubsystem.intakeWheelsMotor.getMotor().set(triggerSpeed);
+        // intakeSubsystem.setDefaultCommand(
+        //     Commands.run(
+        //         () -> {
+        //             double triggerSpeed = joystick.getLeftTriggerAxis() > joystick.getRightTriggerAxis() ? -joystick.getLeftTriggerAxis(): joystick.getRightTriggerAxis();
+        //             intakeSubsystem.intakeWheelsMotor.getMotor().set(triggerSpeed);
 
-                    Logger.recordOutput("IntakeSubsystem/WheelSpeed", triggerSpeed);
-                }, intakeSubsystem
-            )
-        );
+        //             Logger.recordOutput("IntakeSubsystem/WheelSpeed", triggerSpeed);
+        //         }, intakeSubsystem
+        //     )
+        // );
     }
 
     public void configureBindings() {
