@@ -107,6 +107,7 @@ public class RobotContainer {
     private void configureBindings() {
         driverJoystick.configureBindings();
         operatorJoystick.configureBindings();
+        debugJoystick.configureBindings();
         
         drivetrain.setDefaultCommand(drivetrain.joysticksDefaultCommand(driverJoystick.joystick));
 
