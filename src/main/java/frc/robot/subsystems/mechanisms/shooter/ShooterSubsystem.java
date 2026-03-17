@@ -37,15 +37,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
 
-    public ShooterConstants shooterConstants = new ShooterConstants();
+    // public ShooterConstants shooterConstants = new ShooterConstants();
 
     // MARK: Motors
     /** Motor controlling the shooter pitch (angle). */
     // this is reversed in real life so its inverted in the code
     public final Motor shooterPitchMotor = new Motor(11, "Mechanisms", true)
         .setFree(false)
-        .setRange(-0.5, 0)
-        .setMotorSpeed(0.1);
+        .setRange(ShooterConstants.SHOOTER_MAX_ANGLE, ShooterConstants.SHOOTER_MIN_ANGLE)
+        .setMotorSpeed(0.1)
+        .setPositionSupplier(() -> getThroughBorePosition());
 
     public final Motor leftShooterMotor = new Motor(13, "Mechanisms");
     public final Motor rightShooterMotor = new Motor(14, "Mechanisms", true);
@@ -72,7 +73,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     /** IMU sensor for shooter orientation feedback. */
-    // public final Pigeon2 shooterPigeon = new Pigeon2(34);
+    public final Pigeon2 shooterPigeon = new Pigeon2(34, "Mechanisms");
 
     public final CANcoder shooterThroughBore = new CANcoder(36);
 
@@ -80,7 +81,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput("ShooterSubsystem/MotorConnected", shooterPitchMotor.getMotor().isConnected());
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
-        Logger.recordOutput("ShooterSubsystem/MotorAngle", shooterPitchMotor.getMotor().getPosition().getValueAsDouble());
+        Logger.recordOutput("ShooterSubsystem/PigeonAngle", getPigeonPosition());
     }
 
     // --- Commands --- \\
@@ -89,6 +90,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getThroughBorePosition() {
         double offset = 0.4;
         return shooterThroughBore.getAbsolutePosition().getValueAsDouble() + offset;
+    }
+
+    public double getPigeonPosition() {
+        return shooterPigeon.getRoll().getValueAsDouble() * -1;
     }
 
     // For testing shooter angle manually
