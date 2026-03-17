@@ -90,15 +90,15 @@ public class FeederSubsystem extends SubsystemBase {
         boolean runShooterFeeder,
         boolean shooterFeederInverted
     ) {
-        feederFeederMotor.toggleEnabled(runFeederFeeder);
-        shooterFeederMotor.toggleEnabled(runShooterFeeder);
+        double feederSpeed = runFeederFeeder ? (feederFeederInverted ? -FeederConstants.FEEDER_FEEDER_SPEED : FeederConstants.FEEDER_FEEDER_SPEED) : 0.0;
+        double shooterSpeed = runShooterFeeder ? (shooterFeederInverted ? -FeederConstants.SHOOTER_FEEDER_SPEED : FeederConstants.SHOOTER_FEEDER_SPEED) : 0.0;
 
-        if (runFeederFeeder) {
-            feederFeederMotor.drive(feederFeederInverted);
-        }
-        if (runShooterFeeder) {
-            shooterFeederMotor.drive(shooterFeederInverted);
-        }
+        feederFeederMotor.getMotor().set(feederSpeed);
+        shooterFeederMotor.getMotor().set(shooterSpeed);
+
+        Logger.recordOutput("FeederSubsystem/FeederFeederSpeed", feederSpeed);
+        Logger.recordOutput("FeederSubsystem/ShooterFeederSpeed", shooterSpeed);
+        Logger.recordOutput("FeederSubsystem/FeederState", feederState.toString());
     }
 
     public void setFeederState(FeederState feederState) {
