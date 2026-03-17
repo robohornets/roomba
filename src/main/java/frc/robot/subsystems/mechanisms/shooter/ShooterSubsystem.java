@@ -72,7 +72,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     /** IMU sensor for shooter orientation feedback. */
-    public final Pigeon2 shooterPigeon = new Pigeon2(34);
+    // public final Pigeon2 shooterPigeon = new Pigeon2(34);
 
     public final CANcoder shooterThroughBore = new CANcoder(36);
 
@@ -87,6 +87,16 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getThroughBorePosition() {
         double offset = 0.4;
         return shooterThroughBore.getAbsolutePosition().getValueAsDouble() + offset;
+    }
+
+    // For testing shooter angle manually
+    private double shooterAngleTargetTesting = 0.0;
+    public void incrementShooterAngle(double incrementValue) {
+        shooterAngleTargetTesting += incrementValue;
+        
+        Logger.recordOutput("ShooterSubsystem/TestingAngleTarget", shooterAngleTargetTesting);
+        
+        shooterPitchMotor.goTo(shooterAngleTargetTesting);
     }
 
     public UpperLowerPoint shooterUpperLower() {

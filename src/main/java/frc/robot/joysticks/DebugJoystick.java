@@ -6,6 +6,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -86,12 +87,24 @@ public class DebugJoystick {
         );
 
         joystick.x().whileTrue(
-            NamedCommands.getCommand("RunAllFeederIn")
+            Commands.run(
+                () -> {
+                    shooterSubsystem.incrementShooterAngle(0.01);
+                }
+            )
         );
 
-        joystick.y();
+        joystick.y().whileTrue(
+            Commands.run(
+                () -> {
+                    shooterSubsystem.incrementShooterAngle(-0.01);
+                }
+            )
+        );;
 
-        joystick.rightTrigger();
+        joystick.rightTrigger().whileTrue(
+            NamedCommands.getCommand("RunAllFeederIn")
+        );
 
         joystick.leftTrigger()
             .whileTrue(

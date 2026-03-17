@@ -1,5 +1,7 @@
 package frc.robot.subsystems.vision.limelight;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +26,7 @@ public class LimelightConstants {
     // Position of Limelight relative to the centre of the robot in metres
     public static final Transform2d LIMELIGHT_4_TRANSFORM_FROM_CENTRE = new Transform2d(
         new Translation2d(0.0762, 0.228), 
-        new Rotation2d(0)
+        new Rotation2d(-0.2792526803)
     );
 
     /** Calculate dynamic standard deviations for Quest */

@@ -3,6 +3,8 @@ package frc.robot.subsystems.mechanisms.feeder;
 import org.littletonrobotics.junction.Logger;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
@@ -26,6 +28,8 @@ public class FeederSubsystem extends SubsystemBase {
         feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+
+        motorBedAgitationRoutine();
     }
 
     // MARK: Periodic Loop
@@ -33,54 +37,57 @@ public class FeederSubsystem extends SubsystemBase {
     public void periodic() {
         switch (feederState) {
             case ALL_FEEDER_IN:
-                runSpecifiedMotors(true, false, true, false, true, false);
+                runSpecifiedMotors(true, false, true, false);
                 break;
             
             case ALL_FEEDER_OUT:
-                runSpecifiedMotors(true, true, true, true, true, true);
-                break;
-
-            case ROLLERS_IN:
-                runSpecifiedMotors(true, false, false, false, false, false);
-                break;
-
-            case ROLLERS_OUT:
-                runSpecifiedMotors(true, true, false, false, false, false);
+                runSpecifiedMotors(true, true, true, true);
                 break;
 
             case SHOOTER_FEED_IN:
-                runSpecifiedMotors(false, false, true, false, true, false);
+                runSpecifiedMotors(true, false, true, false);
                 break;
 
             case SHOOTER_FEED_OUT:
-                runSpecifiedMotors(false, false, true, true, true, true);
+                runSpecifiedMotors(true, true, true, true);
                 break;
                 
             case OFF:
-                runSpecifiedMotors(false, false, false, false, false, false);
+                runSpecifiedMotors(false, false, false, false);
                 break;
         
             default:
-                runSpecifiedMotors(false, false, false, false, false, false);
+                runSpecifiedMotors(false, false, false, false);
                 break;
         }
     }
 
+    // MARK: Bed Agitation
+    // Reverses the bed roller motors every 10 seconds
+    private Command motorBedAgitationRoutine() {
+        return Commands.repeatingSequence(
+            Commands.run(
+                () -> {
+                    feederBedMotor.drive();
+                }
+            ).withTimeout(10),
+            Commands.run(
+                () -> {
+                    feederBedMotor.drive(true);
+                }
+            ).withTimeout(2)
+        );
+    }
+
     private void runSpecifiedMotors(
-        boolean runFeederBed, 
-        boolean feederBedInverted, 
         boolean runFeederFeeder, 
         boolean feederFeederInverted,
         boolean runShooterFeeder,
         boolean shooterFeederInverted
     ) {
-        feederBedMotor.toggleEnabled(runFeederBed);
         feederFeederMotor.toggleEnabled(runFeederFeeder);
         shooterFeederMotor.toggleEnabled(runShooterFeeder);
 
-        if (runFeederBed) {
-            feederBedMotor.drive(feederBedInverted);
-        }
         if (runFeederFeeder) {
             feederFeederMotor.drive(feederFeederInverted);
         }
@@ -93,6 +100,7 @@ public class FeederSubsystem extends SubsystemBase {
         this.feederState = feederState;
     }
 
+    // MARK: Logging
     public void logValues() {
         Logger.recordOutput("FeederSubsystem/MotorConnections/FeederBedConnected", feederBedMotor.getMotor().isConnected());
         Logger.recordOutput("FeederSubsystem/MotorConnections/FeederFeederConnected", feederFeederMotor.getMotor().isConnected());
