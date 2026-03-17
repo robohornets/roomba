@@ -5,14 +5,15 @@ import org.littletonrobotics.junction.Logger;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
-    public Motor angleMotor = new Motor(9)
+    public Motor angleMotor = new Motor(9, "Mechanisms")
         .setFree(false);
 
     // MARK: Intake Wheels
-    public Motor intakeWheelsMotor = new Motor(10)
+    public Motor intakeWheelsMotor = new Motor(10, "Mechanisms")
         .setMinValue(IntakeConstants.minValue)
         .setMaxValue(IntakeConstants.maxValue)
         .setMotorSpeed(0.2)
@@ -21,6 +22,11 @@ public class IntakeSubsystem extends SubsystemBase {
         .setMinSpeed(0.1)
         .setPG(0.1)
         .setPositionSupplier(()-> angleMotor.getCurrentValue());
+
+    public IntakeSubsystem() {
+        angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+    }
 
     // MARK: Periodic Loop
     @Override

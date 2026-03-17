@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.math.MathSubsystem;
 
@@ -38,6 +39,21 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterConstants shooterConstants = new ShooterConstants();
 
+    // MARK: Motors
+    /** Motor controlling the shooter pitch (angle). */
+    // this is reversed in real life so its inverted in the code
+    public final Motor shooterPitchMotor = new Motor(11, "Mechanisms", true)
+        .setFree(false)
+        .setRange(-0.5, 0)
+        .setMotorSpeed(0.1);
+
+    public final Motor leftShooterMotor = new Motor(13, "Mechanisms");
+    public final Motor rightShooterMotor = new Motor(14, "Mechanisms", true);
+
+    public final MotorGroup shooterMotors = new MotorGroup(
+        Arrays.asList(leftShooterMotor, rightShooterMotor)
+    ).setMotorSpeed(0.4);
+
     // MARK: Constructor
     /**
      * Constructs the ShooterSubsystem.
@@ -45,26 +61,15 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
+
+        shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         
         for (ShooterDataPoint point : ShooterConstants.shooterDataPoints) {
             dataPoints.put(point.distance, point);
         }
     }
-    
-    /** Motor controlling the shooter pitch (angle). */
-
-    // this is reversed in real life so its inverted in the code
-    public final Motor shooterPitchMotor = new Motor(11, true)
-        .setFree(false)
-        .setRange(-0.5, 0)
-        .setMotorSpeed(0.1);
-
-    public final Motor leftShooterMotor = new Motor(13);
-    public final Motor rightShooterMotor = new Motor(14, true);
-
-    public final MotorGroup shooterMotors = new MotorGroup(
-        Arrays.asList(leftShooterMotor, rightShooterMotor)
-    ).setMotorSpeed(0.4);
 
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34);

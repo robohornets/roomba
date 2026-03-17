@@ -2,21 +2,33 @@ package frc.robot.subsystems.mechanisms.feeder;
 
 import org.littletonrobotics.junction.Logger;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 
 public class FeederSubsystem extends SubsystemBase {
     // MARK: Feeder Bed
-    public Motor feederBedMotor = new Motor(15).setFree(true).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED);
+    public Motor feederBedMotor = new Motor(15, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED);
 
     // MARK: Feeder Feeder
-    public Motor feederFeederMotor = new Motor(16).setFree(true).setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED);
+    public Motor feederFeederMotor = new Motor(16, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED);
 
     // MARK: Shooter Feeder
-    public Motor shooterFeederMotor = new Motor(12).setFree(true).setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED);
+    public Motor shooterFeederMotor = new Motor(12, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED);
 
     // MARK: Feeder State
     private FeederState feederState = FeederState.OFF;
+
+    // Applys current limits to motors to reduce chance of brownout
+    // MARK: Constructor
+    public FeederSubsystem() {
+        feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+    }
 
     // MARK: Periodic Loop
     @Override

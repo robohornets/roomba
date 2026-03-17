@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -50,6 +54,16 @@ public class RobotContainer {
     
     // MARK: Register Commands
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, feederSubsystem);
+
+    // MARK: Motor Config
+    public static final TalonFXConfiguration mechanismsMotorConfiguration = new TalonFXConfiguration()
+        .withCurrentLimits(
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(Amps.of(60))
+                .withSupplyCurrentLimit(Amps.of(40))
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimitEnable(true)
+        );
     
     // MARK: Tests
     // public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
@@ -110,6 +124,7 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+    // MARK: Get Autonomous
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
         // return autoChooser.get();

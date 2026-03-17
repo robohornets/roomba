@@ -275,4 +275,19 @@ public class Drive extends SubsystemBase {
         }
         return pose;
     }
+
+    // MARK: Motor Logging
+    public void logMotorInformation() {
+        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor0", drivetrain.getModule(0).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor0", drivetrain.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
+
+        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor1", drivetrain.getModule(1).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor1", drivetrain.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        
+        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor2", drivetrain.getModule(2).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor2", drivetrain.getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        
+        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor3", drivetrain.getModule(3).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor3", drivetrain.getModule(3).getDriveMotor().getStatorCurrent().getValueAsDouble());
+    }
 }
