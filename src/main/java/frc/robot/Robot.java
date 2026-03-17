@@ -98,10 +98,11 @@ public class Robot extends LoggedRobot {
         robotContainer.intakeSubsystem.angleMotor.toggleEnabled(true);
 
         // Apply full motor config here (after CAN bus is stable — constructor-time apply() silently fails)
-        robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        robotContainer.intakeSubsystem.angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        // StatusCodes are logged so you can verify success in AdvantageScope under MotorConfig/
+        Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/LeftShooter",  robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/RightShooter", robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/IntakeAngle",  robotContainer.intakeSubsystem.angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
     }
 
     // MARK: Robot Periodic

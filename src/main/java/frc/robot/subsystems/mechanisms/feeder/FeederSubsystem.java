@@ -25,6 +25,10 @@ public class FeederSubsystem extends SubsystemBase {
     // Applys current limits to motors to reduce chance of brownout
     // MARK: Constructor
     public FeederSubsystem() {
+        feederBedMotor.toggleEnabled(true);
+        feederFeederMotor.toggleEnabled(true);
+        shooterFeederMotor.toggleEnabled(true);
+
         feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);

@@ -69,6 +69,7 @@ public class RobotContainer {
         .withMotorOutput(
             new MotorOutputConfigs()
                 .withNeutralMode(NeutralModeValue.Brake)
+                .withDutyCycleNeutralDeadband(0.04)
         );
     
     // MARK: Tests

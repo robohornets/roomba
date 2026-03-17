@@ -24,6 +24,9 @@ public class IntakeSubsystem extends SubsystemBase {
         .setPositionSupplier(()-> angleMotor.getCurrentValue());
 
     public IntakeSubsystem() {
+        angleMotor.toggleEnabled(true);
+        intakeWheelsMotor.toggleEnabled(true);
+        
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
     }

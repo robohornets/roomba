@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
@@ -85,12 +86,10 @@ public class DebugJoystick {
             NamedCommands.getCommand("IntakeUp")
         );
 
-        joystick.x().whileTrue(
-            // shooterSubsystem.accelerateToSpeed(0.5)
-            Commands.run(
+        joystick.x().onTrue(
+            Commands.runOnce(
                 () -> {
-                    shooterSubsystem.leftShooterMotor.getMotor().set(0.5);
-                    shooterSubsystem.leftShooterMotor.getMotor().set(-0.5);
+                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
                 }
             )
         );
