@@ -10,7 +10,7 @@ import frc.robot.RobotContainer;
 
 public class FeederSubsystem extends SubsystemBase {
     // MARK: Feeder Bed
-    public Motor feederBedMotor = new Motor(15, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED);
+    public Motor feederBedMotor = new Motor(15, "Mechanisms", true).setFree(true).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED);
 
     // MARK: Feeder Feeder
     public Motor feederFeederMotor = new Motor(16, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED);
