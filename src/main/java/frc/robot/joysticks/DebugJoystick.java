@@ -89,18 +89,20 @@ public class DebugJoystick {
         joystick.x().whileTrue(
             Commands.run(
                 () -> {
-                    shooterSubsystem.incrementShooterAngle(0.1);
-                }
+                    shooterPitch = MathUtil.clamp(shooterPitch + 0.0025, -0.5, 0.0);
+                    shooterSubsystem.shooterPitchMotor.goTo(shooterPitch);
+                }, shooterSubsystem
             )
         );
 
         joystick.y().whileTrue(
             Commands.run(
                 () -> {
-                    shooterSubsystem.incrementShooterAngle(-0.1);
-                }
+                    shooterPitch = MathUtil.clamp(shooterPitch - 0.0025, -0.5, 0.0);
+                    shooterSubsystem.shooterPitchMotor.goTo(shooterPitch);
+                }, shooterSubsystem
             )
-        );;
+        );
 
         joystick.rightTrigger().whileTrue(
             NamedCommands.getCommand("RunAllFeederIn")
