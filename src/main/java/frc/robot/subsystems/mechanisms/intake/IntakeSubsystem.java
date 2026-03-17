@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
@@ -17,7 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
         .setHoldSpeed(0.0)
         .setThreshold(IntakeConstants.threshold)
         .setMinSpeed(0.3)
-        .setPG(0.8);
+        .setPG(1.0);
 
     // MARK: Intake Wheels
     public Motor intakeWheelsMotor = new Motor(10, "Mechanisms")
@@ -29,6 +30,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
         angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
+
+        intakeWheelsMotor.setDefaultCommand(Commands.run(() -> {}, intakeWheelsMotor));
         
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
@@ -52,13 +55,13 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.recordOutput("IntakeSubsystem/State", intakeState.toString());
         switch (intakeState) {
             case INTAKE_IN:
-                intakeWheelsMotor.drive(intakeSpeed);
+                intakeWheelsMotor.getMotor().set(intakeSpeed);
                 break;
             case INTAKE_OUT:
-                intakeWheelsMotor.drive(-intakeSpeed);
+                intakeWheelsMotor.getMotor().set(-intakeSpeed);
                 break;
             case OFF:
-                intakeWheelsMotor.drive(0);
+                intakeWheelsMotor.getMotor().set(0.0);
                 break;
             default:
                 break;
