@@ -94,11 +94,11 @@ public class DebugJoystick {
             )
         );
 
-        joystick.y().whileTrue(
-            Commands.run(
+        joystick.y().onTrue(
+            Commands.runOnce(
                 () -> {
-                    shooterSubsystem.shooterPitchMotor.goTo(50);
-                }, shooterSubsystem
+                    feederSubsystem.setFeederState(FeederState.OFF);
+                }
             )
         );
 
