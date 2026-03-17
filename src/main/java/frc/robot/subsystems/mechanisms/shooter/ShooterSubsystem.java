@@ -44,10 +44,10 @@ public class ShooterSubsystem extends SubsystemBase {
     // this is reversed in real life so its inverted in the code
     public final Motor shooterPitchMotor = new Motor(11, "Mechanisms", true)
         .setFree(false)
-        .setRange(ShooterConstants.SHOOTER_MAX_ANGLE, ShooterConstants.SHOOTER_MIN_ANGLE)
+        .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
         .setMotorSpeed(0.1)
         .setThreshold(ShooterConstants.POSITION_THRESHOLD)
-        .setPositionSupplier(() -> getThroughBorePosition());
+        .setPositionSupplier(() -> getPigeonPosition());
 
     public final Motor leftShooterMotor = new Motor(13, "Mechanisms");
     public final Motor rightShooterMotor = new Motor(14, "Mechanisms", true);
@@ -78,8 +78,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public final CANcoder shooterThroughBore = new CANcoder(36);
 
+    public double shooterAngleTargetTesting = 65;
+
     @Override
     public void periodic() {
+        Logger.recordOutput("ShooterSubsystem/TestingAngleTarget", shooterAngleTargetTesting);
         Logger.recordOutput("ShooterSubsystem/MotorConnected", shooterPitchMotor.getMotor().isConnected());
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
         Logger.recordOutput("ShooterSubsystem/PigeonAngle", getPigeonPosition());
@@ -98,11 +101,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     // For testing shooter angle manually
-    private double shooterAngleTargetTesting = 0.0;
     public void incrementShooterAngle(double incrementValue) {
         shooterAngleTargetTesting += incrementValue;
-        
-        Logger.recordOutput("ShooterSubsystem/TestingAngleTarget", shooterAngleTargetTesting);
         
         shooterPitchMotor.goTo(shooterAngleTargetTesting);
     }

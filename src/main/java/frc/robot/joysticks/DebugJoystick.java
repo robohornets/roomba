@@ -89,7 +89,7 @@ public class DebugJoystick {
         joystick.x().whileTrue(
             Commands.run(
                 () -> {
-                    shooterSubsystem.incrementShooterAngle(0.01);
+                    shooterSubsystem.incrementShooterAngle(0.1);
                 }
             )
         );
@@ -97,7 +97,7 @@ public class DebugJoystick {
         joystick.y().whileTrue(
             Commands.run(
                 () -> {
-                    shooterSubsystem.incrementShooterAngle(-0.01);
+                    shooterSubsystem.incrementShooterAngle(-0.1);
                 }
             )
         );;
