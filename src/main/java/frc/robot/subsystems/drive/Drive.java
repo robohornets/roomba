@@ -1,9 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -32,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
@@ -42,41 +37,37 @@ public class Drive extends SubsystemBase {
 
     public QuestNavSubsystem questNavSubsystem;
     
-    LimelightSubsystem limelightSubsystem;
+    public LimelightSubsystem limelightSubsystem;
 
+    // MARK: Constructor
     public Drive(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
 
         this.questNavSubsystem = new QuestNavSubsystem(this);
-
         this.limelightSubsystem = new LimelightSubsystem(this, questNavSubsystem, "limelight-four");
 
         configureAutoBuilder();
     }
 
-    public static final double ODOMETRY_FREQUENCY = 250.0;
-    public static double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
     // MARK: Field Centric
     public static final SwerveRequest.FieldCentric drive = 
         new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1)
-            .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(DriveConstants.MAX_SPEED * 0.1)
+            .withRotationalDeadband(DriveConstants.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
     // MARK: Heading Control
     public final SwerveRequest.FieldCentricFacingAngle driveFacingHub = 
         new SwerveRequest.FieldCentricFacingAngle()
             .withHeadingPID(5, 0, 0)
-            .withDeadband(MaxSpeed * 0.1)
-            .withRotationalDeadband(MaxAngularRate * 0.1)
+            .withDeadband(DriveConstants.MAX_SPEED * 0.1)
+            .withRotationalDeadband(DriveConstants.MAX_ANGULAR_RATE * 0.1)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
     // MARK: Robot Centric
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
-        .withDeadband(MaxSpeed * 0.1)
-        .withRotationalDeadband(MaxAngularRate * 0.1)
+        .withDeadband(DriveConstants.MAX_SPEED * 0.1)
+        .withRotationalDeadband(DriveConstants.MAX_ANGULAR_RATE * 0.1)
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     public final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -98,6 +89,8 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
 
         Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
+
+        logMotorInformation();
     }
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
@@ -278,16 +271,42 @@ public class Drive extends SubsystemBase {
 
     // MARK: Motor Logging
     public void logMotorInformation() {
-        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor0", drivetrain.getModule(0).getSteerMotor().getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor0", drivetrain.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        for (int i = 0; i <= 3; i++) {
+            // Logs the current readings to AdvantageKit
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Current/Stator/SteerMotor" + i, 
+                drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble()
+            );
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Current/Stator/DriveMotor" + i, 
+                drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble()
+            );
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Current/Supply/SteerMotor" + i, 
+                drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble()
+            );
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Current/Supply/DriveMotor" + i, 
+                drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble()
+            );
 
-        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor1", drivetrain.getModule(1).getSteerMotor().getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor1", drivetrain.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
-        
-        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor2", drivetrain.getModule(2).getSteerMotor().getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor2", drivetrain.getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
-        
-        Logger.recordOutput("SwerveDrive/Motors/Current/DriveMotor3", drivetrain.getModule(3).getSteerMotor().getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("SwerveDrive/Motors/Current/SteerMotor3", drivetrain.getModule(3).getDriveMotor().getStatorCurrent().getValueAsDouble());
+            // Logs the voltage to AdvantageKit
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Voltage/Output/SteerMotor" + i, 
+                drivetrain.getModule(i).getDriveMotor().getMotorVoltage().getValueAsDouble()
+            );
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Voltage/Output/DriveMotor" + i, 
+                drivetrain.getModule(i).getDriveMotor().getMotorVoltage().getValueAsDouble()
+            );
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Voltage/Supply/SteerMotor" + i, 
+                drivetrain.getModule(i).getDriveMotor().getSupplyVoltage().getValueAsDouble()
+            );
+            Logger.recordOutput(
+                "SwerveDrive/Motors/Voltage/Supply/DriveMotor" + i, 
+                drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble()
+            );
+        }
     }
 }
