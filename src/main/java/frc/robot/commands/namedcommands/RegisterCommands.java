@@ -53,6 +53,15 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: IntakeAgitate
+        NamedCommands.registerCommand("IntakeAgitate",
+            Commands.runOnce(
+                () -> {
+                    intakeSubsystem.setPosition(IntakeConstants.maxValue/2);
+                }
+            )
+        );
+
         // MARK: RunIntakeIn
         NamedCommands.registerCommand("IntakeIn",
             Commands.runOnce(
