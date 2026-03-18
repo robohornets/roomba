@@ -35,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // MARK: Intake Wheel State
     private IntakeStates intakeState = IntakeStates.OFF;
-    private static final double INTAKE_SPEED = 0.2;
+    private static final double INTAKE_SPEED = 0.5;
 
     // MARK: Periodic Loop
     @Override

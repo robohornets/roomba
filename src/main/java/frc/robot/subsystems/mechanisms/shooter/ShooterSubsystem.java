@@ -48,7 +48,8 @@ public class ShooterSubsystem extends SubsystemBase {
         .setFree(false)
         .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
         .setMotorSpeed(0.5)
-        .setMinSpeed(0.05)
+        .setMinSpeed(0.1)
+        .setHoldSpeed(0.1)
         .setPG(0.02)
         .setThreshold(ShooterConstants.POSITION_THRESHOLD)
         .setPositionSupplier(() -> getPigeonPosition());
