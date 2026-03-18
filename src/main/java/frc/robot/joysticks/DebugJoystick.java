@@ -102,20 +102,21 @@ public class DebugJoystick {
             )
         );
 
-        joystick.rightTrigger().whileTrue(
-            NamedCommands.getCommand("RunAllFeederIn")
-        );
-
-        joystick.leftTrigger()
-            .whileTrue(
-                Commands.runEnd(
-                    () -> {
-                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                    },
+        joystick.rightTrigger()
+            .onTrue(
+                Commands.runOnce(
                     () -> {
                         intakeSubsystem.setIntake(IntakeStates.OFF);
-                    },
-                    intakeSubsystem
+                    }
+                )
+            );
+
+        joystick.leftTrigger()
+            .onTrue(
+                Commands.runOnce(
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                    }
                 )
             );
 

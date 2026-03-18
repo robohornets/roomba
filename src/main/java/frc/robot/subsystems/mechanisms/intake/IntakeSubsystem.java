@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // MARK: Angle Control State
     private double angleTarget = Double.NaN;
-    private static final double ANGLE_SPEED = 0.3;
+    private static final double ANGLE_SPEED = 0.6;
 
     public IntakeSubsystem() {
         angleMotor.toggleEnabled(true);
