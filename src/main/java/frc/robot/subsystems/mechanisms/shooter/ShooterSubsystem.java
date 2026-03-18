@@ -47,7 +47,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public final Motor shooterPitchMotor = new Motor(11, "Mechanisms", true)
         .setFree(false)
         .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
-        .setMotorSpeed(0.1)
+        .setMotorSpeed(0.5)
+        .setMinSpeed(0.05)
+        .setPG(0.02)
         .setThreshold(ShooterConstants.POSITION_THRESHOLD)
         .setPositionSupplier(() -> getPigeonPosition());
 
@@ -88,6 +90,7 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("ShooterSubsystem/MotorConnected", shooterPitchMotor.getMotor().isConnected());
         Logger.recordOutput("ShooterSubsystem/ThroughBoreAngle", getThroughBorePosition());
         Logger.recordOutput("ShooterSubsystem/PigeonAngle", getPigeonPosition());
+        Logger.recordOutput("ShooterSubsystem/PitchMotorOutput", shooterPitchMotor.getMotor().get());
     }
 
     // --- Commands --- \\

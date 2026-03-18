@@ -61,7 +61,7 @@ public class RobotContainer {
     public static final TalonFXConfiguration mechanismsMotorConfiguration = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(Amps.of(60))
+                .withStatorCurrentLimit(Amps.of(100))
                 .withSupplyCurrentLimit(Amps.of(40))
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimitEnable(true)

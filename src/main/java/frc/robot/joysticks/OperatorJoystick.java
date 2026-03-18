@@ -37,11 +37,7 @@ public class OperatorJoystick {
             NamedCommands.getCommand("IntakeDown")
         );
 
-        // MARK: Intake Up
-        joystick.b().onTrue(
-            NamedCommands.getCommand("IntakeUp")
-        );
-
+        joystick.b();
 
         joystick.x();
 
@@ -51,7 +47,13 @@ public class OperatorJoystick {
         joystick.rightTrigger();
 
         // MARK: Intake in
-        joystick.leftTrigger();
+        joystick.leftTrigger().whileTrue(
+                Commands.runEnd(
+                    () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_IN),
+                    () -> intakeSubsystem.setIntake(IntakeStates.OFF),
+                    intakeSubsystem
+                )
+            );
 
         // MARK: Shooter feeder
         joystick.rightBumper();
