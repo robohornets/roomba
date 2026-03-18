@@ -19,7 +19,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // MARK: Angle Control State
     private double angleTarget = Double.NaN;
-    private static final double ANGLE_SPEED = 0.6;
+    private static final double ANGLE_DOWN_SPEED = 0.2;
+    private static final double ANGLE_UP_SPEED = 0.2;
 
     public IntakeSubsystem() {
         // angleMotor.toggleEnabled(true);
@@ -60,8 +61,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
         if (Math.abs(error) <= IntakeConstants.threshold) {
             angleMotor.set(0.0);
-        } else {
-            angleMotor.set(Math.copySign(ANGLE_SPEED, error));
+        } else if (error < 0) {
+            angleMotor.set(Math.copySign(ANGLE_DOWN_SPEED, error));
+        }
+        else {
+            angleMotor.set(Math.copySign(ANGLE_UP_SPEED, error));
         }
     }
 
