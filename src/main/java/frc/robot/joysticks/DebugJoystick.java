@@ -102,21 +102,12 @@ public class DebugJoystick {
             )
         );
 
-        joystick.rightTrigger()
-            .onTrue(
-                Commands.runOnce(
-                    () -> {
-                        intakeSubsystem.setIntake(IntakeStates.OFF);
-                    }
-                )
-            );
-
         joystick.leftTrigger()
-            .onTrue(
-                Commands.runOnce(
-                    () -> {
-                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                    }
+            .whileTrue(
+                Commands.runEnd(
+                    () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_IN),
+                    () -> intakeSubsystem.setIntake(IntakeStates.OFF),
+                    intakeSubsystem
                 )
             );
 
