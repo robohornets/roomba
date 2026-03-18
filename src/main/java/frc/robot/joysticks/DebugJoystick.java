@@ -111,7 +111,13 @@ public class DebugJoystick {
                 )
             );
 
-        joystick.leftBumper();
+        joystick.leftBumper().onTrue(
+            Commands.runOnce(
+                () -> {
+                    shooterSubsystem.shooterPitchMotor.set(50);
+                }
+            )
+        );
 
         // Reset pose to limelight output
         joystick.povUp().onTrue(
