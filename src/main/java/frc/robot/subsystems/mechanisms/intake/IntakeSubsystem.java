@@ -15,9 +15,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
     // MARK: Intake Wheels
-    public Motor intakeWheelsMotor = new Motor(10, "Mechanisms")
-        .setFree(true)
-        .setMotorSpeed(0.2);
+    public Motor intakeWheelsMotor = new Motor(10, "Mechanisms");
 
     // MARK: Angle Control State
     private double angleTarget = Double.NaN;
@@ -34,14 +32,20 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
     }
 
+    // MARK: Intake Wheel State
+    private IntakeStates intakeState = IntakeStates.OFF;
+    private static final double INTAKE_SPEED = 0.2;
+
     // MARK: Periodic Loop
     @Override
     public void periodic() {
         runAngleControl();
+        runIntakeWheels();
 
         Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getPosition().refresh().getValueAsDouble());
         Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.get());
+        Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
     }
 
     // MARK: Angle Control
@@ -61,27 +65,30 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void setPosition(double targetPosition) {
-        Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
-        angleTarget = targetPosition;
-    }
-
-    private double intakeSpeed = 0.2;
-
-    public void setIntake(IntakeStates intakeState) {
-        Logger.recordOutput("IntakeSubsystem/State", intakeState.toString());
+    // MARK: Intake Wheels
+    private void runIntakeWheels() {
         switch (intakeState) {
             case INTAKE_IN:
-                intakeWheelsMotor.getMotor().set(intakeSpeed);
+                intakeWheelsMotor.getMotor().set(INTAKE_SPEED);
                 break;
             case INTAKE_OUT:
-                intakeWheelsMotor.getMotor().set(-intakeSpeed);
+                intakeWheelsMotor.getMotor().set(-INTAKE_SPEED);
                 break;
             case OFF:
                 intakeWheelsMotor.getMotor().set(0.0);
                 break;
             default:
+                intakeWheelsMotor.getMotor().set(0.0);
                 break;
         }
+    }
+
+    public void setPosition(double targetPosition) {
+        Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
+        angleTarget = targetPosition;
+    }
+
+    public void setIntake(IntakeStates intakeState) {
+        this.intakeState = intakeState;
     }
 }
