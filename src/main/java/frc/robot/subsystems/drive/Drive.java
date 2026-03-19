@@ -80,18 +80,7 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         drivetrain.periodic();
 
-        Logger.recordOutput("SwerveDrive/Pose", getPose2d());
-        
-        // Log module states for AdvantageScope swerve visualization
-        Logger.recordOutput("SwerveDrive/ModuleStates", drivetrain.getState().ModuleStates);
-        Logger.recordOutput("SwerveDrive/ModuleTargets", drivetrain.getState().ModuleTargets);
-        Logger.recordOutput("SwerveDrive/ChassisSpeeds", drivetrain.getState().Speeds);
-        Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
-
-        Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
-
-        Logger.recordOutput("SwerveDrive/DistanceToHub", getDistanceToHub());
-
+        logValues();
         logMotorInformation();
     }
 
@@ -269,6 +258,20 @@ public class Drive extends SubsystemBase {
             );
         }
         return pose;
+    }
+
+    // MARK: Logging
+    private void logValues() {
+        Logger.recordOutput("SwerveDrive/Pose", getPose2d());
+        
+        // Log module states for AdvantageScope swerve visualization
+        Logger.recordOutput("SwerveDrive/ModuleStates", drivetrain.getState().ModuleStates);
+        Logger.recordOutput("SwerveDrive/ModuleTargets", drivetrain.getState().ModuleTargets);
+        Logger.recordOutput("SwerveDrive/ChassisSpeeds", drivetrain.getState().Speeds);
+        Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
+
+        Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
+        Logger.recordOutput("SwerveDrive/DistanceToHub", getDistanceToHub());
     }
 
     // MARK: Motor Logging

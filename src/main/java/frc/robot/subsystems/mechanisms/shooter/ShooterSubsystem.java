@@ -118,6 +118,13 @@ public class ShooterSubsystem extends SubsystemBase {
     // MARK: Periodic Loop
     @Override
     public void periodic() {
+        if (drivetrain.isLockedToHub()) {
+            double currentDistance = drivetrain.getDistanceToHub();
+            ShooterDataPoint values = calculateShooterValues(shooterUpperLower(), currentDistance);
+            setPitchTarget(values.angle);
+            setFlywheelSpeed(values.speed);
+        }
+
         logValues();
     }
 
@@ -186,7 +193,7 @@ public class ShooterSubsystem extends SubsystemBase {
             () -> timer.restart(),
             () -> {
                 double rampedSpeed = Math.min(timer.get() / 5.0, 1.0) * targetSpeed;
-                shooterMotors.drive(rampedSpeed);
+                setFlywheelSpeed(rampedSpeed);
             },
             this
         ).until(() -> timer.hasElapsed(5.0));
