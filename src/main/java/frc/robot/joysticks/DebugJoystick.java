@@ -113,7 +113,7 @@ public class DebugJoystick {
         joystick.leftBumper().onTrue(
             Commands.runOnce(
                 () -> {
-                    shooterSubsystem.shooterPitchMotor.set(50);
+                    shooterSubsystem.shooterPitchMotor.goTo(50);
                 }
             )
         );

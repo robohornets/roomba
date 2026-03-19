@@ -90,6 +90,8 @@ public class Drive extends SubsystemBase {
 
         Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
 
+        Logger.recordOutput("SwerveDrive/DistanceToHub", getDistanceToHub());
+
         logMotorInformation();
     }
 

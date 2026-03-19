@@ -43,11 +43,11 @@ public class FeederSubsystem extends SubsystemBase {
 
         switch (feederState) {
             case ALL_FEEDER_IN:
-                runSpecifiedMotors(true, false, true, false, true, false);
+                runSpecifiedMotors(true, false, true, false, true, true);
                 break;
 
             case ALL_FEEDER_OUT:
-                runSpecifiedMotors(true, true, true, true, true, true);
+                runSpecifiedMotors(true, true, true, true, true, false);
                 break;
 
             case SHOOTER_FEED_IN:
