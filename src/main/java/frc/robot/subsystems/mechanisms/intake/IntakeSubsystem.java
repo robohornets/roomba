@@ -105,5 +105,6 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
         Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
+        Logger.recordOutput("IntakeSubsystem/Current/AngleMotor", angleMotor.getMotor().getStatorCurrent().getValueAsDouble());
     }
 }

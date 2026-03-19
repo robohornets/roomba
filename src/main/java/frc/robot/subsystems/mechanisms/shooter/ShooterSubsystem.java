@@ -45,12 +45,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: Motors
     /** Motor controlling the shooter angle */
-    public final Motor shooterPitchMotor = new Motor(11, "Mechanisms", true)
+    public final Motor shooterPitchMotor = new Motor(11, "Mechanisms", false)
         .setFree(false)
         .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
-        .setMotorSpeed(0.5)
-        .setMinSpeed(0.1)
-        .setHoldSpeed(0.1)
+        .setMotorSpeed(0.1)
+        .setMinSpeed(0.0)
+        .setHoldSpeed(0.0)
         .setPG(0.02)
         .setThreshold(ShooterConstants.POSITION_THRESHOLD)
         .setPositionSupplier(() -> getPigeonPosition());
@@ -98,7 +98,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public double shooterAngleTarget = 65;
 
     /** Shared pitch target used by manual joystick control and button bindings. */
-    public double pitchTarget = ShooterConstants.SHOOTER_MIN_ANGLE;
+    public double pitchTarget = ShooterConstants.SHOOTER_MAX_ANGLE;
     private double lastSentPitchTarget = Double.NaN;
 
     // MARK: Set Pitch Target
