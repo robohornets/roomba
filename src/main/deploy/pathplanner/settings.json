@@ -1,18 +1,16 @@
 {
-  "robotWidth": 0.762,
-  "robotLength": 0.762,
+  "robotWidth": 0.7874,
+  "robotLength": 0.7874,
   "holonomicMode": true,
   "pathFolders": [
-    "1 - Hub, Depot, Hub (HDH)",
-    "2- HDH",
-    "3 - Hub, Depot, Hub, Outpost, Hub (HDHOH)",
-    "4 - Hub, Neutral, Hub (HNH)"
+    "Neutral Auto 1",
+    "Neutral Auto 2"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 1.5,
-  "defaultMaxAngVel": 180.0,
-  "defaultMaxAngAccel": 100.0,
+  "defaultMaxAccel": 3.0,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
   "robotMass": 75.0,
   "robotMOI": 6.883,
@@ -33,5 +31,7 @@
   "brModuleY": -0.267,
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
-  "robotFeatures": []
+  "robotFeatures": [
+    "{\"name\":\"Rectangle\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":-0.425,\"y\":0.0},\"size\":{\"width\":0.6,\"length\":0.15},\"borderRadius\":0.02,\"strokeWidth\":0.01,\"filled\":false}}"
+  ]
 }

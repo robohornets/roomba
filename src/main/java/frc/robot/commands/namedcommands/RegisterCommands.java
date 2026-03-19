@@ -39,7 +39,7 @@ public class RegisterCommands {
         NamedCommands.registerCommand("IntakeDown",
             Commands.runOnce(
                 () -> {
-                    intakeSubsystem.setPosition(IntakeConstants.minValue);
+                    intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
                 }
             )
         );
@@ -48,7 +48,7 @@ public class RegisterCommands {
         NamedCommands.registerCommand("IntakeUp",
             Commands.runOnce(
                 () -> {
-                    intakeSubsystem.setPosition(IntakeConstants.maxValue);
+                    intakeSubsystem.setPosition(IntakeConstants.INTAKE_MAX_VALUE);
                 }
             )
         );
@@ -57,8 +57,18 @@ public class RegisterCommands {
         NamedCommands.registerCommand("IntakeAgitate",
             Commands.runOnce(
                 () -> {
-                    intakeSubsystem.setPosition(IntakeConstants.maxValue/2);
+                    intakeSubsystem.setPosition(IntakeConstants.INTAKE_MAX_VALUE/2);
                 }
+            )
+        );
+
+        // MARK: AgitateAutoFuel
+        NamedCommands.registerCommand("AgitateAutoFuel",
+            Commands.repeatingSequence(
+                Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MAX_VALUE / 2)),
+                Commands.waitSeconds(2),
+                Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
+                Commands.waitSeconds(2)
             )
         );
 
