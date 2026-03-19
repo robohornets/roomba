@@ -105,7 +105,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // MARK: Set Pitch Target
     public void setPitchTarget(double pitch) {
         // pitchTarget = MathUtil.clamp(pitch, ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE);
-        shooterPitchMotor.goTo(pitchTarget);
+        shooterPitchMotor.goTo(pitchTarget / 180);
     }
 
     /** Shared flywheel speed target used by manual joystick control and button bindings. */
@@ -148,16 +148,16 @@ public class ShooterSubsystem extends SubsystemBase {
         // MARK: NEEDS REFACTORING
         // if (dataPoints.isEmpty()) {
 
-            // double currentDistance = drivetrain.getDistanceToHub();
-            // double aimHeight = (6 - 20 / 12) / 3.281;
+        //     double currentDistance = drivetrain.getDistanceToHub();
+        //     double aimHeight = (6 - 20 / 12) / 3.281;
 
-            // double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
+        //     double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
 
 
-            // return new UpperLowerPoint(
-            //     new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
-            //     new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
-            // );
+        //     return new UpperLowerPoint(
+        //         new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
+        //         new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
+        //     );
         // }
         
         double currentDistance = drivetrain.getDistanceToHub();

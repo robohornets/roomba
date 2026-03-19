@@ -58,9 +58,12 @@ public class DebugJoystick {
             double changeAmountPerTick = 0.0025;
             double leftY = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY() : 0.0;
             double rightY = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY() : 0.0;
-            
-            shooterSubsystem.setFlywheelSpeed(shooterSubsystem.flywheelSpeed + Math.signum(leftY) * changeAmountPerTick);
-            shooterSubsystem.setPitchTarget(shooterSubsystem.pitchTarget + Math.signum(rightY) * changeAmountPerTick);
+
+
+            shooterSubsystem.shooterMotors.drive(shooterSubsystem.leftShooterMotor.getCurrentValue() + Math.signum(leftY) * changeAmountPerTick);
+            shooterSubsystem.shooterPitchMotor.goTo(shooterSubsystem.shooterPitchMotor.getCurrentValue() +  + Math.signum(rightY) * changeAmountPerTick);
+            // shooterSubsystem.setFlywheelSpeed(shooterSubsystem.flywheelSpeed + Math.signum(leftY) * changeAmountPerTick);
+            // shooterSubsystem.setPitchTarget(shooterSubsystem.pitchTarget + Math.signum(rightY) * changeAmountPerTick);
         }).schedule();
 
 
