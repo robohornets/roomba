@@ -41,10 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
         runAngleControl();
         runIntakeWheels();
 
-        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
-        Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
-        Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
-        Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
+        logValues();
     }
 
     // MARK: Angle Control
@@ -100,5 +97,13 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
         this.intakeState = intakeState;
+    }
+
+    // MARK: Logging
+    private void logValues() {
+        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
+        Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
+        Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
+        Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
     }
 }

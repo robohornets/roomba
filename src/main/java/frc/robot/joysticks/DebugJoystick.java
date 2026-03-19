@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -24,8 +23,6 @@ public class DebugJoystick {
     private final IntakeSubsystem intakeSubsystem;
     private final FeederSubsystem feederSubsystem;
 
-    private double shooterSpeed;
-    private double shooterPitch;
 
     public DebugJoystick(
         CommandXboxController joystick, 
@@ -40,29 +37,6 @@ public class DebugJoystick {
         this.intakeSubsystem = intakeSubsystem;
         this.feederSubsystem = feederSubsystem;
 
-        this.shooterSpeed = 0.0;
-        this.shooterPitch = 0.0;
-
-        shooterSubsystem.setDefaultCommand(
-            Commands.run(
-                () -> {
-
-                    double leftJoystickValue = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY(): 0.0;
-                    double rightJoystickValue = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY(): 0.0;
-
-                    double changeAmountPerTick = 0.0025;
-                    double change = Math.signum(leftJoystickValue) * changeAmountPerTick;
-                    shooterSpeed = MathUtil.clamp(shooterSpeed + change, -0.1, 1.0);
-
-                    shooterPitch = MathUtil.clamp(shooterPitch + Math.signum(rightJoystickValue) * changeAmountPerTick, 5.0 ,65.0);
-
-                    shooterSubsystem.shooterMotors.drive(shooterSpeed);
-
-                    Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterSpeed);
-                    Logger.recordOutput("ShooterSubsystem/FeederSpeed", rightJoystickValue);
-                }, shooterSubsystem
-            )
-        );
 
         // intakeSubsystem.setDefaultCommand(
         //     Commands.run(
@@ -77,6 +51,18 @@ public class DebugJoystick {
     }
 
     public void configureBindings() {
+        // Continuously adjust flywheel speed (left Y) and pitch target (right Y).
+        // No subsystem requirement — just updates the shared values; the subsystem's
+        // default command picks them up and calls the motors.
+        Commands.run(() -> {
+            double changeAmountPerTick = 0.0025;
+            double leftY = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY() : 0.0;
+            double rightY = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY() : 0.0;
+            shooterSubsystem.setFlywheelSpeed(shooterSubsystem.flywheelSpeed + Math.signum(leftY) * changeAmountPerTick);
+            shooterSubsystem.setPitchTarget(shooterSubsystem.pitchTarget + Math.signum(rightY) * changeAmountPerTick);
+        }).schedule();
+
+
         joystick.a().onTrue(
             NamedCommands.getCommand("IntakeDown")
         );
@@ -113,7 +99,7 @@ public class DebugJoystick {
         joystick.leftBumper().onTrue(
             Commands.runOnce(
                 () -> {
-                    shooterSubsystem.shooterPitchMotor.goTo(50);
+                    shooterSubsystem.setPitchTarget(50);
                 }
             )
         );
