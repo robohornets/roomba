@@ -11,7 +11,9 @@ import frc.robot.RobotContainer;
 
 public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
-    public Motor angleMotor = new Motor(9, "Mechanisms");
+    public Motor angleMotor = new Motor(9, "Mechanisms")
+        .setMinValue(0.0)
+        .setMaxValue(2.34);
     // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
     // MARK: Intake Wheels
