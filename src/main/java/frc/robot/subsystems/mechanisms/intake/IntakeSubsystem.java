@@ -27,10 +27,9 @@ public class IntakeSubsystem extends SubsystemBase {
     private double angleTarget = Double.NaN;
 
     public IntakeSubsystem() {
-        // angleMotor.toggleEnabled(true);
+        angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
 
-        // angleMotor.setDefaultCommand(Commands.run(() -> {}, angleMotor));
         intakeWheelsMotor.setDefaultCommand(Commands.run(() -> {}, intakeWheelsMotor));
 
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
