@@ -33,6 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // MARK: Intake Wheel State
     private IntakeStates intakeState = IntakeStates.OFF;
+    public IntakeStates lastIntakeState = IntakeStates.OFF;
 
     // MARK: Periodic Loop
     @Override
@@ -89,7 +90,15 @@ public class IntakeSubsystem extends SubsystemBase {
         angleTarget = targetPosition;
     }
 
+    public IntakeStates getIntakeState() {
+        return intakeState;
+    }
+
     public void setIntake(IntakeStates intakeState) {
+        if (!intakeState.equals(this.intakeState)) {
+            lastIntakeState = this.intakeState;
+        }
+
         this.intakeState = intakeState;
     }
 }

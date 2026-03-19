@@ -3,8 +3,8 @@
   "robotLength": 0.7874,
   "holonomicMode": true,
   "pathFolders": [
-    "4 - Hub, Neutral, Hub (HNH)",
-    "Neutral Auto 1"
+    "Neutral Auto 1",
+    "Neutral Auto 2"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

@@ -3,55 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.455928530092593,
-        "y": 7.19860865162037
+        "x": 2.89557884837963,
+        "y": 3.84925658275463
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.793412840783701,
-        "y": 7.126602132123037
+        "x": 2.83915379050926,
+        "y": 2.2673210358796303
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Neutral Auto 2 - Shoot Point"
     },
     {
       "anchor": {
-        "x": 7.160853949652778,
-        "y": 7.029202256944444
+        "x": 6.091139829282408,
+        "y": 2.286807364004629
       },
       "prevControl": {
-        "x": 6.6386748822686785,
-        "y": 7.591245387179791
+        "x": 5.3060533457174754,
+        "y": 2.3267179618763683
       },
       "nextControl": {
-        "x": 7.80660430720271,
-        "y": 6.334154188230901
+        "x": 6.766140986689816,
+        "y": 2.2524930555555556
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.538508174189815,
-        "y": 2.361668981481482
+        "x": 7.710210937499999,
+        "y": 2.6393983651620374
       },
       "prevControl": {
-        "x": 7.389464795846691,
-        "y": 3.8473959916429026
+        "x": 7.147535011574075,
+        "y": 2.417831597222222
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Neutral Auto 1 - Point 2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.1729029605263157,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.4914268092105266,
+      "rotationDegrees": 54.84095812282095
     },
     {
-      "waypointRelativePos": 1.0609580592105259,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 0.8793585526315789,
+      "rotationDegrees": 179.17582565489303
     }
   ],
   "constraintZones": [],
@@ -67,13 +67,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Neutral Auto 1",
+  "folder": "Neutral Auto 2",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

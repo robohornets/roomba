@@ -2,9 +2,11 @@ package frc.robot.joysticks;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
+import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
@@ -43,22 +45,37 @@ public class OperatorJoystick {
 
         joystick.y();
 
-        // MARK: Shooter accelerate
+        // MARK: Intake In - LT
+        joystick.leftTrigger().onTrue(
+                // Toggle state of the intake
+                Commands.runOnce(
+                    () -> {
+                        if (intakeSubsystem.getIntakeState().equals(IntakeStates.INTAKE_IN)) {
+                            intakeSubsystem.setIntake(IntakeStates.OFF);
+                        }
+                        else {
+                            intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                        }
+                    }
+                )
+            );
+
+        // MARK: Intake Out - LB
+        joystick.leftBumper().whileTrue(
+            Commands.runEnd(
+                () -> {
+                    intakeSubsystem.setIntake(IntakeStates.OFF);
+                },
+                () -> {
+                    // Reset intake to last state.
+                    intakeSubsystem.setIntake(intakeSubsystem.lastIntakeState);
+                }
+            )
+        );
+
         joystick.rightTrigger();
 
-        // MARK: Intake in
-        // joystick.leftTrigger().whileTrue(
-        //         Commands.runEnd(
-        //             () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_IN),
-        //             () -> intakeSubsystem.setIntake(IntakeStates.OFF),
-        //             intakeSubsystem
-        //         )
-        //     );
-
-        // MARK: Shooter feeder
         joystick.rightBumper();
-
-        joystick.leftBumper();
 
         joystick.povUp();
 
