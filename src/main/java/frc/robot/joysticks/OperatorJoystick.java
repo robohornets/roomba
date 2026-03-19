@@ -34,15 +34,22 @@ public class OperatorJoystick {
     }
 
     public void configureBindings() {
-        // MARK: Intake Down
+        // MARK: Intake Down - A
         joystick.a().onTrue(
             NamedCommands.getCommand("IntakeDown")
         );
 
-        joystick.b();
+        // MARK: Intake Up - B
+        joystick.b().onTrue(
+            NamedCommands.getCommand("IntakeUp")
+        );
 
-        joystick.x();
+        // MARK: Jostle Fuel - X
+        joystick.x().onTrue(
+            NamedCommands.getCommand("IntakeAgitate")
+        );
 
+        // MARK: nothing - Y
         joystick.y();
 
         // MARK: Intake In - LT
