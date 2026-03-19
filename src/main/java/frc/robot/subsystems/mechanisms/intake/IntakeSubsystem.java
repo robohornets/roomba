@@ -38,31 +38,31 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Periodic Loop
     @Override
     public void periodic() {
-        runAngleControl();
+        // runAngleControl();
         runIntakeWheels();
 
         logValues();
     }
 
     // MARK: Angle Control
-    private void runAngleControl() {
-        if (Double.isNaN(angleTarget)) {
-            angleMotor.set(0.0);
-            return;
-        }
+    // private void runAngleControl() {
+    //     if (Double.isNaN(angleTarget)) {
+    //         angleMotor.set(0.0);
+    //         return;
+    //     }
 
-        double currentPos = angleMotor.getMotor().getPosition().refresh().getValueAsDouble();
-        double error = angleTarget - currentPos;
+    //     double currentPos = angleMotor.getMotor().getPosition().refresh().getValueAsDouble();
+    //     double error = angleTarget - currentPos;
 
-        if (Math.abs(error) <= IntakeConstants.INTAKE_THRESHOLD) {
-            angleMotor.set(0.0);
-        } else if (error < 0) {
-            angleMotor.set(Math.copySign(IntakeConstants.INTAKE_DOWN_SPEED, error));
-        }
-        else {
-            angleMotor.set(Math.copySign(IntakeConstants.INTAKE_UP_SPEED, error));
-        }
-    }
+    //     if (Math.abs(error) <= IntakeConstants.INTAKE_THRESHOLD) {
+    //         angleMotor.set(0.0);
+    //     } else if (error < 0) {
+    //         angleMotor.set(Math.copySign(IntakeConstants.INTAKE_DOWN_SPEED, error));
+    //     }
+    //     else {
+    //         angleMotor.set(Math.copySign(IntakeConstants.INTAKE_UP_SPEED, error));
+    //     }
+    // }
 
     // MARK: Intake Wheels
     private void runIntakeWheels() {
@@ -84,7 +84,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setPosition(double targetPosition) {
         Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
-        angleTarget = targetPosition;
+        angleMotor.goTo(targetPosition);
     }
 
     public IntakeStates getIntakeState() {
