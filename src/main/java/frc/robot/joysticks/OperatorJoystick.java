@@ -54,19 +54,19 @@ public class OperatorJoystick {
         joystick.y();
 
         // MARK: Intake In - LT
-        joystick.leftTrigger().onTrue(
-                // Toggle state of the intake
-                Commands.runOnce(
+        joystick.leftTrigger()
+            .whileTrue(
+                Commands.runEnd(
                     () -> {
-                        if (intakeSubsystem.getIntakeState().equals(IntakeStates.INTAKE_IN)) {
-                            intakeSubsystem.setIntake(IntakeStates.OFF);
-                        }
-                        else {
-                            intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                        }
-                    }
+                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                    },
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.OFF);
+                    },
+                    intakeSubsystem
                 )
             );
+
 
         // MARK: Intake Out - LB
         joystick.leftBumper().whileTrue(

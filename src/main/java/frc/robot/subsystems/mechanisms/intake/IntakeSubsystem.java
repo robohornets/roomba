@@ -23,9 +23,6 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Wheels
     public Motor intakeWheelsMotor = new Motor(10, "Mechanisms");
 
-    // MARK: Angle Control State
-    private double angleTarget = Double.NaN;
-
     public IntakeSubsystem() {
         angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
@@ -107,7 +104,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Logging
     private void logValues() {
         Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
-        Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
+        // Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
         Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
         Logger.recordOutput("IntakeSubsystem/Current/AngleMotor", angleMotor.getMotor().getStatorCurrent().getValueAsDouble());

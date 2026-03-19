@@ -60,7 +60,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public final MotorGroup shooterMotors = new MotorGroup(
         Arrays.asList(leftShooterMotor, rightShooterMotor)
-    ).setMotorSpeed(0.4);
+    ).setMotorSpeed(0.4)
+    .setMinSpeed(-0.1);
 
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34, "Mechanisms");
@@ -103,7 +104,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: Set Pitch Target
     public void setPitchTarget(double pitch) {
-        pitchTarget = MathUtil.clamp(pitch, ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE);
+        // pitchTarget = MathUtil.clamp(pitch, ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE);
+        shooterPitchMotor.goTo(pitchTarget);
     }
 
     /** Shared flywheel speed target used by manual joystick control and button bindings. */
@@ -112,7 +114,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: Set Flywheel
     public void setFlywheelSpeed(double speed) {
-        flywheelSpeed = MathUtil.clamp(speed, -0.1, 1.0);
+        shooterMotors.drive(speed);
     }
 
     // MARK: Periodic Loop
