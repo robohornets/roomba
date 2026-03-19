@@ -43,7 +43,7 @@ public class ShooterConstants {
     public static final double FEEDER_IN_SPEED = 0.2;
     public static final double FEEDER_OUT_SPEED = -0.05;
 
-    public static final double SHOOTER_MIN_ANGLE = 5;
+    public static final double SHOOTER_MIN_ANGLE = 40;
 
     public static final double SHOOTER_MAX_ANGLE = 65;
 
