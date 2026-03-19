@@ -40,7 +40,7 @@ public class RegisterCommands {
             Commands.run(
                 () -> {
                     intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
-                }
+                }, intakeSubsystem
             )
         );
 
@@ -49,7 +49,7 @@ public class RegisterCommands {
             Commands.run(
                 () -> {
                     intakeSubsystem.setPosition(IntakeConstants.INTAKE_MAX_VALUE);
-                }
+                }, intakeSubsystem
             )
         );
 

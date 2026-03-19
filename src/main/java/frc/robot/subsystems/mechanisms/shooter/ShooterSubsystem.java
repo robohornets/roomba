@@ -45,7 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: Motors
     /** Motor controlling the shooter angle */
-    public final Motor shooterPitchMotor = new Motor(11, "Mechanisms", false)
+    public final Motor shooterPitchMotor = new Motor(11, "Mechanisms")
         .setFree(false)
         .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
         .setMotorSpeed(0.1)
