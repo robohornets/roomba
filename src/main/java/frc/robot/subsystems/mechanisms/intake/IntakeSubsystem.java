@@ -11,16 +11,14 @@ import frc.robot.RobotContainer;
 
 public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
-    // public Motor angleMotor = new Motor(9, "Mechanisms");
-    public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
+    public Motor angleMotor = new Motor(9, "Mechanisms");
+    // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
     // MARK: Intake Wheels
     public Motor intakeWheelsMotor = new Motor(10, "Mechanisms");
 
     // MARK: Angle Control State
     private double angleTarget = Double.NaN;
-    private static final double ANGLE_DOWN_SPEED = 0.2;
-    private static final double ANGLE_UP_SPEED = 0.2;
 
     public IntakeSubsystem() {
         // angleMotor.toggleEnabled(true);
@@ -29,13 +27,12 @@ public class IntakeSubsystem extends SubsystemBase {
         // angleMotor.setDefaultCommand(Commands.run(() -> {}, angleMotor));
         intakeWheelsMotor.setDefaultCommand(Commands.run(() -> {}, intakeWheelsMotor));
 
-        angleMotor.getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
     }
 
     // MARK: Intake Wheel State
     private IntakeStates intakeState = IntakeStates.OFF;
-    private static final double INTAKE_SPEED = 0.5;
 
     // MARK: Periodic Loop
     @Override
@@ -43,9 +40,9 @@ public class IntakeSubsystem extends SubsystemBase {
         runAngleControl();
         runIntakeWheels();
 
-        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getPosition().refresh().getValueAsDouble());
+        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
         Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
-        Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.get());
+        Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
         Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
     }
 
@@ -56,16 +53,16 @@ public class IntakeSubsystem extends SubsystemBase {
             return;
         }
 
-        double currentPos = angleMotor.getPosition().refresh().getValueAsDouble();
+        double currentPos = angleMotor.getMotor().getPosition().refresh().getValueAsDouble();
         double error = angleTarget - currentPos;
 
-        if (Math.abs(error) <= IntakeConstants.threshold) {
+        if (Math.abs(error) <= IntakeConstants.INTAKE_THRESHOLD) {
             angleMotor.set(0.0);
         } else if (error < 0) {
-            angleMotor.set(Math.copySign(ANGLE_DOWN_SPEED, error));
+            angleMotor.set(Math.copySign(IntakeConstants.INTAKE_DOWN_SPEED, error));
         }
         else {
-            angleMotor.set(Math.copySign(ANGLE_UP_SPEED, error));
+            angleMotor.set(Math.copySign(IntakeConstants.INTAKE_UP_SPEED, error));
         }
     }
 
@@ -73,10 +70,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private void runIntakeWheels() {
         switch (intakeState) {
             case INTAKE_IN:
-                intakeWheelsMotor.getMotor().set(INTAKE_SPEED);
+                intakeWheelsMotor.getMotor().set(IntakeConstants.INTAKE_WHEELS_SPEED);
                 break;
             case INTAKE_OUT:
-                intakeWheelsMotor.getMotor().set(-INTAKE_SPEED);
+                intakeWheelsMotor.getMotor().set(-IntakeConstants.INTAKE_WHEELS_SPEED);
                 break;
             case OFF:
                 intakeWheelsMotor.getMotor().set(0.0);

@@ -5,19 +5,21 @@ import java.util.List;
 public class ShooterConstants {
     public static final List<ShooterDataPoint> shooterDataPoints = List.of(
         // TODO: Collect successful data points and add them here
-        new ShooterDataPoint(0.0, 0, 0),
-        new ShooterDataPoint(0.5, 0, 0),
-        new ShooterDataPoint(1.0, 0, 0),
-        new ShooterDataPoint(1.5, 0, 0),
-        new ShooterDataPoint(2.0, 0, 0),
-        new ShooterDataPoint(2.5, 0, 0),
-        new ShooterDataPoint(3.0, 0, 0),
-        new ShooterDataPoint(3.5, 0, 0),
-        new ShooterDataPoint(4.0, 0, 0),
-        new ShooterDataPoint(4.5, 0, 0),
-        new ShooterDataPoint(5.0, 0, 0),
-        new ShooterDataPoint(5.5, 0, 0),
-        new ShooterDataPoint(6.0, 0, 0)
+        // new ShooterDataPoint(0.0, 0, 0),
+        // new ShooterDataPoint(0.5, 0, 0),
+        // new ShooterDataPoint(1.0, 0, 0),
+        // new ShooterDataPoint(1.5, 0, 0),
+        // new ShooterDataPoint(2.0, 0, 0),
+        // new ShooterDataPoint(2.5, 0, 0),
+        // new ShooterDataPoint(3.0, 0, 0),
+        // new ShooterDataPoint(3.5, 0, 0),
+        // new ShooterDataPoint(4.0, 0, 0),
+        // new ShooterDataPoint(4.5, 0, 0),
+        // new ShooterDataPoint(5.0, 0, 0),
+        // new ShooterDataPoint(5.5, 0, 0),
+        // new ShooterDataPoint(6.0, 0, 0)
+        new ShooterDataPoint(1.4986, 69.6, 0.65),
+        new ShooterDataPoint(2.775, 45.5, 0.74)
     );
 
     // --- Shooter configuration and tuning fields ---

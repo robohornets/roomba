@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4183219762731487,
-        "y": 6.927243489583334
+        "x": 3.6423778464146634,
+        "y": 6.404003254994157
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.097426721643519,
-        "y": 6.502415292245371
+        "x": 2.861505823087231,
+        "y": 6.123399727941238
       },
       "isLocked": false,
-      "linkedName": "HDH - 2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.6354688223379634,
-        "y": 4.255910662615741
+        "x": 2.8143530092596523,
+        "y": 5.99025947626901
       },
       "prevControl": {
-        "x": 2.313219762731482,
-        "y": 4.215888237847222
+        "x": 3.053391608063426,
+        "y": 6.063475241524374
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Neutral Auto 1 Shoot Point"
     }
   ],
   "rotationTargets": [],
@@ -34,21 +34,21 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
-    "maxAngularVelocity": 180.0,
-    "maxAngularAcceleration": 100.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -47.94801452480744
   },
   "reversed": false,
-  "folder": "1 - Hub, Depot, Hub (HDH)",
+  "folder": "Neutral Auto 1",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -89.62181552849039
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
