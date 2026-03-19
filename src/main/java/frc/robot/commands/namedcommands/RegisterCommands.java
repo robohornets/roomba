@@ -37,7 +37,7 @@ public class RegisterCommands {
         
         // MARK: IntakeDown
         NamedCommands.registerCommand("IntakeDown",
-            Commands.runOnce(
+            Commands.run(
                 () -> {
                     intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
                 }
@@ -46,7 +46,7 @@ public class RegisterCommands {
 
         // MARK: IntakeUp
         NamedCommands.registerCommand("IntakeUp",
-            Commands.runOnce(
+            Commands.run(
                 () -> {
                     intakeSubsystem.setPosition(IntakeConstants.INTAKE_MAX_VALUE);
                 }
