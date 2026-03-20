@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.793412840783701,
-        "y": 7.126602132123037
+        "x": 4.803387700141693,
+        "y": 7.12095478130701
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 7.029202256944444
       },
       "prevControl": {
-        "x": 6.6386748822686785,
-        "y": 7.591245387179791
+        "x": 6.676125662085838,
+        "y": 7.566945548568894
       },
       "nextControl": {
-        "x": 7.80660430720271,
-        "y": 6.334154188230901
+        "x": 7.697495904183438,
+        "y": 6.433867471550382
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 2.361668981481482
       },
       "prevControl": {
-        "x": 7.389464795846691,
-        "y": 3.8473959916429026
+        "x": 7.277314850604052,
+        "y": 3.745240926872281
       },
       "nextControl": null,
       "isLocked": false,
@@ -56,7 +56,20 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeDown",
+      "waypointRelativePos": 0.4675560631229236,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "IntakeIn",
+      "waypointRelativePos": 0.4849719684385383,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

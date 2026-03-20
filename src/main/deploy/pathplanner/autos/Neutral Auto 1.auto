@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeDown"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Neutral Auto 1 - Part 1"
@@ -20,12 +14,6 @@
           "type": "path",
           "data": {
             "pathName": "Neutral Auto 1 - Part 2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
           }
         },
         {
