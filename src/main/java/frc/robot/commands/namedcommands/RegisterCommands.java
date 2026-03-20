@@ -1,5 +1,7 @@
 package frc.robot.commands.namedcommands;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -9,6 +11,8 @@ import frc.robot.subsystems.mechanisms.intake.IntakeConstants;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
+import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 
 public class RegisterCommands {
     IntakeSubsystem intakeSubsystem;
@@ -25,16 +29,44 @@ public class RegisterCommands {
         this.feederSubsystem = feederSubsystem;
     }
     
-    public void registerCommands(){
-        // MARK: ShootFullSpeed
-        NamedCommands.registerCommand("ShootFullSpeed",
+    public void registerCommands(){        
+        NamedCommands.registerCommand("ShootStart",
+            Commands.parallel(
+                Commands.run(
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+
+                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                        double maxRPM = 1200; // MARK: Populate max rpm
+
+                        shooterDataPoint.speed = rpm / maxRPM;
+                        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
+
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                    },
+                    shooterSubsystem
+                ),
+                Commands.sequence(
+                    Commands.waitSeconds(2),
+                    Commands.runOnce(
+                        ()->{
+                            feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
+                        }, feederSubsystem
+                    )
+                )
+            )
+        );
+
+        NamedCommands.registerCommand("ShootStop",
             Commands.run(
                 () -> {
-                    shooterSubsystem.shooterMotors.drive();
-                }
-            ).withTimeout(5)
+                    shooterSubsystem.shooterMotors.drive(0.0);
+
+                    feederSubsystem.setFeederState(FeederState.OFF);
+                }, shooterSubsystem, feederSubsystem
+            )
         );
-        
+
         // MARK: IntakeDown
         NamedCommands.registerCommand("IntakeDown",
             Commands.runOnce(
@@ -75,30 +107,11 @@ public class RegisterCommands {
             )
         );
 
-        // MARK: AgitateAutoFuel
-        NamedCommands.registerCommand("AgitateAutoFuel",
-            Commands.repeatingSequence(
-                Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MAX_VALUE / 2)),
-                Commands.waitSeconds(2),
-                Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
-                Commands.waitSeconds(2)
-            )
-        );
-
         // MARK: RunIntakeIn
         NamedCommands.registerCommand("IntakeIn",
             Commands.runOnce(
                 () -> {
                     intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                }
-            )
-        );
-
-        // MARK: 
-        NamedCommands.registerCommand("RunAllFeederIn",
-            Commands.runOnce(
-                () -> {
-                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
                 }
             )
         );
