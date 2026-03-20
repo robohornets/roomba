@@ -48,10 +48,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public final Motor shooterPitchMotor = new Motor(11, "Mechanisms")
         .setFree(false)
         .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
-        .setMotorSpeed(0.1)
-        .setMinSpeed(0.0)
+        .setMotorSpeed(0.4)
         .setHoldSpeed(0.0)
-        .setPG(0.02)
+        .setPG(0.01)
         .setThreshold(ShooterConstants.POSITION_THRESHOLD)
         .setPositionSupplier(() -> getPigeonPosition());
 
@@ -146,28 +145,28 @@ public class ShooterSubsystem extends SubsystemBase {
         // MARK: NEEDS REFACTORING
         // if (dataPoints.isEmpty()) {
 
-        //     double currentDistance = drivetrain.getDistanceToHub();
-        //     double aimHeight = (6 - 20 / 12) / 3.281;
+            double currentDistance = drivetrain.getDistanceToHub();
+            double aimHeight = (6 - 20 / 12) / 3.281;
 
-        //     double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
+            double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
 
 
-        //     return new UpperLowerPoint(
-        //         new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
-        //         new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
-        //     );
+            return new UpperLowerPoint(
+                new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
+                new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
+            );
         // }
         
-        double currentDistance = drivetrain.getDistanceToHub();
+        // double currentDistance = drivetrain.getDistanceToHub();
 
-        Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
-        Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
+        // Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
+        // Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
 
-        // Handle out-of-range cases by clamping to the nearest point
-        ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
-        ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
+        // // Handle out-of-range cases by clamping to the nearest point
+        // ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
+        // ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
 
-        return new UpperLowerPoint(upper, lower);
+        // return new UpperLowerPoint(upper, lower);
     }
 
     public ShooterDataPoint calculateShooterValues(UpperLowerPoint upperLowerPoint, double currentDistance) {
@@ -185,18 +184,6 @@ public class ShooterSubsystem extends SubsystemBase {
         double estimatedSpeed = upperLowerPoint.getLowerSpeed() + interpolationFactor * (upperLowerPoint.getUpperSpeed() - upperLowerPoint.getLowerSpeed());
 
         return new ShooterDataPoint(currentDistance, estimatedAngle, estimatedSpeed);
-    }
-
-    public Command accelerateToSpeed(double targetSpeed) {
-        Timer timer = new Timer();
-        return Commands.startRun(
-            () -> timer.restart(),
-            () -> {
-                double rampedSpeed = Math.min(timer.get() / 5.0, 1.0) * targetSpeed;
-                setFlywheelSpeed(rampedSpeed);
-            },
-            this
-        ).until(() -> timer.hasElapsed(5.0));
     }
 
     public double getRequiredRPM(ShooterDataPoint shooterDataPoint){

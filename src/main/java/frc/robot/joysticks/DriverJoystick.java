@@ -58,46 +58,36 @@ public class DriverJoystick {
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()
             .whileTrue(
-                Commands.sequence(
-                    Commands.startRun(
-                        () -> {
-                            ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+                Commands.startRun(
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
 
-                            shooterDataPoint = shooterSubsystem.calculateShooterValues(
-                                shooterSubsystem.shooterUpperLower(), 
-                                drivetrain.getDistanceToHub()
-                            );
+                        shooterDataPoint = shooterSubsystem.calculateShooterValues(
+                            shooterSubsystem.shooterUpperLower(), 
+                            drivetrain.getDistanceToHub()
+                        );
 
-                            double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
 
-                            double maxRPM = 200; // MARK: Populate max rpm
-                            
-                            shooterDataPoint.speed = rpm / maxRPM;
-                            shooterDataPoint.angle = shooterDataPoint.angle / 180; // angle (0.5 = 180deg)
+                        double maxRPM = 1200; // MARK: Populate max rpm
+                        
+                        shooterDataPoint.speed = rpm / maxRPM;
+                        shooterDataPoint.angle = shooterDataPoint.angle; // angle (0.5 = 180deg)
 
-                            saveShooterDataPoint[0] = shooterDataPoint;
-                        },
-                        () -> {
-                            ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
-                            Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
-                            Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.speed);
+                        saveShooterDataPoint[0] = shooterDataPoint;
+                    },
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
+                        Logger.recordOutput("DriverJoystick/ShooterTargetAngle", shooterDataPoint.angle);
 
-                            // maintain motor speed
-                            shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                            shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
+                        // maintain motor speed
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                        // shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
 
-                            saveShooterDataPoint[0] = shooterDataPoint;
-                        },
-                        shooterSubsystem, drivetrain
-                    ),
-                    Commands.runEnd(
-                        () -> {
-                            feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
-                        },
-                        () -> {
-                            feederSubsystem.setFeederState(FeederState.OFF);
-                        }, feederSubsystem
-                    )
+                        saveShooterDataPoint[0] = shooterDataPoint;
+                    },
+                    shooterSubsystem, drivetrain
                 )
             )
             .onFalse(
