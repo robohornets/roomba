@@ -70,16 +70,16 @@ public class IntakeSubsystem extends SubsystemBase {
     private void runIntakeWheels() {
         switch (intakeState) {
             case INTAKE_IN:
-                intakeWheelsMotor.getMotor().set(IntakeConstants.INTAKE_WHEELS_SPEED);
+                intakeWheelsMotor.drive(IntakeConstants.INTAKE_WHEELS_SPEED);
                 break;
             case INTAKE_OUT:
-                intakeWheelsMotor.getMotor().set(-IntakeConstants.INTAKE_WHEELS_SPEED);
+                intakeWheelsMotor.drive(-IntakeConstants.INTAKE_WHEELS_SPEED);
                 break;
             case OFF:
-                intakeWheelsMotor.getMotor().set(0.0);
+                intakeWheelsMotor.drive(0.0);
                 break;
             default:
-                intakeWheelsMotor.getMotor().set(0.0);
+                intakeWheelsMotor.drive(0.0);
                 break;
         }
     }
