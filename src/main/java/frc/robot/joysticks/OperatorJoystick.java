@@ -36,10 +36,10 @@ public class OperatorJoystick {
     }
 
     public void configureBindings() {
-        // MARK: Nothing - A
+        // MARK: Intake Down - A
         joystick.a();
 
-        // MARK: Nothing - B
+        // MARK: Intake Up - B
         joystick.b();
 
         // MARK: nothing - X

@@ -48,7 +48,7 @@ public class DriverJoystick {
         );
 
         // MARK: Intake Agitate - B
-        joystick.b().onTrue(
+        joystick.b().whileTrue(
             NamedCommands.getCommand("IntakeAgitate")
         );
 
@@ -98,14 +98,14 @@ public class DriverJoystick {
     
                             // maintain motor speed
                             shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                            shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
+                            // shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
     
                             saveShooterDataPoint[0] = shooterDataPoint;
                         },
                         shooterSubsystem, drivetrain
                     ),
                     Commands.sequence(
-                        Commands.waitSeconds(1),
+                        Commands.waitSeconds(2),
                         Commands.runOnce(
                             ()->{
                                 feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);

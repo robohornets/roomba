@@ -3,7 +3,7 @@ package frc.robot.subsystems.mechanisms.intake;
 import org.littletonrobotics.junction.Logger;
 
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +26,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
+
+        angleMotor.setNeutralMode(NeutralModeValue.Brake);
 
         intakeWheelsMotor.setDefaultCommand(Commands.run(() -> {}, intakeWheelsMotor));
 
@@ -74,16 +76,16 @@ public class IntakeSubsystem extends SubsystemBase {
     private void runIntakeWheels() {
         switch (intakeState) {
             case INTAKE_IN:
-                intakeWheelsMotor.drive(IntakeConstants.INTAKE_WHEELS_SPEED);
+                intakeWheelsMotor.getMotor().set(IntakeConstants.INTAKE_WHEELS_SPEED);
                 break;
             case INTAKE_OUT:
-                intakeWheelsMotor.drive(-IntakeConstants.INTAKE_WHEELS_SPEED);
+                intakeWheelsMotor.getMotor().set(-IntakeConstants.INTAKE_WHEELS_SPEED);
                 break;
             case OFF:
-                intakeWheelsMotor.drive(0.0);
+                intakeWheelsMotor.getMotor().set(0.0);
                 break;
             default:
-                intakeWheelsMotor.drive(0.0);
+                intakeWheelsMotor.getMotor().set(0.0);
                 break;
         }
     }
