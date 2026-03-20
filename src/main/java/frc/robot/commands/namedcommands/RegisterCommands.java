@@ -37,7 +37,7 @@ public class RegisterCommands {
                         ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
 
                         double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                        double maxRPM = 1200; // MARK: Populate max rpm
+                        double maxRPM = 1300; // MARK: Populate max rpm
 
                         shooterDataPoint.speed = rpm / maxRPM;
                         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
@@ -101,15 +101,11 @@ public class RegisterCommands {
         NamedCommands.registerCommand("IntakeAgitate",
             Commands.repeatingSequence(
                 Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
-                Commands.waitSeconds(1),
+                Commands.waitSeconds(0.75),
                 Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
-                Commands.waitSeconds(1)
-            ).andThen(
-                Commands.runOnce(
-                    () -> {
-                        intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
-                    }, intakeSubsystem
-                )
+                Commands.waitSeconds(0.75)
+            ).finallyDo(
+                () -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)
             )
         );
 
