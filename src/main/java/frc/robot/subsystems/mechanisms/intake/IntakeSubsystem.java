@@ -51,6 +51,7 @@ public class IntakeSubsystem extends SubsystemBase {
         runIntakeWheels();
 
         logValues();
+        logMotors();
     }
 
     // MARK: Angle Control
@@ -112,9 +113,48 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Logging
     private void logValues() {
         Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
-        // Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
         Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
-        Logger.recordOutput("IntakeSubsystem/Current/AngleMotor", angleMotor.getMotor().getStatorCurrent().getValueAsDouble());
+    }
+
+    // MARK: Log Motors
+    private void logMotors() {
+        // Log current readings to AdvantageKit
+        Logger.recordOutput(
+            "IntakeSubsystem/Current/Stator/AngleMotor", 
+            angleMotor.getMotor().getStatorCurrent().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "IntakeSubsystem/Current/Supply/AngleMotor", 
+            angleMotor.getMotor().getSupplyCurrent().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "IntakeSubsystem/Current/Stator/IntakeWheelsMotor", 
+            intakeWheelsMotor.getMotor().getStatorCurrent().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
+            intakeWheelsMotor.getMotor().getSupplyCurrent().getValueAsDouble()
+        );
+
+        // Log voltage readings to AdvantageKit
+        Logger.recordOutput(
+            "IntakeSubsystem/Voltage/Output/FeederBedMotor", 
+            angleMotor.getMotor().getMotorVoltage().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "IntakeSubsystem/Current/Supply/FeederBedMotor", 
+            angleMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "IntakeSubsystem/Voltage/Output/IntakeWheelsMotor", 
+            intakeWheelsMotor.getMotor().getMotorVoltage().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
+            intakeWheelsMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+        );
     }
 }

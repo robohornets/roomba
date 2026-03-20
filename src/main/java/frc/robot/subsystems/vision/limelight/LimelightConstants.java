@@ -15,8 +15,8 @@ public class LimelightConstants {
     // Standard deviations or sexually transmitted disease developments?
     public static final Matrix<N3, N1> VISION_STD_DEVS = 
         VecBuilder.fill(
-            0.07, 
-            0.07, 
+            0.1, 
+            0.1, 
             9999999
     );
     
@@ -31,7 +31,7 @@ public class LimelightConstants {
 
     /** Calculate dynamic standard deviations for Quest */
     public static Matrix<N3, N1> calculateQuestUpdateStdDevs(PoseEstimate estimate) {
-        double xyStdDev = 0.05;
+        double xyStdDev = 0.07;
         double thetaStdDev = 9999999;
 
         // Increase std devs with distance for less trust
@@ -40,12 +40,12 @@ public class LimelightConstants {
 
         // Decrease std devs with more tags for more trust
         if (estimate.tagCount >= 2) {
-            xyStdDev*= 0.7;
+            xyStdDev*= 0.8;
         }
 
         // Increase std devs with smaller tags for less trust
         if (estimate.avgTagArea < 0.3) {
-            xyStdDev *= 1.5;
+            xyStdDev *= 1.75;
         }
 
         return VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev);

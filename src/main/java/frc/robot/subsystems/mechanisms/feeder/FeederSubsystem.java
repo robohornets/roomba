@@ -39,8 +39,6 @@ public class FeederSubsystem extends SubsystemBase {
     // MARK: Periodic Loop
     @Override
     public void periodic() {
-        logValues();
-
         switch (feederState) {
             case ALL_FEEDER_IN:
                 runSpecifiedMotors(true, false, true, false, true, true);
@@ -66,6 +64,9 @@ public class FeederSubsystem extends SubsystemBase {
                 runSpecifiedMotors(false, false, false, false, false, false);
                 break;
         }
+
+        logValues();
+        logMotors();
     }
 
     private void runSpecifiedMotors(
@@ -95,11 +96,71 @@ public class FeederSubsystem extends SubsystemBase {
     }
 
     // MARK: Logging
-    public void logValues() {
+    private void logValues() {
         Logger.recordOutput("FeederSubsystem/MotorConnections/FeederBedConnected", feederBedMotor.getMotor().isConnected());
         Logger.recordOutput("FeederSubsystem/MotorConnections/FeederFeederConnected", feederFeederMotor.getMotor().isConnected());
         Logger.recordOutput("FeederSubsystem/MotorConnections/ShooterFeederConnected", shooterFeederMotor.getMotor().isConnected());
 
         Logger.recordOutput("FeederSubsystem/FeederState", feederState.toString());
+    }
+
+    // MARK: Log Motors
+    private void logMotors() {
+        // Log current readings to AdvantageKit
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Stator/FeederBedMotor", 
+            feederBedMotor.getMotor().getStatorCurrent().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Supply/FeederBedMotor", 
+            feederBedMotor.getMotor().getSupplyCurrent().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Stator/FeederFeederMotor", 
+            feederFeederMotor.getMotor().getStatorCurrent().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Supply/FeederFeederMotor", 
+            feederFeederMotor.getMotor().getSupplyCurrent().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Stator/ShooterFeederMotor", 
+            shooterFeederMotor.getMotor().getStatorCurrent().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Supply/ShooterFeederMotor", 
+            shooterFeederMotor.getMotor().getSupplyCurrent().getValueAsDouble()
+        );
+
+
+        // Log voltage readings to AdvantageKit
+        Logger.recordOutput(
+            "FeederSubsystem/Voltage/Output/FeederBedMotor", 
+            feederBedMotor.getMotor().getMotorVoltage().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Supply/FeederBedMotor", 
+            feederBedMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "FeederSubsystem/Voltage/Output/FeederFeederMotor", 
+            feederFeederMotor.getMotor().getMotorVoltage().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Supply/FeederFeederMotor", 
+            feederFeederMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "FeederSubsystem/Voltage/Output/ShooterFeederMotor", 
+            shooterFeederMotor.getMotor().getMotorVoltage().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "FeederSubsystem/Current/Supply/ShooterFeederMotor", 
+            shooterFeederMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+        );
     }
 }
