@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
@@ -57,37 +58,46 @@ public class DriverJoystick {
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()
             .whileTrue(
-                Commands.startRun(
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+                Commands.sequence(
+                    Commands.startRun(
+                        () -> {
+                            ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
 
-                        shooterDataPoint = shooterSubsystem.calculateShooterValues(
-                            shooterSubsystem.shooterUpperLower(), 
-                            drivetrain.getDistanceToHub()
-                        );
+                            shooterDataPoint = shooterSubsystem.calculateShooterValues(
+                                shooterSubsystem.shooterUpperLower(), 
+                                drivetrain.getDistanceToHub()
+                            );
 
-                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                            double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
 
-                        double maxRPM = 200; // MARK: Populate max rpm
-                        
-                        shooterDataPoint.speed = rpm / maxRPM;
-                        shooterDataPoint.angle = shooterDataPoint.angle / 180; // angle (0.5 = 180deg)
+                            double maxRPM = 200; // MARK: Populate max rpm
+                            
+                            shooterDataPoint.speed = rpm / maxRPM;
+                            shooterDataPoint.angle = shooterDataPoint.angle / 180; // angle (0.5 = 180deg)
 
-                        saveShooterDataPoint[0] = shooterDataPoint;
-                    },
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
-                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.speed);
+                            saveShooterDataPoint[0] = shooterDataPoint;
+                        },
+                        () -> {
+                            ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+                            Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
+                            Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.speed);
 
-                        // maintain motor speed
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                        feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
-                        shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
+                            // maintain motor speed
+                            shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                            shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
 
-                        saveShooterDataPoint[0] = shooterDataPoint;
-                    },
-                    shooterSubsystem, drivetrain
+                            saveShooterDataPoint[0] = shooterDataPoint;
+                        },
+                        shooterSubsystem, drivetrain
+                    ),
+                    Commands.runEnd(
+                        () -> {
+                            feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
+                        },
+                        () -> {
+                            feederSubsystem.setFeederState(FeederState.OFF);
+                        }, feederSubsystem
+                    )
                 )
             )
             .onFalse(

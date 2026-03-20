@@ -118,12 +118,12 @@ public class ShooterSubsystem extends SubsystemBase {
     // MARK: Periodic Loop
     @Override
     public void periodic() {
-        if (drivetrain.isLockedToHub()) {
-            double currentDistance = drivetrain.getDistanceToHub();
-            ShooterDataPoint values = calculateShooterValues(shooterUpperLower(), currentDistance);
-            setPitchTarget(values.angle);
-            setFlywheelSpeed(values.speed);
-        }
+        // if (drivetrain.isLockedToHub()) {
+        //     double currentDistance = drivetrain.getDistanceToHub();
+        //     ShooterDataPoint values = calculateShooterValues(shooterUpperLower(), currentDistance);
+        //     setPitchTarget(values.angle);
+        //     setFlywheelSpeed(values.speed);
+        // }
 
         logValues();
     }
