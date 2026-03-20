@@ -16,6 +16,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
 import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.HootAutoReplay;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -159,7 +160,9 @@ public class Robot extends LoggedRobot {
 
     // MARK: Autonomous Exit
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit() {
+        NamedCommands.getCommand("ShootStop");
+    }
 
     // MARK: Teleop Init
     @Override
