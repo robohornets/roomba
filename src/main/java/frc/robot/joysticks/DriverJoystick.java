@@ -2,6 +2,8 @@ package frc.robot.joysticks;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -37,9 +39,15 @@ public class DriverJoystick {
     }
 
     public void configureBindings() {
-        joystick.a();
+        // MARK: Intake Down - A
+        joystick.a().onTrue(
+            NamedCommands.getCommand("IntakeDown")
+        );
 
-        joystick.b();
+        // MARK: Intake Up - B
+        joystick.b().onTrue(
+            NamedCommands.getCommand("IntakeUp")
+        );
 
         // MARK: X - Lock to hub
         joystick.x().onTrue(
@@ -65,9 +73,11 @@ public class DriverJoystick {
 
                             shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
                             double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-
                             double maxRPM = 1200; // MARK: Populate max rpm
-                            shooterDataPoint.speed = rpm / maxRPM;
+
+                            // shooterDataPoint.speed = rpm / maxRPM;
+                            shooterDataPoint.speed = 0.1;
+                            
                             // shooterDataPoint.angle = ( shooterDataPoint.angle - 65) / 180; // angle (0.5 = 180deg)
 
                             saveShooterDataPoint[0] = shooterDataPoint;
