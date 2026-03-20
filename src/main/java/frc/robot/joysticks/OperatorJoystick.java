@@ -9,6 +9,7 @@ import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class OperatorJoystick {
@@ -51,7 +52,13 @@ public class OperatorJoystick {
         );
 
         // MARK: nothing - Y
-        joystick.y();
+        joystick.y().whileTrue(
+            Commands.run(
+                () -> {
+                    shooterSubsystem.shooterPitchMotor.goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
+                }
+            )
+        );
 
         // MARK: Intake In - LT
         joystick.leftTrigger()

@@ -8,6 +8,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
@@ -67,7 +68,7 @@ public class DriverJoystick {
 
                         double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
 
-                        double maxRPM = 1000; // MARK: Populate max rpm
+                        double maxRPM = 200; // MARK: Populate max rpm
                         
                         shooterDataPoint.speed = rpm / maxRPM;
                         shooterDataPoint.angle = shooterDataPoint.angle / 180; // angle (0.5 = 180deg)
@@ -98,7 +99,7 @@ public class DriverJoystick {
                         shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
                         feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
 
-                        shooterSubsystem.shooterPitchMotor.goTo(0.0);
+                        shooterSubsystem.shooterPitchMotor.goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
 
                         Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
                         Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.angle);

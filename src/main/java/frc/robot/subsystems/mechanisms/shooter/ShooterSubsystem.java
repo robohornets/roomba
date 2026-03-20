@@ -61,7 +61,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public final MotorGroup shooterMotors = new MotorGroup(
         Arrays.asList(leftShooterMotor, rightShooterMotor)
     ).setMotorSpeed(0.4)
-    .setMinSpeed(-0.1);
+    .setPG(0.01);
 
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34, "Mechanisms");

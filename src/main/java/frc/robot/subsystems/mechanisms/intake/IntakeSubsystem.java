@@ -13,7 +13,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
     public Motor angleMotor = new Motor(9, "Mechanisms")
         .setFree(false)
-        .setMotorSpeed(0.4)
+        .setMotorSpeed(1.0)
         .setMinValue(0.0)
         .setMaxValue(2.34)
         .setThreshold(0.2);
