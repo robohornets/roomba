@@ -104,8 +104,6 @@ public class RegisterCommands {
                 Commands.waitSeconds(0.75),
                 Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
                 Commands.waitSeconds(0.75)
-            ).finallyDo(
-                () -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)
             )
         );
 

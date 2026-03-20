@@ -40,9 +40,9 @@ public class DriverJoystick {
     }
 
     public void configureBindings() {
-        // MARK: Intake Toggle - A
+        // MARK: Intake Down - A
         joystick.a().onTrue(
-            NamedCommands.getCommand("IntakeToggle")
+            NamedCommands.getCommand("IntakeDown")
         );
 
         // MARK: Intake Agitate - B

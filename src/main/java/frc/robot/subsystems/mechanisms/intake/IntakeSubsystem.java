@@ -13,11 +13,11 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
     public Motor angleMotor = new Motor(9, "Mechanisms")
         .setFree(false)
-        .setMotorSpeed(1.0)
-        .setMinValue(0.0)
-        .setMaxValue(2.34)
-        .setPG(0.5)
-        .setThreshold(0.025);
+        .setMotorSpeed(0.5)
+        .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
+        .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
+        .setPG(0.4)
+        .setThreshold(IntakeConstants.INTAKE_THRESHOLD);
     // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
 
