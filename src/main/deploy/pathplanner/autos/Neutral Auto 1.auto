@@ -17,28 +17,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootAutoFuel"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AgitateAutoFuel"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "RunAllFeederIn"
-                }
-              }
-            ]
+            "name": "ShootStart"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeAgitate"
           }
         }
       ]

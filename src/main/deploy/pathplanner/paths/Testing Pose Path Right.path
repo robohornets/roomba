@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.61808203125,
-        "y": 3.84925658275463
+        "x": 3.6240525896990743,
+        "y": 0.46795218460648125
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.084307083258309,
-        "y": 3.915454030104481
+        "x": 3.2843869803670778,
+        "y": 0.4662093778230667
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3821108217592597,
-        "y": 2.799684895833334
+        "x": 2.8847531105324076,
+        "y": 0.46795218460648125
       },
       "prevControl": {
-        "x": 2.745032554562707,
-        "y": 2.905384564906554
+        "x": 3.134751376378298,
+        "y": 0.46888335271561543
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Neutral Auto 2 - Shoot Point"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 28.13347074578162
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Neutral Auto 2",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
