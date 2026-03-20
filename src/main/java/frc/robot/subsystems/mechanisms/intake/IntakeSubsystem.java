@@ -16,6 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
         .setMotorSpeed(1.0)
         .setMinValue(0.0)
         .setMaxValue(2.34)
+        .setPG(0.25)
         .setThreshold(0.025);
     // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
