@@ -71,8 +71,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
 
+        shooterMotors.toggleEnabled(true);
         // shooterPitchMotor.toggleEnabled(true);
-        // shooterMotors.toggleEnabled(true);
 
         for (ShooterDataPoint point : ShooterConstants.shooterDataPoints) {
             dataPoints.put(point.distance, point);

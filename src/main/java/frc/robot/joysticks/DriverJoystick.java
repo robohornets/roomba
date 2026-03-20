@@ -82,13 +82,12 @@ public class DriverJoystick {
                             ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
     
                             shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+
                             double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
                             double maxRPM = 1200; // MARK: Populate max rpm
     
                             shooterDataPoint.speed = rpm / maxRPM;
                             
-                            // shooterDataPoint.angle = ( shooterDataPoint.angle - 65) / 180; // angle (0.5 = 180deg)
-    
                             saveShooterDataPoint[0] = shooterDataPoint;
                         },
                         () -> {
@@ -125,7 +124,7 @@ public class DriverJoystick {
                         feederSubsystem.setFeederState(FeederState.OFF);
 
                     },
-                    shooterSubsystem
+                    shooterSubsystem, feederSubsystem
                 )
             );
 
@@ -166,37 +165,14 @@ public class DriverJoystick {
             )
         );
 
-        joystick.povUp().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("SwerveDrive/SetSwervePoseLimelight", true);
-
-                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
-                }
-            )
-        );
+        joystick.povUp();
 
         // Reset Field Centric Heading
         joystick.povDown().onTrue(
             drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric)
         );
 
-        joystick.povLeft().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("QuestNav/SetQuestPose", true);
-                    // Reset QuestNav pose to Limelight position
-                    drivetrain.questNavSubsystem.setQuestPose(
-                        LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
-                            .transformBy(
-                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
-                            )
-                    );
-
-                    Logger.recordOutput("QuestNav/SetQuestPose", false);
-                }
-            )
-        );
+        joystick.povLeft();
 
         joystick.povRight();
     }
