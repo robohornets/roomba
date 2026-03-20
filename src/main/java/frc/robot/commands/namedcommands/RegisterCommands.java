@@ -101,9 +101,15 @@ public class RegisterCommands {
         NamedCommands.registerCommand("IntakeAgitate",
             Commands.repeatingSequence(
                 Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
-                Commands.waitSeconds(0.75),
+                Commands.waitSeconds(1),
                 Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
-                Commands.waitSeconds(0.75)
+                Commands.waitSeconds(1)
+            ).andThen(
+                Commands.runOnce(
+                    () -> {
+                        intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
+                    }, intakeSubsystem
+                )
             )
         );
 
