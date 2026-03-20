@@ -1,68 +1,112 @@
 package frc.robot.subsystems.mechanisms.intake;
 
-import java.util.List;
-
 import org.littletonrobotics.junction.Logger;
 
-import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
-import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
-import com.ctre.phoenix6.hardware.CANcoder;
+import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private double minValue = 0.0;
-    private double maxValue = 1.0;
+    // MARK: Intake Angle
+    public Motor angleMotor = new Motor(9, "Mechanisms")
+        .setFree(false)
+        .setMotorSpeed(1.0)
+        .setMinValue(0.0)
+        .setMaxValue(2.34)
+        .setThreshold(0.2);
+    // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
-    private List<MotorWrapper> angleMotors = List.of(
-        new MotorWrapper(
-            new TalonFX(9), false
-        )
-    );
 
-    @Override
-    public void periodic() {
-        Logger.recordOutput("IntakeSubsystem/Angle", angleEncoder.getAbsolutePosition().getValueAsDouble());
+    // MARK: Intake Wheels
+    public Motor intakeWheelsMotor = new Motor(10, "Mechanisms");
+
+    public IntakeSubsystem() {
+        angleMotor.toggleEnabled(true);
+        intakeWheelsMotor.toggleEnabled(true);
+
+        intakeWheelsMotor.setDefaultCommand(Commands.run(() -> {}, intakeWheelsMotor));
+
+        angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
     }
 
-    private MotorWrapper intakeWheelsMotor = new MotorWrapper(
-        new TalonFX(10), false
-    );
+    // MARK: Intake Wheel State
+    private IntakeStates intakeState = IntakeStates.OFF;
+    public IntakeStates lastIntakeState = IntakeStates.OFF;
 
-    private CANcoder angleEncoder = new CANcoder(0);
+    // MARK: Periodic Loop
+    @Override
+    public void periodic() {
+        // runAngleControl();
+        runIntakeWheels();
 
-    private PositionManager intakePositionManager = new PositionManager(
-        minValue, 
-        maxValue, 
-        angleMotors, 
-        0.2, 
-        0.0, 
-        0.02, 
-        () -> angleEncoder.getAbsolutePosition().getValueAsDouble()
-    );
+        logValues();
+    }
+
+    // MARK: Angle Control
+    // private void runAngleControl() {
+    //     if (Double.isNaN(angleTarget)) {
+    //         angleMotor.set(0.0);
+    //         return;
+    //     }
+
+    //     double currentPos = angleMotor.getMotor().getPosition().refresh().getValueAsDouble();
+    //     double error = angleTarget - currentPos;
+
+    //     if (Math.abs(error) <= IntakeConstants.INTAKE_THRESHOLD) {
+    //         angleMotor.set(0.0);
+    //     } else if (error < 0) {
+    //         angleMotor.set(Math.copySign(IntakeConstants.INTAKE_DOWN_SPEED, error));
+    //     }
+    //     else {
+    //         angleMotor.set(Math.copySign(IntakeConstants.INTAKE_UP_SPEED, error));
+    //     }
+    // }
+
+    // MARK: Intake Wheels
+    private void runIntakeWheels() {
+        switch (intakeState) {
+            case INTAKE_IN:
+                intakeWheelsMotor.getMotor().set(IntakeConstants.INTAKE_WHEELS_SPEED);
+                break;
+            case INTAKE_OUT:
+                intakeWheelsMotor.getMotor().set(-IntakeConstants.INTAKE_WHEELS_SPEED);
+                break;
+            case OFF:
+                intakeWheelsMotor.getMotor().set(0.0);
+                break;
+            default:
+                intakeWheelsMotor.getMotor().set(0.0);
+                break;
+        }
+    }
 
     public void setPosition(double targetPosition) {
         Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
-        intakePositionManager.move(targetPosition);
+        angleMotor.goTo(targetPosition);
     }
 
-    private double intakeSpeed = 0.5;
+    public IntakeStates getIntakeState() {
+        return intakeState;
+    }
 
     public void setIntake(IntakeStates intakeState) {
-        Logger.recordOutput("IntakeSubsystem/State", intakeState.toString());
-        switch (intakeState) {
-            case INTAKE_IN:
-                intakeWheelsMotor.set(intakeSpeed);
-                break;
-            case INTAKE_OUT:
-                intakeWheelsMotor.set(-intakeSpeed);
-                break;
-            case OFF:
-                intakeWheelsMotor.set(0);
-                break;
-            default:
-                break;
+        if (!intakeState.equals(this.intakeState)) {
+            lastIntakeState = this.intakeState;
         }
+
+        this.intakeState = intakeState;
+    }
+
+    // MARK: Logging
+    private void logValues() {
+        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
+        // Logger.recordOutput("IntakeSubsystem/AngleTarget", Double.isNaN(angleTarget) ? -1.0 : angleTarget);
+        Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
+        Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
+        Logger.recordOutput("IntakeSubsystem/Current/AngleMotor", angleMotor.getMotor().getStatorCurrent().getValueAsDouble());
     }
 }

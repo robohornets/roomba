@@ -2,23 +2,37 @@ package frc.robot.joysticks;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.limelight.LimelightConstants;
-import frc.robot.subsystems.vision.limelight.LimelightHelpers;
+import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
+import frc.robot.subsystems.mechanisms.intake.IntakeStates;
+import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
+import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
+import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class DriverJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
+    private final ShooterSubsystem shooterSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
+    private final FeederSubsystem feederSubsystem;
 
     public DriverJoystick(
         CommandXboxController joystick, 
-        Drive drivetrain
+        Drive drivetrain, 
+        ShooterSubsystem shooterSubsystem,
+        IntakeSubsystem intakeSubsystem,
+        FeederSubsystem feederSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
+        this.shooterSubsystem = shooterSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
+        this.feederSubsystem = feederSubsystem;
+        
+        Logger.recordOutput("DriverJoystick/ShooterSpeed", 0.0);
     }
 
     public void configureBindings() {
@@ -38,46 +52,88 @@ public class DriverJoystick {
 
         joystick.y();
 
-        joystick.rightTrigger();
+        final ShooterDataPoint[] saveShooterDataPoint = {new ShooterDataPoint(0.0, 0.0, 0.0)};
 
-        joystick.leftTrigger();
+        // MARK: RT - Shooter shoot
+        joystick.rightTrigger()
+            .whileTrue(
+                Commands.startRun(
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+
+                        shooterDataPoint = shooterSubsystem.calculateShooterValues(
+                            shooterSubsystem.shooterUpperLower(), 
+                            drivetrain.getDistanceToHub()
+                        );
+
+                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+
+                        double maxRPM = 200; // MARK: Populate max rpm
+                        
+                        shooterDataPoint.speed = rpm / maxRPM;
+                        shooterDataPoint.angle = shooterDataPoint.angle / 180; // angle (0.5 = 180deg)
+
+                        saveShooterDataPoint[0] = shooterDataPoint;
+                    },
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
+                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.speed);
+
+                        // maintain motor speed
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                        feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
+                        shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
+
+                        saveShooterDataPoint[0] = shooterDataPoint;
+                    },
+                    shooterSubsystem, drivetrain
+                )
+            )
+            .onFalse(
+                Commands.run(
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+
+                        shooterDataPoint.speed = Math.max(0.0, shooterDataPoint.speed - 0.05);
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                        feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
+
+                        shooterSubsystem.shooterPitchMotor.goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
+
+                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
+                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.angle);
+
+                        saveShooterDataPoint[0] = shooterDataPoint;
+                    },
+                    shooterSubsystem
+                )
+                .until(() -> saveShooterDataPoint[0].speed <= 0.0)
+            );
+
+        // MARK: LT - Intake
+        joystick.leftTrigger()
+            .whileTrue(
+                Commands.runEnd(
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                    },
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.OFF);
+                    },
+                    intakeSubsystem
+                )
+            );
 
         joystick.rightBumper();
 
         joystick.leftBumper();
 
-        // Reset pose to limelight output
-        joystick.povUp().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("SwerveDrive/SetSwervePoseLimelight", true);
+        joystick.povUp();
 
-                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
-                }
-            )
-        );
+        joystick.povDown();
 
-        // Reset Field Centric Heading
-        joystick.povDown().onTrue(drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric));
-
-        //joystick.povDown();
-
-        joystick.povLeft().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("QuestNav/SetQuestPose", true);
-                    // Reset QuestNav pose to Limelight position
-                    drivetrain.questNavSubsystem.setQuestPose(
-                        LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
-                            .transformBy(
-                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
-                            )
-                    );
-
-                    Logger.recordOutput("QuestNav/SetQuestPose", false);
-                }
-            )
-        );
+        joystick.povLeft();
 
         joystick.povRight();
     }

@@ -4,16 +4,24 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.units.Units.Amps;
 
+import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -24,66 +32,70 @@ import frc.robot.joysticks.DriverJoystick;
 import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
-import frc.robot.subsystems.mechanisms.climber.ClimberSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
+import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
-import frc.robot.subsystems.motor.MotorSubsystem;
+
 
 public class RobotContainer {
-    // public static double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    // public static double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
     // MARK: Drivetrain
     // Create the swerve drivetrain subsystem for the robot
     public final Drive drivetrain = new Drive(TunerConstants.createDrivetrain());
 
-
-    // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
     private final Telemetry logger = new Telemetry(DriveConstants.MAX_SPEED);
 
-    // MARK: Vision
-    // Uses the Quest to periodically add vision measurements
-    // public QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem(drivetrain);
-
-    // LimelightSubsystem limelight2Subsystem = new LimelightSubsystem(drivetrain, "limelight-two");
-
     // MARK: Subsystems
-    public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-    public final MotorSubsystem motorSubsystem = new MotorSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
+    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+    public final FeederSubsystem feederSubsystem = new FeederSubsystem();
 
     // MARK: Xbox Controllers
-    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain);
-    public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain, intakeSubsystem);
-    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain);
-
-    
-    
-    
+    public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);
+    public final OperatorJoystick operatorJoystick = new OperatorJoystick(new CommandXboxController(1), drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);
+    public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);
     
     // MARK: Register Commands
-    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
+    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, feederSubsystem);
+
+    // MARK: Motor Config
+    public static final TalonFXConfiguration mechanismsMotorConfiguration = new TalonFXConfiguration()
+        .withCurrentLimits(
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(Amps.of(100))
+                .withSupplyCurrentLimit(Amps.of(40))
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimitEnable(true)
+        )
+        .withMotorOutput(
+            new MotorOutputConfigs()
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withDutyCycleNeutralDeadband(0.04)
+        );
     
-
     // MARK: Tests
-    public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
+    // public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);
 
-
-    // private final SendableChooser<Command> autoChooser;
-    private final LoggedDashboardChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        DriverStation.silenceJoystickConnectionWarning(true);
-        
         registerCommands.registerCommands();
 
-        autoChooser = new LoggedDashboardChooser<>("Autonomous Mode", AutoBuilder.buildAutoChooser());
+        // MARK: Auto Chooser
+        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser.onChange(
+            command -> {
+                Commands.runOnce(
+                    () -> {
+                        Logger.recordOutput("Autonomous/SelectedAuto", autoChooser.getSelected().getName());
+                    }
+                );
+            }
+        );
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         // MARK: Run Tests
         /* Disable tests on actual code */
-        tests.runTests();
+        // tests.runTests();
 
         configureBindings();
 
@@ -96,16 +108,7 @@ public class RobotContainer {
         driverJoystick.configureBindings();
         operatorJoystick.configureBindings();
         debugJoystick.configureBindings();
-
-        // Positive X is forward, Positive Y is left according to WPILib
-        // drivetrain.setDefaultCommand(
-        //     drivetrain.applyRequest(() ->
-        //         Drive.drive
-        //             .withVelocityX(-driverJoystick.joystick.getLeftY() * DriveConstants.MAX_SPEED) // Drive forward with negative Y (forward)
-        //             .withVelocityY(-driverJoystick.joystick.getLeftX() * DriveConstants.MAX_SPEED) // Drive left with negative X (left)
-        //             .withRotationalRate(-driverJoystick.joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
-        //     )
-        // );
+        
         drivetrain.setDefaultCommand(drivetrain.joysticksDefaultCommand(driverJoystick.joystick));
 
         // Idle while the robot is disabled. This ensures the configured
@@ -129,8 +132,10 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+    // MARK: Get Autonomous
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return autoChooser.get();
+        // return autoChooser.get();
+        return autoChooser.getSelected();
     }
 }

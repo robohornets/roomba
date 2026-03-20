@@ -14,6 +14,8 @@ public class DriveConstants {
     // 3/4 of a rotation per second max angular velocity
     public static double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
+    public static final double ODOMETRY_FREQUENCY = 250.0;
+
     // MARK: Coordinates of Hub
     public static Translation2d HUB_RED_POSITION = new Translation2d(11.915, 4.034);
 

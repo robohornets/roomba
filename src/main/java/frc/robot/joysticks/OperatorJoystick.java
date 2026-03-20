@@ -1,62 +1,116 @@
 package frc.robot.joysticks;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.feeder.FeederState;
+import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
+import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
+import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class OperatorJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
+    private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-
+    private final FeederSubsystem feederSubsystem;
+    
     public OperatorJoystick(
         CommandXboxController joystick, 
-        Drive drivetrain,
-        IntakeSubsystem intakeSubsystem
+        Drive drivetrain, 
+        ShooterSubsystem shooterSubsystem,
+        IntakeSubsystem intakeSubsystem,
+        FeederSubsystem feederSubsystem
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
+        this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+        this.feederSubsystem = feederSubsystem;
+
+
     }
 
     public void configureBindings() {
-        joystick.a();
+        // MARK: Intake Down - A
+        joystick.a().onTrue(
+            NamedCommands.getCommand("IntakeDown")
+        );
 
-        joystick.b();
+        // MARK: Intake Up - B
+        joystick.b().onTrue(
+            NamedCommands.getCommand("IntakeUp")
+        );
 
-        joystick.x();
+        // MARK: Jostle Fuel - X
+        joystick.x().onTrue(
+            NamedCommands.getCommand("IntakeAgitate")
+        );
 
-        joystick.y();
-
-        // MARK: Intake out
-        joystick.rightTrigger().onTrue(
-            Commands.runOnce(
+        // MARK: nothing - Y
+        joystick.y().whileTrue(
+            Commands.run(
                 () -> {
-                    intakeSubsystem.setIntake(IntakeStates.INTAKE_OUT);
+                    shooterSubsystem.shooterPitchMotor.goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
                 }
             )
         );
 
-        // MARK: Intake in
-        joystick.leftTrigger().onTrue(
-            Commands.runOnce(
+        // MARK: Intake In - LT
+        joystick.leftTrigger()
+            .whileTrue(
+                Commands.runEnd(
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                    },
+                    () -> {
+                        intakeSubsystem.setIntake(IntakeStates.OFF);
+                    },
+                    intakeSubsystem
+                )
+            );
+
+
+        // MARK: Intake Out - LB
+        joystick.leftBumper().whileTrue(
+            Commands.runEnd(
                 () -> {
-                    intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
+                    intakeSubsystem.setIntake(IntakeStates.OFF);
+                },
+                () -> {
+                    // Reset intake to last state.
+                    intakeSubsystem.setIntake(intakeSubsystem.lastIntakeState);
                 }
             )
         );
 
-        joystick.rightBumper().onTrue(
-            Commands.runOnce(
+        // MARK: Shoot Feed In - RT
+        joystick.rightTrigger().whileTrue(
+            Commands.runEnd(
                 () -> {
-                    
+                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
+                },
+                () -> {
+                    feederSubsystem.setFeederState(FeederState.OFF);
                 }
             )
         );
 
-        joystick.leftBumper();
+        // MARK: Shoot Feed Out - RB
+        joystick.rightBumper().whileTrue(
+            Commands.runEnd(
+                () -> {
+                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT);
+                },
+                () -> {
+                    feederSubsystem.setFeederState(FeederState.OFF);
+                }
+            )
+        );
 
         joystick.povUp();
 

@@ -1,17 +1,24 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
-import com.btwrobotics.WhatTime.frc.MotorManagers.MotorWrapper;
-import com.btwrobotics.WhatTime.frc.MotorManagers.PositionManager;
+import org.littletonrobotics.junction.Logger;
+
+import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
+import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
+
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.motor.MotorSubsystem;
+import frc.robot.subsystems.math.MathSubsystem;
 
 
 
@@ -32,117 +39,179 @@ public class ShooterSubsystem extends SubsystemBase {
     /** Reference to the drivetrain for coordinated aiming. */
     Drive drivetrain;
 
+    TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
+
+    // public ShooterConstants shooterConstants = new ShooterConstants();
+
+    // MARK: Motors
+    /** Motor controlling the shooter angle */
+    public final Motor shooterPitchMotor = new Motor(11, "Mechanisms")
+        .setFree(false)
+        .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
+        .setMotorSpeed(0.1)
+        .setMinSpeed(0.0)
+        .setHoldSpeed(0.0)
+        .setPG(0.02)
+        .setThreshold(ShooterConstants.POSITION_THRESHOLD)
+        .setPositionSupplier(() -> getPigeonPosition());
+
+    public final Motor leftShooterMotor = new Motor(13, "Mechanisms");
+    public final Motor rightShooterMotor = new Motor(14, "Mechanisms", true);
+
+    public final MotorGroup shooterMotors = new MotorGroup(
+        Arrays.asList(leftShooterMotor, rightShooterMotor)
+    ).setMotorSpeed(0.4)
+    .setPG(0.01);
+
+    /** IMU sensor for shooter orientation feedback. */
+    public final Pigeon2 shooterPigeon = new Pigeon2(34, "Mechanisms");
+
+    // MARK: Constructor
     /**
      * Constructs the ShooterSubsystem.
      * @param drivetrain the swerve drivetrain subsystem (for aiming/coordination)
      */
     public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
-    }
 
-    /** Utility for motion calculations (e.g., trajectory, angles). */
-    MotorSubsystem motorSubsystem = new MotorSubsystem();
-    
-    /** Motor controlling the shooter flywheel. */
-    public final MotorWrapper shooterMotor = new MotorWrapper(
-        new TalonFX(10),
-        false
-    );
-    /** Motor controlling the shooter pitch (angle). */
-    public final MotorWrapper shooterPitchMotor = new MotorWrapper(
-        new TalonFX(9),
-        false
-    );
+        shooterPitchMotor.toggleEnabled(true);
+        leftShooterMotor.toggleEnabled(true);
+        rightShooterMotor.toggleEnabled(true);
 
-    /** IMU sensor for shooter orientation feedback. */
-    public final Pigeon2 shooterPigeon = new Pigeon2(34);
+        for (ShooterDataPoint point : ShooterConstants.shooterDataPoints) {
+            dataPoints.put(point.distance, point);
+        }
 
-    // --- Shooter configuration and tuning fields ---
-
-    /** Entry angle to the hub in degrees (TODO: calculate actual value). */
-    public double hubEnterAngle = -70;
-
-    /** Speed for pitching the shooter (open-loop, 0..1). */
-    public double shooterPitchSpeed = 0.1;
-    /** Hold speed for maintaining shooter pitch (open-loop, 0..1). */
-    public double shooterPitchHoldSpeed = 0.02;
-
-    /** Maximum allowed shooter pitch (units depend on mechanism, e.g., rotations or percent). */
-    public double shooterPitchMax = 0.3;
-    /** Minimum allowed shooter pitch. */
-    public double shooterPitchMin = 0.0;
-
-    /** Threshold for position manager to consider the shooter "at position". */
-    public double positionThreshold = 1.0;
-
-    /** Height of the hub (target) in meters. */
-    public double hubHeight = 2;
-    /** Height of the shooter in meters. */
-    public double shooterHeight = 1;
-
-    /**
-     * PositionManager for controlling the shooter pitch motor to a target angle.
-     * Uses feedback from the shooter IMU.
-     */
-    public PositionManager shooterPositionManager = new PositionManager(
-        shooterPitchMin,
-        shooterPitchMax,
-        List.of(shooterPitchMotor),
-        0.2,
-        0.0,
-        positionThreshold, 
-        () -> getShooterPitchDeg()
-    );
-
-    // --- Commands ---
-
-    /**
-     * Returns a command to pitch the shooter to the specified angle (degrees).
-     * @param angle target pitch angle in degrees
-     * @return a command that moves the shooter pitch to the given angle
-     */
-    public Command pitchToAngleDeg(double angle) {
-        return shooterPositionManager.move(angle);
-    }
-    
-    /**
-     * Returns a command to aim the shooter at the hub.
-     * Currently a placeholder: should calculate robot position, distance to hub,
-     * required rotation, and pitch, then command the shooter and drivetrain.
-     * @return a command that aims the shooter at the hub
-     */
-    public Command aimAtHub() {
-        return Commands.run(
-            () -> {
-                // Get robot position (Should be implemented into WhatTime)
-                // Calculate distance to hub (Should be implemented into WhatTime)
-
-                // Calculate required rotations to face hub
-                // Rotate to face hub
-
-                // Calculate required shooter pitch angle to hit hub
-                // Pitch shooter to required angle
-            }
+        setDefaultCommand(
+            Commands.run(() -> {
+                if (pitchTarget != lastSentPitchTarget) {
+                    shooterPitchMotor.goTo(pitchTarget);
+                    lastSentPitchTarget = pitchTarget;
+                }
+                if (flywheelSpeed != lastSentFlywheelSpeed) {
+                    shooterMotors.drive(flywheelSpeed);
+                    lastSentFlywheelSpeed = flywheelSpeed;
+                }
+            }, this)
         );
     }
 
-    // --- Sensor feedback ---
+    public double shooterAngleTarget = 65;
 
-    /**
-     * Gets the shooter pitch motor's position in degrees.
-     * @return shooter pitch (motor) position in degrees
-     */
-    public double getShooterMotorPitchDeg() {
-        return shooterPitchMotor.getPosition() * 360;
+    /** Shared pitch target used by manual joystick control and button bindings. */
+    public double pitchTarget = ShooterConstants.SHOOTER_MAX_ANGLE;
+    private double lastSentPitchTarget = Double.NaN;
+
+    // MARK: Set Pitch Target
+    public void setPitchTarget(double pitch) {
+        // pitchTarget = MathUtil.clamp(pitch, ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE);
+        shooterPitchMotor.goTo(pitchTarget / 180);
     }
 
-    /**
-     * Gets the current shooter pitch in degrees from the Pigeon2 IMU.
-     * @return shooter pitch in degrees (roll axis)
-     */
-    public double getShooterPitchDeg() {
-        // MARK: Should be roll?
-        return shooterPigeon.getRoll().getValueAsDouble();
+    /** Shared flywheel speed target used by manual joystick control and button bindings. */
+    public double flywheelSpeed = 0.0;
+    private double lastSentFlywheelSpeed = Double.NaN;
+
+    // MARK: Set Flywheel
+    public void setFlywheelSpeed(double speed) {
+        shooterMotors.drive(speed);
     }
 
+    // MARK: Periodic Loop
+    @Override
+    public void periodic() {
+        if (drivetrain.isLockedToHub()) {
+            double currentDistance = drivetrain.getDistanceToHub();
+            ShooterDataPoint values = calculateShooterValues(shooterUpperLower(), currentDistance);
+            setPitchTarget(values.angle);
+            setFlywheelSpeed(values.speed);
+        }
+
+        logValues();
+    }
+
+    // MARK: Get Pigeon
+    public double getPigeonPosition() {
+        return shooterPigeon.getRoll().refresh().getValueAsDouble() * -1;
+    }
+
+    // MARK: Increment Shooter
+    /** For testing shooter angle manually */
+    public void incrementShooterAngle(double incrementValue) {
+        shooterAngleTarget += incrementValue;
+        
+        shooterPitchMotor.goTo(shooterAngleTarget);
+    }
+
+    // MARK: UpperLowerPoint
+    public UpperLowerPoint shooterUpperLower() {
+        // MARK: NEEDS REFACTORING
+        // if (dataPoints.isEmpty()) {
+
+        //     double currentDistance = drivetrain.getDistanceToHub();
+        //     double aimHeight = (6 - 20 / 12) / 3.281;
+
+        //     double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
+
+
+        //     return new UpperLowerPoint(
+        //         new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
+        //         new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
+        //     );
+        // }
+        
+        double currentDistance = drivetrain.getDistanceToHub();
+
+        Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
+        Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
+
+        // Handle out-of-range cases by clamping to the nearest point
+        ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
+        ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
+
+        return new UpperLowerPoint(upper, lower);
+    }
+
+    public ShooterDataPoint calculateShooterValues(UpperLowerPoint upperLowerPoint, double currentDistance) {
+        double lowerDist = upperLowerPoint.getLowerDistance();
+        double upperDist = upperLowerPoint.getUpperDistance();
+        double valueRange = upperDist - lowerDist;
+
+        if (valueRange == 0) {
+            return new ShooterDataPoint(currentDistance, upperLowerPoint.getLowerAngle(), upperLowerPoint.getLowerSpeed());
+        }
+
+        double interpolationFactor = (currentDistance - lowerDist) / valueRange;
+
+        double estimatedAngle = upperLowerPoint.getLowerAngle() + interpolationFactor * (upperLowerPoint.getUpperAngle() - upperLowerPoint.getLowerAngle());
+        double estimatedSpeed = upperLowerPoint.getLowerSpeed() + interpolationFactor * (upperLowerPoint.getUpperSpeed() - upperLowerPoint.getLowerSpeed());
+
+        return new ShooterDataPoint(currentDistance, estimatedAngle, estimatedSpeed);
+    }
+
+    public Command accelerateToSpeed(double targetSpeed) {
+        Timer timer = new Timer();
+        return Commands.startRun(
+            () -> timer.restart(),
+            () -> {
+                double rampedSpeed = Math.min(timer.get() / 5.0, 1.0) * targetSpeed;
+                setFlywheelSpeed(rampedSpeed);
+            },
+            this
+        ).until(() -> timer.hasElapsed(5.0));
+    }
+
+    public double getRequiredRPM(ShooterDataPoint shooterDataPoint){
+        double vWheel = 2 * shooterDataPoint.speed;
+        return vWheel * 60 / (Math.PI * 4 * 0.0254); // get rpm required for wheel with diameter of 4 inches
+    }
+
+    // MARK: Logging
+    private void logValues() {
+        Logger.recordOutput("ShooterSubsystem/MotorConnected", shooterPitchMotor.getMotor().isConnected());
+        Logger.recordOutput("ShooterSubsystem/PigeonAngle", getPigeonPosition());
+        Logger.recordOutput("ShooterSubsystem/PitchMotorOutput", shooterPitchMotor.getMotor().get());
+        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", flywheelSpeed);
+        Logger.recordOutput("ShooterSubsystem/TargetAngle", shooterAngleTarget);
+    }
 }

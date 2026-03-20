@@ -9,13 +9,35 @@
       "name": "Main",
       "request": "launch",
       "mainClass": "frc.robot.Main",
-      "projectName": "roomba"
+      "projectName": "roomba",
+      "env": {
+        "GLFW_PLATFORM": "x11",
+        "LIBGL_ALWAYS_SOFTWARE": "1",
+        "LIBGL_DRI3_DISABLE": "1",
+        "__GLX_VENDOR_LIBRARY_NAME": "mesa",
+        "MESA_LOADER_DRIVER_OVERRIDE": "llvmpipe",
+        "GALLIUM_DRIVER": "llvmpipe",
+        "HALSIM_EXTENSIONS": "${workspaceFolder}/build/jni/release/libhalsim_gui.so",
+        "LD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release",
+        "DYLD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release"
+      }
     },
     {
       "type": "wpilib",
       "name": "WPILib Desktop Debug",
       "request": "launch",
-      "desktop": true
+      "desktop": true,
+      "env": {
+        "GLFW_PLATFORM": "x11",
+        "LIBGL_ALWAYS_SOFTWARE": "1",
+        "LIBGL_DRI3_DISABLE": "1",
+        "__GLX_VENDOR_LIBRARY_NAME": "mesa",
+        "MESA_LOADER_DRIVER_OVERRIDE": "llvmpipe",
+        "GALLIUM_DRIVER": "llvmpipe",
+        "HALSIM_EXTENSIONS": "${workspaceFolder}/build/jni/release/libhalsim_gui.so",
+        "LD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release",
+        "DYLD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release"
+      }
     },
     {
       "type": "wpilib",
