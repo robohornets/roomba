@@ -61,12 +61,10 @@ public class DriverJoystick {
         );
 
         // MARK: Reset Shooter Angle - Y
-        joystick.y().whileTrue(
-            Commands.run(
-                () -> {
-                    shooterSubsystem.shooterPitchMotor.goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
-                }
-            )
+        joystick.y().onTrue(
+            NamedCommands.getCommand("FeederIn")
+        ).onFalse(
+            NamedCommands.getCommand("FeederOff")
         );
 
         // MARK: RT - Shooter shoot

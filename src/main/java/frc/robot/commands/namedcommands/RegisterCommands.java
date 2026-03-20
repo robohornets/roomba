@@ -31,29 +31,19 @@ public class RegisterCommands {
     
     public void registerCommands(){        
         NamedCommands.registerCommand("ShootStart",
-            Commands.parallel(
                 Commands.run(
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+                () -> {
+                    ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
 
-                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                        double maxRPM = 1300; // MARK: Populate max rpm
+                    double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                    double maxRPM = 1300; // MARK: Populate max rpm
 
-                        shooterDataPoint.speed = rpm / maxRPM;
-                        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
+                    shooterDataPoint.speed = rpm / maxRPM;
+                    Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                    },
-                    shooterSubsystem
-                ),
-                Commands.sequence(
-                    Commands.waitSeconds(2),
-                    Commands.runOnce(
-                        ()->{
-                            feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
-                        }, feederSubsystem
-                    )
-                )
+                    shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                },
+                shooterSubsystem
             )
         );
 
@@ -113,6 +103,27 @@ public class RegisterCommands {
                 () -> {
                     intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
                 }
+            )
+        );
+
+        NamedCommands.registerCommand("FeederIn",
+            Commands.run(
+                () ->  feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
+                feederSubsystem
+            )
+        );
+
+        NamedCommands.registerCommand("FeederOff",
+            Commands.run(
+                () ->  feederSubsystem.setFeederState(FeederState.OFF),
+                feederSubsystem
+            )
+        );
+
+        NamedCommands.registerCommand("FeederOut",
+            Commands.run(
+                () ->  feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT),
+                feederSubsystem
             )
         );
     }
