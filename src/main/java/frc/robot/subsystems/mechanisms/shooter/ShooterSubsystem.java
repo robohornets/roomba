@@ -71,7 +71,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
 
-        shooterPitchMotor.toggleEnabled(true);
+        // shooterPitchMotor.toggleEnabled(true);
         leftShooterMotor.toggleEnabled(true);
         rightShooterMotor.toggleEnabled(true);
 

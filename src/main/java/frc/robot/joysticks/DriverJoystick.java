@@ -87,7 +87,7 @@ public class DriverJoystick {
                     ),
                     Commands.runOnce(() -> {
                         feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
-                    }, feederSubsystem)
+                    }, feederSubsystem).withTimeout(2.0)
                 )
             )
             .onFalse(
