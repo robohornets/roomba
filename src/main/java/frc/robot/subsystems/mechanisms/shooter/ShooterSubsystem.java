@@ -140,33 +140,33 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterPitchMotor.goTo(shooterAngleTarget);
     }
 
+
+
+    public ShooterDataPoint shooterCalculateTrajectory() {
+        double currentDistance = drivetrain.getDistanceToHub();
+        double aimHeight = (6 - 20 / 12) / 3.281;
+
+        double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 65);
+
+
+        return new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]);
+    }
+
     // MARK: UpperLowerPoint
     public UpperLowerPoint shooterUpperLower() {
         // MARK: NEEDS REFACTORING
-        // if (dataPoints.isEmpty()) {
 
-            double currentDistance = drivetrain.getDistanceToHub();
-            double aimHeight = (6 - 20 / 12) / 3.281;
-
-            double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 70);
-
-
-            return new UpperLowerPoint(
-                new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]),
-                new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0])
-            );
-        // }
         
-        // double currentDistance = drivetrain.getDistanceToHub();
+        double currentDistance = drivetrain.getDistanceToHub();
 
-        // Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
-        // Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
+        Map.Entry<Double, ShooterDataPoint> lowerEntry = dataPoints.floorEntry(currentDistance);
+        Map.Entry<Double, ShooterDataPoint> upperEntry = dataPoints.ceilingEntry(currentDistance);
 
-        // // Handle out-of-range cases by clamping to the nearest point
-        // ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
-        // ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
+        // Handle out-of-range cases by clamping to the nearest point
+        ShooterDataPoint lower = (lowerEntry != null) ? lowerEntry.getValue() : upperEntry.getValue();
+        ShooterDataPoint upper = (upperEntry != null) ? upperEntry.getValue() : lowerEntry.getValue();
 
-        // return new UpperLowerPoint(upper, lower);
+        return new UpperLowerPoint(upper, lower);
     }
 
     public ShooterDataPoint calculateShooterValues(UpperLowerPoint upperLowerPoint, double currentDistance) {
