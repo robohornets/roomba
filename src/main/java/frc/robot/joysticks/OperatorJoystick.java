@@ -37,27 +37,68 @@ public class OperatorJoystick {
 
     public void configureBindings() {
         // MARK: Intake Down - A
-        joystick.a();
+        joystick.a().onTrue(
+            NamedCommands.getCommand("IntakeDown")
+        );
 
         // MARK: Intake Up - B
-        joystick.b();
+        joystick.b().onTrue(
+            NamedCommands.getCommand("IntakeUp")
+        );
 
         // MARK: nothing - X
-        joystick.x();
+        joystick.x().whileTrue(
+            NamedCommands.getCommand("IntakeAgitate")
+        );
 
         // MARK: nothing - Y
         joystick.y();
 
-        // MARK: nothing - LT
-        joystick.leftTrigger();
+        // MARK: RT - Shooter shoot
+        joystick.rightTrigger()
+            .whileTrue(
+               NamedCommands.getCommand("ShootStart")
+            )
+            .onFalse(
+                NamedCommands.getCommand("ShootStop")
+            );
 
-        // MARK: nothing - LB
-        joystick.leftBumper();
+        // MARK: LT - Intake
+        joystick.leftTrigger()
+            .whileTrue(
+                Commands.runEnd(
+                    () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_IN),
+                    () -> intakeSubsystem.setIntake(IntakeStates.OFF),
+                    intakeSubsystem
+                )
+            );
 
-        // MARK: nothing - RT
-        joystick.rightTrigger();
+        joystick.rightBumper().whileTrue(
+            Commands.runEnd(
+                () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT),
+                () -> feederSubsystem.setFeederState(FeederState.OFF),
+                feederSubsystem
+            )
+        );
+        
+        // MARK: Intake Out - LB
+        joystick.leftBumper().whileTrue(
+            Commands.runEnd(
+                () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_OUT),
+                () -> intakeSubsystem.setIntake(IntakeStates.OFF),
+                intakeSubsystem
+            )
+        );
 
-        // MARK: nothing - RB
-        joystick.rightBumper();
+        joystick.povUp();
+
+        // Reset Field Centric Heading
+        joystick.povDown().onTrue(
+            drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric)
+        );
+
+        joystick.povLeft();
+
+        joystick.povRight();
     }
 }
