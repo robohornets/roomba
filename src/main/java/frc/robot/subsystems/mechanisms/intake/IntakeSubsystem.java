@@ -36,6 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Wheel State
     private IntakeStates intakeState = IntakeStates.OFF;
     public IntakeStates lastIntakeState = IntakeStates.OFF;
+    
+    // MARK: Intake Angle State
+    public double anglePosition = 0.0;
+
 
     // MARK: Periodic Loop
     @Override
@@ -86,6 +90,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setPosition(double targetPosition) {
         Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
+        anglePosition = targetPosition;
         angleMotor.goTo(targetPosition);
     }
 

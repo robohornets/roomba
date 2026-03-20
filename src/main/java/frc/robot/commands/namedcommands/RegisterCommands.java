@@ -53,6 +53,18 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: IntakeToggle
+        NamedCommands.registerCommand("IntakeToggle", 
+            Commands.runOnce(
+                () -> {
+                    if (intakeSubsystem.anglePosition == IntakeConstants.INTAKE_MAX_VALUE) {
+                        intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
+                    } else {
+                        intakeSubsystem.setPosition(IntakeConstants.INTAKE_MAX_VALUE);
+                    }
+                }, intakeSubsystem
+            ));
+
         // MARK: IntakeAgitate
         NamedCommands.registerCommand("IntakeAgitate",
             Commands.sequence(

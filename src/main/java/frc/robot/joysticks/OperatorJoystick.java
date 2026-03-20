@@ -1,10 +1,7 @@
 package frc.robot.joysticks;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -14,8 +11,6 @@ import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
-import frc.robot.subsystems.vision.limelight.LimelightConstants;
-import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 
 public class OperatorJoystick {
     public final CommandXboxController joystick;
@@ -41,22 +36,18 @@ public class OperatorJoystick {
     }
 
     public void configureBindings() {
-        // MARK: Intake Down - A
-        joystick.a().onTrue(
-            NamedCommands.getCommand("IntakeDown")
-        );
+        // MARK: Nothing - A
+        joystick.a();
 
-        // MARK: Intake Up - B
-        joystick.b().onTrue(
-            NamedCommands.getCommand("IntakeUp")
-        );
+        // MARK: Nothing - B
+        joystick.b();
 
         // MARK: Jostle Fuel - X
         joystick.x().onTrue(
             NamedCommands.getCommand("IntakeAgitate")
         );
 
-        // MARK: nothing - Y
+        // MARK: Reset shooter hood - Y
         joystick.y().whileTrue(
             Commands.run(
                 () -> {
@@ -65,33 +56,12 @@ public class OperatorJoystick {
             )
         );
 
-        // MARK: Intake In - LT
-        joystick.leftTrigger()
-            .whileTrue(
-                Commands.runEnd(
-                    () -> {
-                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                    },
-                    () -> {
-                        intakeSubsystem.setIntake(IntakeStates.OFF);
-                    },
-                    intakeSubsystem
-                )
-            );
+        // MARK: nothing - LT
+        joystick.leftTrigger();
 
 
-        // MARK: Intake Out - LB
-        joystick.leftBumper().whileTrue(
-            Commands.runEnd(
-                () -> {
-                    intakeSubsystem.setIntake(IntakeStates.OFF);
-                },
-                () -> {
-                    // Reset intake to last state.
-                    intakeSubsystem.setIntake(intakeSubsystem.lastIntakeState);
-                }
-            )
-        );
+        // MARK: nothing - LB
+        joystick.leftBumper();
 
         // MARK: Shoot Feed In - RT
         joystick.rightTrigger().whileTrue(
@@ -116,39 +86,5 @@ public class OperatorJoystick {
                 }
             )
         );
-
-        joystick.povUp().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("SwerveDrive/SetSwervePoseLimelight", true);
-
-                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
-                }
-            )
-        );
-
-        // Reset Field Centric Heading
-        joystick.povDown().onTrue(
-            drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric)
-        );
-
-        joystick.povLeft().onTrue(
-            Commands.runOnce(
-                () -> {
-                    Logger.recordOutput("QuestNav/SetQuestPose", true);
-                    // Reset QuestNav pose to Limelight position
-                    drivetrain.questNavSubsystem.setQuestPose(
-                        LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
-                            .transformBy(
-                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
-                            )
-                    );
-
-                    Logger.recordOutput("QuestNav/SetQuestPose", false);
-                }
-            )
-        );
-
-        joystick.povRight();
     }
 }

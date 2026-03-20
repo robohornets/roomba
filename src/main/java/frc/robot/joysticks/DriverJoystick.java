@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -14,6 +15,8 @@ import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
+import frc.robot.subsystems.vision.limelight.LimelightConstants;
+import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 
 public class DriverJoystick {
     public final CommandXboxController joystick;
@@ -39,14 +42,14 @@ public class DriverJoystick {
     }
 
     public void configureBindings() {
-        // MARK: Intake Down - A
+        // MARK: Intake Toggle - A
         joystick.a().onTrue(
-            NamedCommands.getCommand("IntakeDown")
+            NamedCommands.getCommand("IntakeToggle")
         );
 
-        // MARK: Intake Up - B
+        // MARK: Intake Agitate - B
         joystick.b().onTrue(
-            NamedCommands.getCommand("IntakeUp")
+            NamedCommands.getCommand("IntakeAgitate")
         );
 
         // MARK: X - Lock to hub
@@ -88,7 +91,7 @@ public class DriverJoystick {
 
                         // maintain motor speed
                         shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                        
+
                         feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
                         // shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
 
@@ -133,15 +136,60 @@ public class DriverJoystick {
                 )
             );
 
-        joystick.rightBumper();
+        joystick.rightBumper().whileTrue(
+            Commands.runEnd(
+                () -> {
+                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT);
+                },
+                () -> {
+                    feederSubsystem.setFeederState(FeederState.OFF);
+                }, feederSubsystem
+            )
+        );
+        
+        // MARK: Intake Out - LB
+        joystick.leftBumper().whileTrue(
+            Commands.runEnd(
+                () -> {
+                    intakeSubsystem.setIntake(IntakeStates.INTAKE_OUT);
+                },
+                () -> {
+                    intakeSubsystem.setIntake(IntakeStates.OFF);
+                }, intakeSubsystem
+            )
+        );
 
-        joystick.leftBumper();
+        joystick.povUp().onTrue(
+            Commands.runOnce(
+                () -> {
+                    Logger.recordOutput("SwerveDrive/SetSwervePoseLimelight", true);
 
-        joystick.povUp();
+                    drivetrain.resetPose(LimelightHelpers.getBotPose2d("limelight-four"));
+                }
+            )
+        );
 
-        joystick.povDown();
+        // Reset Field Centric Heading
+        joystick.povDown().onTrue(
+            drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric)
+        );
 
-        joystick.povLeft();
+        joystick.povLeft().onTrue(
+            Commands.runOnce(
+                () -> {
+                    Logger.recordOutput("QuestNav/SetQuestPose", true);
+                    // Reset QuestNav pose to Limelight position
+                    drivetrain.questNavSubsystem.setQuestPose(
+                        LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
+                            .transformBy(
+                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
+                            )
+                    );
+
+                    Logger.recordOutput("QuestNav/SetQuestPose", false);
+                }
+            )
+        );
 
         joystick.povRight();
     }
