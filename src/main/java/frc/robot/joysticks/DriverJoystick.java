@@ -62,42 +62,58 @@ public class DriverJoystick {
             )
         );
 
-        joystick.y();
+        // MARK: Reset Shooter Angle - Y
+        joystick.y().whileTrue(
+            Commands.run(
+                () -> {
+                    shooterSubsystem.shooterPitchMotor.goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
+                }
+            )
+        );
 
         final ShooterDataPoint[] saveShooterDataPoint = {new ShooterDataPoint(0.0, 0.0, 0.0)};
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()
             .whileTrue(
-                Commands.startRun(
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
-
-                        shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
-                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                        double maxRPM = 1200; // MARK: Populate max rpm
-
-                        // shooterDataPoint.speed = rpm / maxRPM;
-                        shooterDataPoint.speed = 0.1;
-                        
-                        // shooterDataPoint.angle = ( shooterDataPoint.angle - 65) / 180; // angle (0.5 = 180deg)
-
-                        saveShooterDataPoint[0] = shooterDataPoint;
-                    },
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
-                        Logger.recordOutput("DriverJoystick/ShooterTargetAngle", shooterDataPoint.angle);
-
-                        // maintain motor speed
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-
-                        feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
-                        // shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
-
-                        saveShooterDataPoint[0] = shooterDataPoint;
-                    },
-                    shooterSubsystem, drivetrain
+                Commands.parallel(
+                    Commands.startRun(
+                        () -> {
+                            ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+    
+                            shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+                            double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                            double maxRPM = 1200; // MARK: Populate max rpm
+    
+                            // shooterDataPoint.speed = rpm / maxRPM;
+                            shooterDataPoint.speed = 0.1;
+                            
+                            // shooterDataPoint.angle = ( shooterDataPoint.angle - 65) / 180; // angle (0.5 = 180deg)
+    
+                            saveShooterDataPoint[0] = shooterDataPoint;
+                        },
+                        () -> {
+                            ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
+                            Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
+                            Logger.recordOutput("DriverJoystick/ShooterTargetAngle", shooterDataPoint.angle);
+    
+                            // maintain motor speed
+                            shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+    
+                            // shooterSubsystem.shooterPitchMotor.goTo(shooterDataPoint.angle);
+    
+                            saveShooterDataPoint[0] = shooterDataPoint;
+                        },
+                        shooterSubsystem, drivetrain
+                    ),
+                    Commands.sequence(
+                        Commands.waitSeconds(2),
+                        Commands.runOnce(
+                            ()->{
+                                feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
+                            }, feederSubsystem
+                        )
+                    )
                 )
             )
             .onFalse(

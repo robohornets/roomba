@@ -42,49 +42,22 @@ public class OperatorJoystick {
         // MARK: Nothing - B
         joystick.b();
 
-        // MARK: Jostle Fuel - X
-        joystick.x().onTrue(
-            NamedCommands.getCommand("IntakeAgitate")
-        );
+        // MARK: nothing - X
+        joystick.x();
 
-        // MARK: Reset shooter hood - Y
-        joystick.y().whileTrue(
-            Commands.run(
-                () -> {
-                    shooterSubsystem.shooterPitchMotor.goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
-                }
-            )
-        );
+        // MARK: nothing - Y
+        joystick.y();
 
         // MARK: nothing - LT
         joystick.leftTrigger();
 
-
         // MARK: nothing - LB
         joystick.leftBumper();
 
-        // MARK: Shoot Feed In - RT
-        joystick.rightTrigger().whileTrue(
-            Commands.runEnd(
-                () -> {
-                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
-                },
-                () -> {
-                    feederSubsystem.setFeederState(FeederState.OFF);
-                }
-            )
-        );
+        // MARK: nothing - RT
+        joystick.rightTrigger();
 
-        // MARK: Shoot Feed Out - RB
-        joystick.rightBumper().whileTrue(
-            Commands.runEnd(
-                () -> {
-                    feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT);
-                },
-                () -> {
-                    feederSubsystem.setFeederState(FeederState.OFF);
-                }
-            )
-        );
+        // MARK: nothing - RB
+        joystick.rightBumper();
     }
 }
