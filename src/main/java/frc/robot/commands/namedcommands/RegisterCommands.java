@@ -48,27 +48,34 @@ public class RegisterCommands {
             shooterSubsystem
         );
 
-        Command intakeAgitate = Commands.repeatingSequence(
-            Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
-            Commands.waitSeconds(0.75),
-            Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
-            Commands.waitSeconds(0.75)
-        ).finallyDo(
-            () -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)
-        );
-
-        Command feederIn = Commands.runOnce(
-            () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
-            feederSubsystem
-        );
-
         NamedCommands.registerCommand("ShootStart",
             Commands.parallel(
-                shootWheel.repeatedly(), // Update the shooter calculations every tick
+                Commands.run(
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+
+                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                        double maxRPM = 1300; // MARK: Populate max rpm
+
+                        shooterDataPoint.speed = rpm / maxRPM;
+                        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
+
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                    },
+                    shooterSubsystem
+                ), // Update the shooter calculations every tick
                 Commands.sequence(
                     Commands.waitSeconds(2.0),
-                    feederIn,
-                    intakeAgitate
+                    Commands.runOnce(
+                        () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
+                        feederSubsystem
+                    ),
+                    Commands.repeatingSequence(
+                        Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
+                        Commands.waitSeconds(0.75),
+                        Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
+                        Commands.waitSeconds(0.75)
+                    )
                 )
             )
         );
@@ -76,15 +83,46 @@ public class RegisterCommands {
 
         NamedCommands.registerCommand("ShootWithFeeder",
             Commands.parallel(
-                shootWheel.repeatedly(), // Update the shooter calculations every tick
+                Commands.run(
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+
+                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                        double maxRPM = 1300; // MARK: Populate max rpm
+
+                        shooterDataPoint.speed = rpm / maxRPM;
+                        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
+
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                    },
+                    shooterSubsystem
+                ), // Update the shooter calculations every tick
                 Commands.sequence(
                     Commands.waitSeconds(2.0),
-                    feederIn
+                    Commands.runOnce(
+                        () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
+                        feederSubsystem
+                    )
                 )
             )
         );
 
-        NamedCommands.registerCommand("ShootWheel", shootWheel);
+        NamedCommands.registerCommand("ShootWheel", 
+            Commands.runOnce(
+                () -> {
+                    ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+
+                    double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                    double maxRPM = 1300; // MARK: Populate max rpm
+
+                    shooterDataPoint.speed = rpm / maxRPM;
+                    Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
+
+                    shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                },
+                shooterSubsystem
+            )
+        );
 
         NamedCommands.registerCommand("ShootStop",
             Commands.runOnce(
@@ -124,7 +162,14 @@ public class RegisterCommands {
             ));
 
         // MARK: IntakeAgitate
-        NamedCommands.registerCommand("IntakeAgitate", intakeAgitate);
+        NamedCommands.registerCommand("IntakeAgitate",
+            Commands.repeatingSequence(
+                Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
+                Commands.waitSeconds(0.75),
+                Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
+                Commands.waitSeconds(0.75)
+            )
+        );
 
         // MARK: RunIntakeIn
         NamedCommands.registerCommand("IntakeIn",
