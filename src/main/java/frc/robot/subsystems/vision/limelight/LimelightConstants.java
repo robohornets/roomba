@@ -2,6 +2,8 @@ package frc.robot.subsystems.vision.limelight;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,25 +31,19 @@ public class LimelightConstants {
         new Rotation2d(-0.174532925199433)
     );
 
-    /** Calculate dynamic standard deviations for Quest */
-    public static Matrix<N3, N1> calculateQuestUpdateStdDevs(PoseEstimate estimate) {
-        double xyStdDev = 0.07;
+    /** Calculate dynamic standard deviations */
+    public static Matrix<N3, N1> calculateDynamicStdDevs(PoseEstimate estimate) {
+        double baseStdDev = 0.2;
         double thetaStdDev = 9999999;
 
-        // Increase std devs with distance for less trust
-        double distanceFactor = Math.max(1.0, estimate.avgTagDist / 2.0);
-        xyStdDev *= distanceFactor;
+        double xyStdDev = baseStdDev * (estimate.avgTagDist * estimate.avgTagDist) / estimate.tagCount;
 
-        // Decrease std devs with more tags for more trust
-        if (estimate.tagCount >= 2) {
-            xyStdDev*= 0.8;
+        if (estimate.avgTagDist == 1.0) {
+            xyStdDev *= 3;
         }
 
-        // Increase std devs with smaller tags for less trust
-        if (estimate.avgTagArea < 0.3) {
-            xyStdDev *= 1.75;
-        }
-
+        Logger.recordOutput("Limelight/CalculatedXYStdDev", xyStdDev);
+        
         return VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev);
     }
 

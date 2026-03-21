@@ -4,7 +4,10 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.StatusSignal;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,6 +53,7 @@ public class LimelightSubsystem extends SubsystemBase {
     /** Cached signal that provides the robot's angular velocity around Z in world frame. */
     private final StatusSignal<AngularVelocity> angularVelocityZ;
 
+    // MARK: Constructor
     /**
      * Create a LimelightSubsystem.
      *
@@ -72,6 +76,7 @@ public class LimelightSubsystem extends SubsystemBase {
     private int totalLimelightEstimates = 0;
     private int estimatesAddedToQuest = 0;
 
+    // MARK: Periodic Loop
     /**
      * Periodic update called by the scheduler. Adds a vision odometry measurement each cycle.
      * <p>Delegates to {@link #addOdometryMeasurement()} to perform the actual read/filter/submit
@@ -82,6 +87,7 @@ public class LimelightSubsystem extends SubsystemBase {
         addOdometryMeasurement();
     }
 
+    // MARK: Add Odometry
     /**
      * Reads a pose estimate from the Limelight and, when valid, submits it to the drivetrain's
      * odometry.
@@ -132,21 +138,28 @@ public class LimelightSubsystem extends SubsystemBase {
         Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE.inverse());
         Logger.recordOutput("Limelight/" + limelightName + "/Pose", transformedPose);
 
+        Matrix<N3, N1> calculatedStdDevs = LimelightConstants.calculateDynamicStdDevs(estimate);
+
         // Add measurement to drivetrain pose estimator
-        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateQuestUpdateStdDevs(estimate));
+        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
 
         totalLimelightEstimates++;
-        Logger.recordOutput("Limelight/TotalEstimates", totalLimelightEstimates);
+        Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
 
         // Add measurement to QuestNav pose estimator if enabled
         if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
             estimatesAddedToQuest++;
-            Logger.recordOutput("QuestNav/LimelightEstimates", estimatesAddedToQuest);
-            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateQuestUpdateStdDevs(estimate), estimate);
+            Logger.recordOutput("QuestNav/" + limelightName + "/LimelightEstimates", estimatesAddedToQuest);
+            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateDynamicStdDevs(estimate), estimate);
         }
     }
 
+    // MARK: Get Bot Pose
     public Pose2d getPose2d() {
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
+    }
+
+    // MARK: Logging
+    public void logValues() {
     }
 }

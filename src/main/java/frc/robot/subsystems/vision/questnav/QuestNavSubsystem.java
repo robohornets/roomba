@@ -53,6 +53,7 @@ public class QuestNavSubsystem extends SubsystemBase {
     /** Timestamp of the last QuestNav correction to enforce minimum interval */
     private double lastCorrectionTime = 0.0;
 
+    // MARK: Constructor
     /**
      * Construct the QuestNavSubsystem.
      *
@@ -79,6 +80,7 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     Integer questEstimatesCounter = 0;
 
+    // MARK: Quest Periodic
     /**
      * Allows the QuestNav library to progress its internal state.
      * Called BEFORE periodic() to populate the frame buffer.
@@ -88,6 +90,7 @@ public class QuestNavSubsystem extends SubsystemBase {
         questNav.commandPeriodic();
     }
 
+    // MARK: Periodic Loop
     /**
      * Updates the pose estimator with odometry and reads unread pose data from QuestNav.
      *
@@ -110,10 +113,7 @@ public class QuestNavSubsystem extends SubsystemBase {
             drivetrain.getState().ModulePositions
         );
 
-        Logger.recordOutput("QuestNav/Latency", getLatency());
-        Logger.recordOutput("QuestNav/Connected", questIsConnected());
-        Logger.recordOutput("QuestNav/Battery", getBatteryPercentage());
-        Logger.recordOutput("QuestNav/EstimatedPose", getEstimatedPose());
+        
 
         // Log hardware pose and drift metrics
         if (lastQuestHardwarePose != null) {
@@ -247,13 +247,17 @@ public class QuestNavSubsystem extends SubsystemBase {
         );
     }
 
+    public void incrementPoseCounter() {
+        questEstimatesCounter++;
+        Logger.recordOutput("QuestNav/EstimateCount", questEstimatesCounter);
+    }
+
     public boolean questIsConnected() {
         return questNav.isConnected();
     }
 
-    public void incrementPoseCounter() {
-        questEstimatesCounter++;
-        Logger.recordOutput("QuestNav/EstimateCount", questEstimatesCounter);
+    public boolean questIsTracking() {
+        return questNav.isTracking();
     }
 
     public double getLatency() {
@@ -262,5 +266,13 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     public int getBatteryPercentage() {
         return questNav.getBatteryPercent().orElse(0);
+    }
+
+    private void logValues() {
+        Logger.recordOutput("QuestNav/Latency", getLatency());
+        Logger.recordOutput("QuestNav/Connected", questIsConnected());
+        Logger.recordOutput("QuestNav/IsTracking", questIsTracking());
+        Logger.recordOutput("QuestNav/Battery", getBatteryPercentage());
+        Logger.recordOutput("QuestNav/EstimatedPose", getEstimatedPose());
     }
 }
