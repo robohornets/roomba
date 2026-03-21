@@ -46,7 +46,7 @@ public class OperatorJoystick {
             NamedCommands.getCommand("IntakeUp")
         );
 
-        // MARK: nothing - X
+        // MARK: Agitate - X
         joystick.x().whileTrue(
             NamedCommands.getCommand("IntakeAgitate")
         );
@@ -63,6 +63,15 @@ public class OperatorJoystick {
                 NamedCommands.getCommand("ShootStop")
             );
 
+        // MARK: Feeder In - RB
+        joystick.rightBumper().whileTrue(
+            Commands.runEnd(
+                () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
+                () -> feederSubsystem.setFeederState(FeederState.OFF),
+                feederSubsystem
+            )
+        );
+
         // MARK: LT - Intake
         joystick.leftTrigger()
             .whileTrue(
@@ -72,14 +81,6 @@ public class OperatorJoystick {
                     intakeSubsystem
                 )
             );
-
-        joystick.rightBumper().whileTrue(
-            Commands.runEnd(
-                () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
-                () -> feederSubsystem.setFeederState(FeederState.OFF),
-                feederSubsystem
-            )
-        );
         
         // MARK: Intake Out - LB
         joystick.leftBumper().whileTrue(
