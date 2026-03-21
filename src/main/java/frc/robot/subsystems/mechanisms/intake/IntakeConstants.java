@@ -8,5 +8,5 @@ public class IntakeConstants {
     public static final double INTAKE_WHEELS_SPEED = 1.0;
     public static final double INTAKE_DOWN_SPEED = 0.4;
     public static final double INTAKE_UP_SPEED = 0.4;
-    public static final double INTAKE_DOWN_FORCE_SPEED = 0.2;
+    public static final double INTAKE_DOWN_FORCE_SPEED = -0.2;
 }
