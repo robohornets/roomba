@@ -65,15 +65,15 @@ public class OperatorJoystick {
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger().whileTrue(
-            NamedCommands.getCommand("ShootStart")
+            NamedCommands.getCommand("ShootWheel")
         ).onFalse(
             NamedCommands.getCommand("ShootStop")
         );
         
         joystick.rightBumper().whileTrue(
-            NamedCommands.getCommand("ShootWithFeeder")
+            NamedCommands.getCommand("FeederIn")
         ).onFalse(
-            NamedCommands.getCommand("ShootStop")
+            NamedCommands.getCommand("FeederOff")
         );
         
         // MARK: LT - Intake

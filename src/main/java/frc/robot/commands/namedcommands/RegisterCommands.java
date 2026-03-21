@@ -48,7 +48,7 @@ public class RegisterCommands {
             shooterSubsystem
         );
 
-        NamedCommands.registerCommand("ShootStart",
+        NamedCommands.registerCommand("ShootAllSystems",
             Commands.parallel(
                 Commands.run(
                     () -> {

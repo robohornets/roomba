@@ -65,7 +65,7 @@ public class DriverJoystick {
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger().whileTrue(
-            NamedCommands.getCommand("ShootStart")
+            NamedCommands.getCommand("ShootWithFeeder")
         ).onFalse(
             NamedCommands.getCommand("ShootStop")
         );
