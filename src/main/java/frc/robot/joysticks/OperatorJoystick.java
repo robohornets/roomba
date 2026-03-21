@@ -1,5 +1,7 @@
 package frc.robot.joysticks;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -46,13 +48,20 @@ public class OperatorJoystick {
             NamedCommands.getCommand("IntakeUp")
         );
 
-        // MARK: nothing - X
-        joystick.x().whileTrue(
-            NamedCommands.getCommand("IntakeAgitate")
+        // MARK: Lock to hub - X
+        joystick.x().onTrue(
+            Commands.runOnce(
+                () -> {
+                    drivetrain.toggleLockedToHub();
+                    Logger.recordOutput("SwerveDrive/LockedToHub", drivetrain.isLockedToHub());
+                }
+            )
         );
 
-        // MARK: nothing - Y
-        joystick.y();
+        // MARK: Intake Agitate - Y
+        joystick.y().whileTrue(
+            NamedCommands.getCommand("IntakeAgitate")
+        );
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()

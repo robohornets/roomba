@@ -150,7 +150,6 @@ public class Drive extends SubsystemBase {
     /** Toggles the state of locking the robot to face the hub. */
     public void toggleLockedToHub() {
         lockedToHub = !lockedToHub;
-        Logger.recordOutput("SwerveDrive/LockedToHub", lockedToHub);
     }
 
     // MARK: Auto Builder
@@ -274,6 +273,7 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("SwerveDrive/ModuleTargets", drivetrain.getState().ModuleTargets);
         Logger.recordOutput("SwerveDrive/ChassisSpeeds", drivetrain.getState().Speeds);
         Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
+        Logger.recordOutput("SwerveDrive/LockedToHub", lockedToHub);
 
         Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
         Logger.recordOutput("SwerveDrive/DistanceToHub", getDistanceToHub());
