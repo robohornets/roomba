@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral Auto 1 - Part 1"
+            "pathName": "Left Bump Full - Part 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral Auto 1 - Part 2"
+            "pathName": "Left Full Loop"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ShootStart"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeAgitate"
+            "pathName": "Left Bump Full - Part 2"
           }
         }
       ]

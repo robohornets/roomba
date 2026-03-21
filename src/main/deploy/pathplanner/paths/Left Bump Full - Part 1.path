@@ -44,35 +44,54 @@
         "y": 5.501521271086841
       },
       "isLocked": false,
-      "linkedName": "Left Bump Full - Point 1"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.785663049768518,
-        "y": 2.0796093026620373
+        "x": 7.618749855324074,
+        "y": 2.138855613425926
       },
       "prevControl": {
-        "x": 7.809224192355353,
-        "y": 2.7463468558358586
+        "x": 7.64231099791091,
+        "y": 2.8055931665997473
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Full Loop Start"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0214124177631576,
-      "rotationDegrees": 0.0
-    },
-    {
       "waypointRelativePos": 1.9936369243421055,
-      "rotationDegrees": -90.0
+      "rotationDegrees": 118.70034348639953
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeDown",
+      "waypointRelativePos": 1.0017779277408638,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDown"
+        }
+      }
+    },
+    {
+      "name": "IntakeIn",
+      "waypointRelativePos": 1.195701827242525,
+      "endWaypointRelativePos": 3.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIn"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -82,14 +101,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -86.13540569287453
+    "velocity": 1.5,
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Left Bump Full",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

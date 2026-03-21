@@ -84,6 +84,11 @@ public class Drive extends SubsystemBase {
         logMotorInformation();
     }
 
+    @Override
+    public void simulationPeriodic() {
+        drivetrain.simulationPeriodic();
+    }
+
     public Command applyRequest(Supplier<SwerveRequest> request) {
         return Commands.run(
             () -> drivetrain.setControl(request.get()),

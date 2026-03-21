@@ -1,5 +1,7 @@
 package frc.robot.subsystems.mechanisms.shooter;
 
+// TODO: Replace this with an InterpolatingDoubleTreeMap
+// https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/interpolation/InterpolatingDoubleTreeMap.html
 public class UpperLowerPoint {
     public ShooterDataPoint upper;
     public ShooterDataPoint lower;

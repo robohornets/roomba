@@ -3,8 +3,11 @@
   "robotLength": 0.7874,
   "holonomicMode": true,
   "pathFolders": [
-    "Neutral Auto 1",
-    "Neutral Auto 2"
+    "Generic Paths",
+    "Left Bump Full",
+    "Left Trench Full",
+    "Depot Auto",
+    "Right Trench Full"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

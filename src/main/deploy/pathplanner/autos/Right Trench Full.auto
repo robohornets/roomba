@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Bump Auto - Part 1"
+            "pathName": "Right Trench Full - Part 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right Bump Auto - Part 2"
+            "pathName": "Right Full Loop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Trench Full - Part 2"
           }
         }
       ]
