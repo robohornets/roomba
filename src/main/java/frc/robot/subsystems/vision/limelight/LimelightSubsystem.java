@@ -140,17 +140,24 @@ public class LimelightSubsystem extends SubsystemBase {
 
         Matrix<N3, N1> calculatedStdDevs = LimelightConstants.calculateDynamicStdDevs(estimate);
 
-        // Add measurement to drivetrain pose estimator
-        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
+        double xDifference = Math.abs(transformedPose.getX() - drivetrain.getState().Pose.getX());
+        double yDifference = Math.abs(transformedPose.getY() - drivetrain.getState().Pose.getY());
 
-        totalLimelightEstimates++;
-        Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
+        double distanceError = Math.sqrt(xDifference * xDifference + yDifference * yDifference);
 
-        // Add measurement to QuestNav pose estimator if enabled
-        if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
-            estimatesAddedToQuest++;
-            Logger.recordOutput("QuestNav/" + limelightName + "/LimelightEstimates", estimatesAddedToQuest);
-            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateDynamicStdDevs(estimate), estimate);
+        if (distanceError >= 0.25) {
+            // Add measurement to drivetrain pose estimator
+            drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
+
+            totalLimelightEstimates++;
+            Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
+
+            // Add measurement to QuestNav pose estimator if enabled
+            if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
+                estimatesAddedToQuest++;
+                Logger.recordOutput("QuestNav/" + limelightName + "/LimelightEstimates", estimatesAddedToQuest);
+                questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateDynamicStdDevs(estimate), estimate);
+            }
         }
     }
 
