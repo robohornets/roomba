@@ -47,13 +47,27 @@ public class RegisterCommands {
             )
         );
 
+
+        NamedCommands.registerCommand("ShootAllSystems",
+            Commands.sequence(
+                NamedCommands.getCommand("IntakeAgitate")
+            ).beforeStarting(
+                Commands.sequence(
+                    NamedCommands.getCommand("ShootStart"),
+                    Commands.waitSeconds(2.0),
+                    NamedCommands.getCommand("FeederIn")
+                )
+            )
+        );
+
         NamedCommands.registerCommand("ShootStop",
             Commands.run(
                 () -> {
                     shooterSubsystem.shooterMotors.drive(0.0);
                     feederSubsystem.setFeederState(FeederState.OFF);
+                    intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
                     
-                }, shooterSubsystem, feederSubsystem
+                }, shooterSubsystem, feederSubsystem, intakeSubsystem
             )
         );
 

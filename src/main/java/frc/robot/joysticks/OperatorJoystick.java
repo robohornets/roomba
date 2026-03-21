@@ -57,7 +57,7 @@ public class OperatorJoystick {
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()
             .whileTrue(
-               NamedCommands.getCommand("ShootStart")
+                NamedCommands.getCommand("ShootStart")
             )
             .onFalse(
                 NamedCommands.getCommand("ShootStop")
@@ -75,7 +75,7 @@ public class OperatorJoystick {
 
         joystick.rightBumper().whileTrue(
             Commands.runEnd(
-                () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT),
+                () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
                 () -> feederSubsystem.setFeederState(FeederState.OFF),
                 feederSubsystem
             )
