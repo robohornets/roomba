@@ -46,7 +46,9 @@ public class DriverJoystick {
         );
 
         // MARK: Intake Agitate - B
-        joystick.b();
+        joystick.b().whileTrue(
+            NamedCommands.getCommand("IntakeAgitate")
+        );
 
         // MARK: X - Lock to hub
         joystick.x().onTrue(
@@ -64,7 +66,7 @@ public class DriverJoystick {
         // MARK: RT - Shooter shoot
         joystick.rightTrigger()
             .whileTrue(
-                NamedCommands.getCommand("ShootAllSystems")
+               NamedCommands.getCommand("ShootStart")
             )
             .onFalse(
                 NamedCommands.getCommand("ShootStop")

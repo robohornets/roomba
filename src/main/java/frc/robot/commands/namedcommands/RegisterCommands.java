@@ -31,31 +31,28 @@ public class RegisterCommands {
     
     public void registerCommands(){        
         NamedCommands.registerCommand("ShootStart",
-            Commands.run(
-                () -> {
-                    ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+            Commands.parallel(
+                Commands.run(
+                    () -> {
+                        ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
 
-                    double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                    double maxRPM = 1300; // MARK: Populate max rpm
+                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                        double maxRPM = 1300; // MARK: Populate max rpm
 
-                    shooterDataPoint.speed = rpm / maxRPM;
-                    Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
+                        shooterDataPoint.speed = rpm / maxRPM;
+                        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
-                    shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                },
-                shooterSubsystem
-            )
-        );
-
-
-        NamedCommands.registerCommand("ShootAllSystems",
-            Commands.repeatingSequence(
-                NamedCommands.getCommand("IntakeAgitate")
-            ).beforeStarting(
+                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                    },
+                    shooterSubsystem
+                ),
                 Commands.sequence(
-                    NamedCommands.getCommand("ShootStart"),
-                    Commands.waitSeconds(2.0),
-                    NamedCommands.getCommand("FeederIn")
+                    Commands.waitSeconds(2),
+                    Commands.runOnce(
+                        ()->{
+                            feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN);
+                        }, feederSubsystem
+                    )
                 )
             )
         );
@@ -65,9 +62,8 @@ public class RegisterCommands {
                 () -> {
                     shooterSubsystem.shooterMotors.drive(0.0);
                     feederSubsystem.setFeederState(FeederState.OFF);
-                    intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE);
                     
-                }, shooterSubsystem, feederSubsystem, intakeSubsystem
+                }, shooterSubsystem, feederSubsystem
             )
         );
 
