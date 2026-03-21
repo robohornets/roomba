@@ -152,6 +152,8 @@ public class LimelightSubsystem extends SubsystemBase {
             totalLimelightEstimates++;
             Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
 
+            Logger.recordOutput("Limelight/" + limelightName + "/AcceptedPose", transformedPose);
+
             // Add measurement to QuestNav pose estimator if enabled
             if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
                 estimatesAddedToQuest++;
