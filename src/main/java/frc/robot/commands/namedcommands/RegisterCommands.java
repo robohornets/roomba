@@ -132,6 +132,13 @@ public class RegisterCommands {
             )
         );
 
+        NamedCommands.registerCommand("IntakeOff",
+            Commands.runOnce(
+                () -> intakeSubsystem.setIntake(IntakeStates.OFF),
+                intakeSubsystem
+            )
+        );
+
         NamedCommands.registerCommand("FeederIn",
             Commands.runOnce(
                 () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),

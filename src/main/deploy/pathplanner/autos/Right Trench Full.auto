@@ -21,12 +21,6 @@
           "data": {
             "pathName": "Right Trench Full - Part 2"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootAllSystems"
-          }
         }
       ]
     }

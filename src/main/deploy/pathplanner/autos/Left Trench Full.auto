@@ -23,9 +23,46 @@
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "ShootAllSystems"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootWheel"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FeederIn"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 8.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootStop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FeederOff"
+                }
+              }
+            ]
           }
         }
       ]
