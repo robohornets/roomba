@@ -49,7 +49,7 @@ public class RegisterCommands {
 
 
         NamedCommands.registerCommand("ShootAllSystems",
-            Commands.sequence(
+            Commands.repeatingSequence(
                 NamedCommands.getCommand("IntakeAgitate")
             ).beforeStarting(
                 Commands.sequence(
