@@ -161,7 +161,7 @@ public class Robot extends LoggedRobot {
     // MARK: Autonomous Exit
     @Override
     public void autonomousExit() {
-        NamedCommands.getCommand("ShootStop");
+        // NamedCommands.getCommand("ShootStop");
     }
 
     // MARK: Teleop Init

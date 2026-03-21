@@ -64,13 +64,9 @@ public class OperatorJoystick {
         );
 
         // MARK: RT - Shooter shoot
-        joystick.rightTrigger()
-            .whileTrue(
-               NamedCommands.getCommand("ShootStart")
-            )
-            .onFalse(
-                NamedCommands.getCommand("ShootStop")
-            );
+        joystick.rightTrigger().whileTrue(
+            NamedCommands.getCommand("ShootStart")
+        );
 
         // MARK: LT - Intake
         joystick.leftTrigger()
@@ -83,11 +79,7 @@ public class OperatorJoystick {
             );
 
         joystick.rightBumper().whileTrue(
-            Commands.runEnd(
-                () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT),
-                () -> feederSubsystem.setFeederState(FeederState.OFF),
-                feederSubsystem
-            )
+            NamedCommands.getCommand("ShootWithFeeder")
         );
         
         // MARK: Intake Out - LB
