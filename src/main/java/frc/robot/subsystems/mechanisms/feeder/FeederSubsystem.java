@@ -97,15 +97,27 @@ public class FeederSubsystem extends SubsystemBase {
 
     // MARK: Logging
     private void logValues() {
-        Logger.recordOutput("FeederSubsystem/MotorConnections/FeederBedConnected", feederBedMotor.getMotor().isConnected());
-        Logger.recordOutput("FeederSubsystem/MotorConnections/FeederFeederConnected", feederFeederMotor.getMotor().isConnected());
-        Logger.recordOutput("FeederSubsystem/MotorConnections/ShooterFeederConnected", shooterFeederMotor.getMotor().isConnected());
-
         Logger.recordOutput("FeederSubsystem/FeederState", feederState.toString());
     }
 
     // MARK: Log Motors
     private void logMotors() {
+        // Log connection status
+        Logger.recordOutput(
+            "FeederSubsystem/MotorConnections/FeederBedMotor", 
+            feederBedMotor.getMotor().isConnected()
+        );
+
+        Logger.recordOutput(
+            "FeederSubsystem/MotorConnections/FeederFeederMotor", 
+            feederBedMotor.getMotor().isConnected()
+        );
+
+        Logger.recordOutput(
+            "FeederSubsystem/MotorConnections/ShooterFeederMotor", 
+            shooterFeederMotor.getMotor().isConnected()
+        );
+
         // Log current readings to AdvantageKit
         Logger.recordOutput(
             "FeederSubsystem/Current/Stator/FeederBedMotor", 

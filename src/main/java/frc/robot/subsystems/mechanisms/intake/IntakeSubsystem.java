@@ -119,6 +119,17 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // MARK: Log Motors
     private void logMotors() {
+        // Log connection status
+        Logger.recordOutput(
+            "IntakeSubsystem/MotorConnections/AngleMotor", 
+            angleMotor.getMotor().isConnected()
+        );
+
+        Logger.recordOutput(
+            "IntakeSubsystem/MotorConnections/IntakeWheelsMotor", 
+            intakeWheelsMotor.getMotor().isConnected()
+        );
+
         // Log current readings to AdvantageKit
         Logger.recordOutput(
             "IntakeSubsystem/Current/Stator/AngleMotor", 
