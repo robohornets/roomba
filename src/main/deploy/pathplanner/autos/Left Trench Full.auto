@@ -13,6 +13,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Left Full Loop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Left Trench Full - Part 2"
           }
         },

@@ -80,7 +80,7 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     Integer questEstimatesCounter = 0;
 
-    // MARK: Quest Periodic
+    // MARK: Populate Buffer
     /**
      * Allows the QuestNav library to progress its internal state.
      * Called BEFORE periodic() to populate the frame buffer.
@@ -112,8 +112,6 @@ public class QuestNavSubsystem extends SubsystemBase {
             drivetrain.getState().RawHeading,
             drivetrain.getState().ModulePositions
         );
-
-        
 
         // Log hardware pose and drift metrics
         if (lastQuestHardwarePose != null) {
@@ -156,6 +154,8 @@ public class QuestNavSubsystem extends SubsystemBase {
 
         // Automatic QuestNav correction logic
         correctQuestNavDrift();
+
+        logValues();
     }
 
     /**

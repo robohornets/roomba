@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.455928530092593,
-        "y": 7.19860865162037
+        "x": 7.618749855324074,
+        "y": 2.138855613425926
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.7984211222694775,
-        "y": 7.124675574906971
+        "x": 8.180769902120291,
+        "y": 1.2449407523072051
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Full Loop Start"
     },
     {
       "anchor": {
-        "x": 7.160853949652778,
-        "y": 7.029202256944444
+        "x": 6.505929615162038,
+        "y": 1.43295189525463
       },
       "prevControl": {
-        "x": 6.7047045079777305,
-        "y": 7.578270219602648
+        "x": 6.576024698194153,
+        "y": 0.9347968770827362
       },
       "nextControl": {
-        "x": 7.693869075310608,
-        "y": 6.38761092223568
+        "x": 6.385042948848128,
+        "y": 2.2920749157203515
       },
       "isLocked": false,
       "linkedName": null
@@ -33,25 +33,29 @@
     {
       "anchor": {
         "x": 7.618749855324074,
-        "y": 2.138855613425926
+        "y": 2.894754557291667
       },
       "prevControl": {
-        "x": 7.364242832241096,
-        "y": 3.44612276039532
+        "x": 7.70877730981487,
+        "y": 2.086514176731637
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Full Loop Start"
+      "linkedName": "Left Full Loop End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.1729029605263157,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.686513157894736,
+      "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 1.0609580592105259,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 1.2100534539473682,
+      "rotationDegrees": -116.70634530355656
+    },
+    {
+      "waypointRelativePos": 1.5817639802631582,
+      "rotationDegrees": -153.36492550397196
     }
   ],
   "constraintZones": [],
@@ -66,14 +70,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.5,
-    "rotation": 90.0
+    "velocity": 2.0,
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Left Trench Full",
+  "folder": "Generic Paths",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 1.5,
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

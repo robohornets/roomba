@@ -3,55 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.455928530092593,
-        "y": 7.19860865162037
+        "x": 7.5590442708333345,
+        "y": 6.010401909722223
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.7984211222694775,
-        "y": 7.124675574906971
+        "x": 7.351580306324494,
+        "y": 7.042583252683984
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Full Loop Start"
     },
     {
       "anchor": {
-        "x": 7.160853949652778,
-        "y": 7.029202256944444
+        "x": 6.217440104166667,
+        "y": 6.216878255208334
       },
       "prevControl": {
-        "x": 6.7047045079777305,
-        "y": 7.578270219602648
+        "x": 6.288513694384226,
+        "y": 6.456562515796272
       },
       "nextControl": {
-        "x": 7.693869075310608,
-        "y": 6.38761092223568
+        "x": 5.852672935010007,
+        "y": 4.986759599904073
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.618749855324074,
-        "y": 2.138855613425926
+        "x": 7.5590442708333345,
+        "y": 4.074366319444445
       },
       "prevControl": {
-        "x": 7.364242832241096,
-        "y": 3.44612276039532
+        "x": 7.528151766784988,
+        "y": 5.184211296419275
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Full Loop Start"
+      "linkedName": "Right Full Loop End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.1729029605263157,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.48597861842105267,
+      "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 1.0609580592105259,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 1.497327302631579,
+      "rotationDegrees": 141.52027658850795
     }
   ],
   "constraintZones": [],
@@ -66,14 +66,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.5,
+    "velocity": 2.0,
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Left Trench Full",
+  "folder": "Generic Paths",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 1.5,
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
