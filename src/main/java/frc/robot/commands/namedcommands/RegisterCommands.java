@@ -2,6 +2,7 @@ package frc.robot.commands.namedcommands;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,46 +33,47 @@ public class RegisterCommands {
     
     public void registerCommands(){
 
+        Command shootWheel = Commands.runOnce(
+            () -> {
+                ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
+
+                double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
+                double maxRPM = 1300; // MARK: Populate max rpm
+
+                shooterDataPoint.speed = rpm / maxRPM;
+                Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
+
+                shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+            },
+            shooterSubsystem
+        );
+
 
         NamedCommands.registerCommand("ShootStart",
-            NamedCommands.getCommand("ShootWheel")
-            .alongWith(
-                Commands.waitSeconds(2.0)
-                .andThen(
-                    NamedCommands.getCommand("FeederIn")
-                    .alongWith(
+            Commands.parallel(
+                shootWheel.repeatedly(), // Update the shooter calculations every tick
+                Commands.waitSeconds(2.0).andThen(
+                    Commands.parallel(
+                        NamedCommands.getCommand("FeederIn"),
                         NamedCommands.getCommand("IntakeAgitate")
                     )
                 )
+
             )
+
         );
 
         NamedCommands.registerCommand("ShootWithFeeder",
-            NamedCommands.getCommand("ShootWheel")
-            .alongWith(
-                Commands.waitSeconds(2.0)
-                .andThen(
+            Commands.parallel(
+                shootWheel.repeatedly(), // Update the shooter calculations every tick
+                Commands.waitSeconds(2.0).andThen( // wait two seconds before running feeder
                     NamedCommands.getCommand("FeederIn")
                 )
             )
+            
         );
 
-        NamedCommands.registerCommand("ShootWheel",
-            Commands.run(
-                () -> {
-                    ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
-
-                    double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                    double maxRPM = 1300; // MARK: Populate max rpm
-
-                    shooterDataPoint.speed = rpm / maxRPM;
-                    Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
-
-                    shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                },
-                shooterSubsystem
-            )
-        );
+        NamedCommands.registerCommand("ShootWheel", shootWheel);
 
         NamedCommands.registerCommand("ShootStop",
             Commands.runOnce(
