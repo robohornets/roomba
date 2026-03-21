@@ -42,10 +42,16 @@ public class RegisterCommands {
                         shooterDataPoint.speed = rpm / maxRPM;
                         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                    },
-                    shooterSubsystem
-                ),
+                    shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                },
+                shooterSubsystem
+            )
+        );
+
+        NamedCommands.registerCommand("ShootAllSystems",
+            Commands.repeatingSequence(
+                NamedCommands.getCommand("IntakeAgitate")
+            ).beforeStarting(
                 Commands.sequence(
                     Commands.waitSeconds(2),
                     Commands.runOnce(
