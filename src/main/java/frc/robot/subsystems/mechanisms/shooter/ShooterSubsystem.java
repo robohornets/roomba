@@ -198,4 +198,29 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", flywheelSpeed);
         Logger.recordOutput("ShooterSubsystem/TargetAngle", shooterAngleTarget);
     }
+
+    // MARK: Log Motors
+    private void logMotors() {
+        // Log current readings to AdvantageKit
+        Logger.recordOutput(
+            "ShooterSubsystem/Current/Stator/ShooterPitchMotor", 
+            shooterPitchMotor.getMotor().getStatorCurrent().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "ShooterSubsystem/Current/Supply/ShooterPitchMotor", 
+            shooterPitchMotor.getMotor().getSupplyCurrent().getValueAsDouble()
+        );
+
+        
+
+        // Log voltage readings to AdvantageKit
+        Logger.recordOutput(
+            "ShooterSubsystem/Voltage/Output/ShooterPitchMotor", 
+            shooterPitchMotor.getMotor().getMotorVoltage().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "ShooterSubsystem/Current/Supply/ShooterPitchMotor", 
+            shooterPitchMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+        );
+    }
 }
