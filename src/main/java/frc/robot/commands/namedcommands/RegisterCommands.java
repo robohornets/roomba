@@ -48,29 +48,40 @@ public class RegisterCommands {
             shooterSubsystem
         );
 
+        Command intakeAgitate = Commands.repeatingSequence(
+            Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
+            Commands.waitSeconds(0.75),
+            Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
+            Commands.waitSeconds(0.75)
+        ).finallyDo(
+            () -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)
+        );
+
+        Command feederIn = Commands.runOnce(
+            () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
+            feederSubsystem
+        );
 
         NamedCommands.registerCommand("ShootStart",
             Commands.parallel(
                 shootWheel.repeatedly(), // Update the shooter calculations every tick
-                Commands.waitSeconds(2.0).andThen(
-                    Commands.parallel(
-                        NamedCommands.getCommand("FeederIn"),
-                        NamedCommands.getCommand("IntakeAgitate")
-                    )
+                Commands.sequence(
+                    Commands.waitSeconds(2.0),
+                    feederIn,
+                    intakeAgitate
                 )
-
             )
-
         );
+
 
         NamedCommands.registerCommand("ShootWithFeeder",
             Commands.parallel(
                 shootWheel.repeatedly(), // Update the shooter calculations every tick
-                Commands.waitSeconds(2.0).andThen( // wait two seconds before running feeder
-                    NamedCommands.getCommand("FeederIn")
+                Commands.sequence(
+                    Commands.waitSeconds(2.0),
+                    feederIn
                 )
             )
-            
         );
 
         NamedCommands.registerCommand("ShootWheel", shootWheel);
@@ -113,16 +124,7 @@ public class RegisterCommands {
             ));
 
         // MARK: IntakeAgitate
-        NamedCommands.registerCommand("IntakeAgitate",
-            Commands.repeatingSequence(
-                Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
-                Commands.waitSeconds(0.75),
-                Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
-                Commands.waitSeconds(0.75)
-            ).finallyDo(
-                () -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)
-            )
-        );
+        NamedCommands.registerCommand("IntakeAgitate", intakeAgitate);
 
         // MARK: RunIntakeIn
         NamedCommands.registerCommand("IntakeIn",
