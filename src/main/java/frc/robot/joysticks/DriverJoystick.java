@@ -64,13 +64,11 @@ public class DriverJoystick {
         joystick.y();
 
         // MARK: RT - Shooter shoot
-        joystick.rightTrigger()
-            .whileTrue(
-               NamedCommands.getCommand("ShootStart")
-            )
-            .onFalse(
-                NamedCommands.getCommand("ShootStop")
-            );
+        joystick.rightTrigger().whileTrue(
+            NamedCommands.getCommand("ShootWithFeeder")
+        ).onFalse(
+            NamedCommands.getCommand("ShootStop")
+        );
 
         // MARK: LT - Intake
         joystick.leftTrigger()

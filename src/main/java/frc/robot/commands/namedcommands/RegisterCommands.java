@@ -43,8 +43,6 @@ public class RegisterCommands {
                         NamedCommands.getCommand("IntakeAgitate")
                     )
                 )
-            ).finallyDo(
-                () -> feederSubsystem.setFeederState(FeederState.OFF)
             )
         );
 
@@ -55,8 +53,6 @@ public class RegisterCommands {
                 .andThen(
                     NamedCommands.getCommand("FeederIn")
                 )
-            ).finallyDo(
-                () -> feederSubsystem.setFeederState(FeederState.OFF)
             )
         );
 
@@ -74,8 +70,6 @@ public class RegisterCommands {
                     shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
                 },
                 shooterSubsystem
-            ).finallyDo(
-                () -> shooterSubsystem.shooterMotors.drive(0.0)
             )
         );
 
