@@ -284,37 +284,37 @@ public class Drive extends SubsystemBase {
         for (int i = 0; i <= 3; i++) {
             // Logs the current readings to AdvantageKit
             Logger.recordOutput(
-                "SwerveDrive/Motors/Current/Stator/SteerMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Current/Stator/SteerMotor" + i, 
                 drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble()
             );
             Logger.recordOutput(
-                "SwerveDrive/Motors/Current/Stator/DriveMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Current/Stator/DriveMotor" + i, 
                 drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble()
             );
             Logger.recordOutput(
-                "SwerveDrive/Motors/Current/Supply/SteerMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Current/Supply/SteerMotor" + i, 
                 drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble()
             );
             Logger.recordOutput(
-                "SwerveDrive/Motors/Current/Supply/DriveMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Current/Supply/DriveMotor" + i, 
                 drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble()
             );
 
             // Logs the voltage to AdvantageKit
             Logger.recordOutput(
-                "SwerveDrive/Motors/Voltage/Output/SteerMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Voltage/Output/SteerMotor" + i, 
                 drivetrain.getModule(i).getDriveMotor().getMotorVoltage().getValueAsDouble()
             );
             Logger.recordOutput(
-                "SwerveDrive/Motors/Voltage/Output/DriveMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Voltage/Output/DriveMotor" + i, 
                 drivetrain.getModule(i).getDriveMotor().getMotorVoltage().getValueAsDouble()
             );
             Logger.recordOutput(
-                "SwerveDrive/Motors/Voltage/Supply/SteerMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Voltage/Supply/SteerMotor" + i, 
                 drivetrain.getModule(i).getDriveMotor().getSupplyVoltage().getValueAsDouble()
             );
             Logger.recordOutput(
-                "SwerveDrive/Motors/Voltage/Supply/DriveMotor" + i, 
+                "MotorStatus/SwerveDrive/Motors/Voltage/Supply/DriveMotor" + i, 
                 drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble()
             );
         }

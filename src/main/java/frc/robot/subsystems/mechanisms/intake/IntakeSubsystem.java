@@ -135,50 +135,50 @@ public class IntakeSubsystem extends SubsystemBase {
     private void logMotors() {
         // Log connection status
         Logger.recordOutput(
-            "IntakeSubsystem/MotorConnections/AngleMotor", 
+            "MotorStatus/IntakeSubsystem/MotorConnections/AngleMotor", 
             angleMotor.getMotor().isConnected()
         );
 
         Logger.recordOutput(
-            "IntakeSubsystem/MotorConnections/IntakeWheelsMotor", 
+            "MotorStatus/IntakeSubsystem/MotorConnections/IntakeWheelsMotor", 
             intakeWheelsMotor.getMotor().isConnected()
         );
 
         // Log current readings to AdvantageKit
         Logger.recordOutput(
-            "IntakeSubsystem/Current/Stator/AngleMotor", 
+            "MotorStatus/IntakeSubsystem/Current/Stator/AngleMotor", 
             angleMotor.getMotor().getStatorCurrent().getValueAsDouble()
         );
         Logger.recordOutput(
-            "IntakeSubsystem/Current/Supply/AngleMotor", 
+            "MotorStatus/IntakeSubsystem/Current/Supply/AngleMotor", 
             angleMotor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
 
         Logger.recordOutput(
-            "IntakeSubsystem/Current/Stator/IntakeWheelsMotor", 
+            "MotorStatus/IntakeSubsystem/Current/Stator/IntakeWheelsMotor", 
             intakeWheelsMotor.getMotor().getStatorCurrent().getValueAsDouble()
         );
         Logger.recordOutput(
-            "IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
+            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
             intakeWheelsMotor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
 
         // Log voltage readings to AdvantageKit
         Logger.recordOutput(
-            "IntakeSubsystem/Voltage/Output/FeederBedMotor", 
+            "MotorStatus/IntakeSubsystem/Voltage/Output/FeederBedMotor", 
             angleMotor.getMotor().getMotorVoltage().getValueAsDouble()
         );
         Logger.recordOutput(
-            "IntakeSubsystem/Current/Supply/FeederBedMotor", 
+            "MotorStatus/IntakeSubsystem/Current/Supply/FeederBedMotor", 
             angleMotor.getMotor().getSupplyVoltage().getValueAsDouble()
         );
 
         Logger.recordOutput(
-            "IntakeSubsystem/Voltage/Output/IntakeWheelsMotor", 
+            "MotorStatus/IntakeSubsystem/Voltage/Output/IntakeWheelsMotor", 
             intakeWheelsMotor.getMotor().getMotorVoltage().getValueAsDouble()
         );
         Logger.recordOutput(
-            "IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
+            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
             intakeWheelsMotor.getMotor().getSupplyVoltage().getValueAsDouble()
         );
     }

@@ -104,74 +104,74 @@ public class FeederSubsystem extends SubsystemBase {
     private void logMotors() {
         // Log connection status
         Logger.recordOutput(
-            "FeederSubsystem/MotorConnections/FeederBedMotor", 
+            "MotorStatus/FeederSubsystem/MotorConnections/FeederBedMotor", 
             feederBedMotor.getMotor().isConnected()
         );
 
         Logger.recordOutput(
-            "FeederSubsystem/MotorConnections/FeederFeederMotor", 
+            "MotorStatus/FeederSubsystem/MotorConnections/FeederFeederMotor", 
             feederBedMotor.getMotor().isConnected()
         );
 
         Logger.recordOutput(
-            "FeederSubsystem/MotorConnections/ShooterFeederMotor", 
+            "MotorStatus/FeederSubsystem/MotorConnections/ShooterFeederMotor", 
             shooterFeederMotor.getMotor().isConnected()
         );
 
         // Log current readings to AdvantageKit
         Logger.recordOutput(
-            "FeederSubsystem/Current/Stator/FeederBedMotor", 
+            "MotorStatus/FeederSubsystem/Current/Stator/FeederBedMotor", 
             feederBedMotor.getMotor().getStatorCurrent().getValueAsDouble()
         );
         Logger.recordOutput(
-            "FeederSubsystem/Current/Supply/FeederBedMotor", 
+            "MotorStatus/FeederSubsystem/Current/Supply/FeederBedMotor", 
             feederBedMotor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
 
         Logger.recordOutput(
-            "FeederSubsystem/Current/Stator/FeederFeederMotor", 
+            "MotorStatus/FeederSubsystem/Current/Stator/FeederFeederMotor", 
             feederFeederMotor.getMotor().getStatorCurrent().getValueAsDouble()
         );
         Logger.recordOutput(
-            "FeederSubsystem/Current/Supply/FeederFeederMotor", 
+            "MotorStatus/FeederSubsystem/Current/Supply/FeederFeederMotor", 
             feederFeederMotor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
 
         Logger.recordOutput(
-            "FeederSubsystem/Current/Stator/ShooterFeederMotor", 
+            "MotorStatus/FeederSubsystem/Current/Stator/ShooterFeederMotor", 
             shooterFeederMotor.getMotor().getStatorCurrent().getValueAsDouble()
         );
         Logger.recordOutput(
-            "FeederSubsystem/Current/Supply/ShooterFeederMotor", 
+            "MotorStatus/FeederSubsystem/Current/Supply/ShooterFeederMotor", 
             shooterFeederMotor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
 
 
         // Log voltage readings to AdvantageKit
         Logger.recordOutput(
-            "FeederSubsystem/Voltage/Output/FeederBedMotor", 
+            "MotorStatus/FeederSubsystem/Voltage/Output/FeederBedMotor", 
             feederBedMotor.getMotor().getMotorVoltage().getValueAsDouble()
         );
         Logger.recordOutput(
-            "FeederSubsystem/Current/Supply/FeederBedMotor", 
+            "MotorStatus/FeederSubsystem/Current/Supply/FeederBedMotor", 
             feederBedMotor.getMotor().getSupplyVoltage().getValueAsDouble()
         );
 
         Logger.recordOutput(
-            "FeederSubsystem/Voltage/Output/FeederFeederMotor", 
+            "MotorStatus/FeederSubsystem/Voltage/Output/FeederFeederMotor", 
             feederFeederMotor.getMotor().getMotorVoltage().getValueAsDouble()
         );
         Logger.recordOutput(
-            "FeederSubsystem/Current/Supply/FeederFeederMotor", 
+            "MotorStatus/FeederSubsystem/Current/Supply/FeederFeederMotor", 
             feederFeederMotor.getMotor().getSupplyVoltage().getValueAsDouble()
         );
 
         Logger.recordOutput(
-            "FeederSubsystem/Voltage/Output/ShooterFeederMotor", 
+            "MotorStatus/FeederSubsystem/Voltage/Output/ShooterFeederMotor", 
             shooterFeederMotor.getMotor().getMotorVoltage().getValueAsDouble()
         );
         Logger.recordOutput(
-            "FeederSubsystem/Current/Supply/ShooterFeederMotor", 
+            "MotorStatus/FeederSubsystem/Current/Supply/ShooterFeederMotor", 
             shooterFeederMotor.getMotor().getSupplyVoltage().getValueAsDouble()
         );
     }
