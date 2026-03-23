@@ -70,10 +70,21 @@ public class OperatorJoystick {
             NamedCommands.getCommand("FeederOff")
         );
         
-        joystick.rightBumper().whileTrue(
+        joystick.rightBumper().onTrue(
+            Commands.runOnce(
+                () -> shooterSubsystem.shooterMotors.drive(0.05),
+                shooterSubsystem
+            )
+        ).whileTrue(
             NamedCommands.getCommand("FeederIn")
         ).onFalse(
-            NamedCommands.getCommand("FeederOff")
+            Commands.sequence(
+                Commands.runOnce(
+                    () -> shooterSubsystem.shooterMotors.drive(0.0),
+                    shooterSubsystem
+                ),
+                NamedCommands.getCommand("FeederOff")
+            )
         );
         
         // MARK: LT - Intake
