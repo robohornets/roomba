@@ -65,9 +65,9 @@ public class OperatorJoystick {
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger().whileTrue(
-            NamedCommands.getCommand("ShootWheel")
+            NamedCommands.getCommand("FeederOut")
         ).onFalse(
-            NamedCommands.getCommand("ShootStop")
+            NamedCommands.getCommand("FeederOff")
         );
         
         joystick.rightBumper().whileTrue(
