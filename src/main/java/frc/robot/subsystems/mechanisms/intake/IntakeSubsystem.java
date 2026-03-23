@@ -43,14 +43,13 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle State
     public double anglePosition = 0.0;
     private double angleTarget = Double.NaN;
-    private boolean angleAtTarget = false;
-    public boolean forceIntakeDown = false;
+    // public boolean forceIntakeDown = false;
 
 
     // MARK: Periodic Loop
     @Override
     public void periodic() {
-        runAngleControl();
+        // runAngleControl();
         runIntakeWheels();
 
         logValues();
@@ -58,30 +57,30 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     // MARK: Angle Control
-    private void runAngleControl() {
-        // Force the intake down with constant motor speed
-        if (forceIntakeDown) {
-            angleMotor.getMotor().set(IntakeConstants.INTAKE_DOWN_FORCE_SPEED);
-            return;
-        }
+    // private void runAngleControl() {
+    //     // Force the intake down with constant motor speed
+    //     // if (forceIntakeDown) {
+    //     //     // angleMotor.getMotor().set(IntakeConstants.INTAKE_DOWN_FORCE_SPEED);
+    //     //     return;
+    //     // }
 
-        if (Double.isNaN(angleTarget) || angleAtTarget) {
-            angleMotor.set(0.0);
-            return;
-        }
+    //     if (Double.isNaN(angleTarget) || angleAtTarget) {
+    //         angleMotor.set(0.0);
+    //         return;
+    //     }
 
-        double currentPos = angleMotor.getMotor().getPosition().refresh().getValueAsDouble();
-        double error = angleTarget - currentPos;
+    //     double currentPos = angleMotor.getMotor().getPosition().refresh().getValueAsDouble();
+    //     double error = angleTarget - currentPos;
 
-        if (Math.abs(error) <= IntakeConstants.INTAKE_THRESHOLD) {
-            angleMotor.set(0.0);
-            angleAtTarget = true;
-        } else if (error < 0) {
-            angleMotor.set(-IntakeConstants.INTAKE_DOWN_SPEED);
-        } else {
-            angleMotor.set(IntakeConstants.INTAKE_UP_SPEED);
-        }
-    }
+    //     if (Math.abs(error) <= IntakeConstants.INTAKE_THRESHOLD) {
+    //         angleMotor.set(0.0);
+    //         angleAtTarget = true;
+    //     } else if (error < 0) {
+    //         angleMotor.set(-IntakeConstants.INTAKE_DOWN_SPEED);
+    //     } else {
+    //         angleMotor.set(IntakeConstants.INTAKE_UP_SPEED);
+    //     }
+    // }
 
     // MARK: Intake Wheels
     private void runIntakeWheels() {
@@ -103,9 +102,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setPosition(double targetPosition) {
         Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
-        anglePosition = targetPosition;
+        angleMotor.goTo(targetPosition);
         angleTarget = targetPosition;
-        angleAtTarget = false;
     }
 
     public IntakeStates getIntakeState() {
@@ -119,14 +117,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
         this.intakeState = intakeState;
 
-        forceIntakeDown = intakeState.equals(IntakeStates.INTAKE_IN);
+        // forceIntakeDown = intakeState.equals(IntakeStates.INTAKE_IN);
     }
 
     // MARK: Logging
     private void logValues() {
         Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
         Logger.recordOutput("IntakeSubsystem/AngleTarget", angleTarget);
-        Logger.recordOutput("IntakeSubsystem/AngleAtTarget", angleAtTarget);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
         Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
     }
