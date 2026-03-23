@@ -146,20 +146,22 @@ public class LimelightSubsystem extends SubsystemBase {
         double distanceError = Math.sqrt(xDifference * xDifference + yDifference * yDifference);
 
         if (distanceError >= 0.25) {
-            // Add measurement to drivetrain pose estimator
-            drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
+            return;
+        }
 
-            totalLimelightEstimates++;
-            Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
+        // Add measurement to drivetrain pose estimator
+        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
 
-            Logger.recordOutput("Limelight/" + limelightName + "/AcceptedPose", transformedPose);
+        totalLimelightEstimates++;
+        Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
 
-            // Add measurement to QuestNav pose estimator if enabled
-            if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
-                estimatesAddedToQuest++;
-                Logger.recordOutput("QuestNav/" + limelightName + "/LimelightEstimates", estimatesAddedToQuest);
-                questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateDynamicStdDevs(estimate), estimate);
-            }
+        Logger.recordOutput("Limelight/" + limelightName + "/AcceptedPose", transformedPose);
+
+        // Add measurement to QuestNav pose estimator if enabled
+        if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {
+            estimatesAddedToQuest++;
+            Logger.recordOutput("QuestNav/" + limelightName + "/LimelightEstimates", estimatesAddedToQuest);
+            questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateDynamicStdDevs(estimate), estimate);
         }
     }
 
