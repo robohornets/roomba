@@ -145,7 +145,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
         double distanceError = Math.sqrt(xDifference * xDifference + yDifference * yDifference);
 
-        if (distanceError >= 0.25) {
+        if (distanceError >= 2.0) {
             return;
         }
 
