@@ -140,11 +140,15 @@ public class LimelightSubsystem extends SubsystemBase {
 
         Matrix<N3, N1> calculatedStdDevs = LimelightConstants.calculateDynamicStdDevs(estimate);
 
+        // Calculate distance error of Limelight to current drivetrain pose
         double xDifference = Math.abs(transformedPose.getX() - drivetrain.getState().Pose.getX());
         double yDifference = Math.abs(transformedPose.getY() - drivetrain.getState().Pose.getY());
 
         double distanceError = Math.sqrt(xDifference * xDifference + yDifference * yDifference);
 
+        Logger.recordOutput("Limelight/" + limelightName + "/DistanceError", distanceError);
+
+        // Return early if the error is too large
         if (distanceError >= 0.25) {
             return;
         }
