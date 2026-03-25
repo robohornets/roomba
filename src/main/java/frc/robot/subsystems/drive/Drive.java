@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -57,11 +58,10 @@ public class Drive extends SubsystemBase {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
     // MARK: Heading Control
-    public final SwerveRequest.FieldCentricFacingAngle driveFacingHub = 
+    public final SwerveRequest.FieldCentricFacingAngle driveFacingHub =
         new SwerveRequest.FieldCentricFacingAngle()
             .withHeadingPID(5, 0, 0)
             .withDeadband(DriveConstants.MAX_SPEED * 0.1)
-            .withRotationalDeadband(DriveConstants.MAX_ANGULAR_RATE * 0.1)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
     // MARK: Robot Centric
@@ -74,6 +74,8 @@ public class Drive extends SubsystemBase {
     public final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private boolean lockedToHub = false;
+    
+    private boolean wiggleAgitation = false;
 
     // MARK: Periodic Loop
     @Override
@@ -152,6 +154,22 @@ public class Drive extends SubsystemBase {
         lockedToHub = !lockedToHub;
     }
 
+    // MARK: Wiggle Agitation
+    /** Returns true if the robot is wiggling for hopper agitation. */
+    public boolean isWiggling() {
+        return wiggleAgitation;
+    }
+
+    /** Toggles the wiggle agitation state. */
+    public void toggleWiggleAgitation() {
+        wiggleAgitation = !wiggleAgitation;
+    }
+
+    /** Sets the wiggle agitation state. */
+    public void setWiggleAgitation(boolean wiggleState) {
+        wiggleAgitation = wiggleState;
+    }
+
     // MARK: Auto Builder
     private void configureAutoBuilder() {
         try {
@@ -187,6 +205,12 @@ public class Drive extends SubsystemBase {
         return this.applyRequest(
             () -> {
                 if (isLockedToHub()) {
+                    double wiggleFreqHz = 1.5;
+                    double wiggleOffsetDeg = isWiggling()
+                        ? 4.0 * Math.sin(2 * Math.PI * wiggleFreqHz * Timer.getFPGATimestamp())
+                        : 0.0;
+                    Rotation2d targetAngle = getAngleToHub().plus(Rotation2d.fromDegrees(wiggleOffsetDeg));
+
                     return driveFacingHub
                         .withVelocityX(
                             -joystick.getLeftY() * DriveConstants.MAX_SPEED
@@ -194,8 +218,22 @@ public class Drive extends SubsystemBase {
                         .withVelocityY(
                             -joystick.getLeftX() * DriveConstants.MAX_SPEED
                         ) // Drive left with negative X (left)
-                        .withTargetDirection(getAngleToHub());
+                        .withTargetDirection(targetAngle);
                 } else {
+                    double rotX = joystick.getRightX();
+                    boolean joystickOverride = Math.abs(rotX) > 0.1;
+
+                    double rotRate;
+                    if (isWiggling() && !joystickOverride) {
+                        // Sinusoidal ±4° wiggle at 1.5 Hz
+                        double wiggleFreqHz = 1.5;
+                        double wiggleAmplitudeRad = Math.toRadians(4.0);
+                        rotRate = wiggleAmplitudeRad * (2 * Math.PI * wiggleFreqHz)
+                                * Math.cos(2 * Math.PI * wiggleFreqHz * Timer.getFPGATimestamp());
+                    } else {
+                        rotRate = -rotX * DriveConstants.MAX_ANGULAR_RATE;
+                    }
+
                     return drive
                         .withVelocityX(
                             -joystick.getLeftY() * DriveConstants.MAX_SPEED
@@ -203,9 +241,7 @@ public class Drive extends SubsystemBase {
                         .withVelocityY(
                             -joystick.getLeftX() * DriveConstants.MAX_SPEED
                         ) // Drive left with negative X (left)
-                        .withRotationalRate(
-                            -joystick.getRightX() * DriveConstants.MAX_ANGULAR_RATE
-                        ); // Drive counterclockwise with negative X (left)
+                        .withRotationalRate(rotRate);
                 }
             }
         );
@@ -273,7 +309,9 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("SwerveDrive/ModuleTargets", drivetrain.getState().ModuleTargets);
         Logger.recordOutput("SwerveDrive/ChassisSpeeds", drivetrain.getState().Speeds);
         Logger.recordOutput("SwerveDrive/Rotation", getPose2d().getRotation());
+
         Logger.recordOutput("SwerveDrive/LockedToHub", lockedToHub);
+        Logger.recordOutput("SwerveDrive/WiggleAgitation", wiggleAgitation);
 
         Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
         Logger.recordOutput("SwerveDrive/DistanceToHub", getDistanceToHub());
@@ -282,6 +320,22 @@ public class Drive extends SubsystemBase {
     // MARK: Motor Logging
     public void logMotorInformation() {
         for (int i = 0; i <= 3; i++) {
+            // CANcoder Connections
+            Logger.recordOutput(
+                "MotorStatus/SwerveDrive/Encoders/EncoderConnections/CANcoder" + i, 
+                drivetrain.getModule(i).getEncoder().isConnected()
+            );
+
+            // Log connection status
+            Logger.recordOutput(
+                "MotorStatus/SwerveDrive/Motors/MotorConnections/Stator/SteerMotor" + i, 
+                drivetrain.getModule(i).getSteerMotor().isConnected()
+            );
+            Logger.recordOutput(
+                "MotorStatus/SwerveDrive/Motors/MotorConnections/DriveMotor" + i, 
+                drivetrain.getModule(i).getDriveMotor().isConnected()
+            );
+            
             // Logs the current readings to AdvantageKit
             Logger.recordOutput(
                 "MotorStatus/SwerveDrive/Motors/Current/Stator/SteerMotor" + i, 

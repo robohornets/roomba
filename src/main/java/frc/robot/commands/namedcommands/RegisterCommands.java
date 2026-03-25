@@ -2,7 +2,6 @@ package frc.robot.commands.namedcommands;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,7 +12,6 @@ import frc.robot.subsystems.mechanisms.intake.IntakeConstants;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
-import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 
 public class RegisterCommands {

@@ -146,7 +146,6 @@ public class FeederSubsystem extends SubsystemBase {
             shooterFeederMotor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
 
-
         // Log voltage readings to AdvantageKit
         Logger.recordOutput(
             "MotorStatus/FeederSubsystem/Voltage/Output/FeederBedMotor", 

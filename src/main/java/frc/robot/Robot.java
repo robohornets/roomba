@@ -15,11 +15,13 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
 import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -31,7 +33,9 @@ public class Robot extends LoggedRobot {
 
     private final RobotContainer robotContainer;
 
-    private PowerDistribution pdp = new PowerDistribution();
+    private PowerDistribution powerDistributionHub = new PowerDistribution();
+
+    CANBus canivore = new CANBus("Mechanisms");
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -95,22 +99,19 @@ public class Robot extends LoggedRobot {
         robotContainer.shooterSubsystem.shooterPitchMotor.toggleEnabled(true);
         robotContainer.shooterSubsystem.leftShooterMotor.toggleEnabled(true);
         robotContainer.shooterSubsystem.rightShooterMotor.toggleEnabled(true);
-        // robotContainer.intakeSubsystem.angleMotor.toggleEnabled(true);
         robotContainer.intakeSubsystem.intakeWheelsMotor.toggleEnabled(true);
         robotContainer.feederSubsystem.feederBedMotor.toggleEnabled(true);
         robotContainer.feederSubsystem.feederFeederMotor.toggleEnabled(true);
         robotContainer.feederSubsystem.shooterFeederMotor.toggleEnabled(true);
 
-        // Apply full motor config here (after CAN bus is stable — constructor-time apply() silently fails)
-        // StatusCodes are logged so you can verify success in AdvantageScope under MotorConfig/
-        Logger.recordOutput("MotorConfig/ShooterPitch",    robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/LeftShooter",     robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/RightShooter",    robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        // Logger.recordOutput("MotorConfig/IntakeAngle",     robotContainer.intakeSubsystem.angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/IntakeWheels",    robotContainer.intakeSubsystem.intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/FeederBed",       robotContainer.feederSubsystem.feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/FeederFeeder",    robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/ShooterFeeder",   robotContainer.feederSubsystem.shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Apply and log motor configs to AdvantageKit
+        Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/LeftShooter", robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/RightShooter", robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/IntakeWheels", robotContainer.intakeSubsystem.intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/FeederBed", robotContainer.feederSubsystem.feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/FeederFeeder", robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/ShooterFeeder", robotContainer.feederSubsystem.shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
     }
 
     // MARK: Robot Periodic
@@ -121,6 +122,8 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
 
         logDriveStationValues();
+        logPowerDistribution();
+        logRobotController();
 
         // if (!currentAlliance.equals(DriverStation.getAlliance())) {
         //     currentAlliance = DriverStation.getAlliance();
@@ -130,13 +133,12 @@ public class Robot extends LoggedRobot {
 
     // MARK: Disabled Init
     @Override
-    public void disabledInit() {
-    }
+    public void disabledInit() {}
 
     // MARK: Disabled Periodic
     @Override
     public void disabledPeriodic() {
-        pdp.clearStickyFaults();
+        powerDistributionHub.clearStickyFaults();
     }
 
     // MARK: Disabled Exit
@@ -214,5 +216,34 @@ public class Robot extends LoggedRobot {
         Logger.recordOutput("DriverStation/AutonomousEnabled", DriverStation.isAutonomousEnabled());
         Logger.recordOutput("DriverStation/IsEnabled", DriverStation.isEnabled());
         Logger.recordOutput("DriverStation/IsEStopped", DriverStation.isEStopped());
+        Logger.recordOutput("DriverStation/IsFMSAttached", DriverStation.isFMSAttached());
+        Logger.recordOutput("DriverStation/IsDSAttached", DriverStation.isDSAttached());
+    }
+
+    // MARK: Log PD
+    private void logPowerDistribution() {
+        Logger.recordOutput("PowerDistribution/AllChannelCurrents", powerDistributionHub.getAllCurrents());
+        Logger.recordOutput("PowerDistribution/TotalCurrent", powerDistributionHub.getTotalCurrent());
+        Logger.recordOutput("PowerDistribution/TotalEnergy", powerDistributionHub.getTotalEnergy());
+        Logger.recordOutput("PowerDistribution/TotalPower", powerDistributionHub.getTotalPower());
+        Logger.recordOutput("PowerDistribution/Voltage", powerDistributionHub.getVoltage());
+        Logger.recordOutput("PowerDistribution/Temperature", powerDistributionHub.getTemperature());
+    }
+
+    // MARK: Log Robot Control
+    private void logRobotController() {
+        // Log RIO information
+        Logger.recordOutput("RobotController/CPUTemp", RobotController.getCPUTemp());
+        Logger.recordOutput("RobotController/CANBusUtilization", RobotController.getCANStatus().percentBusUtilization);
+        Logger.recordOutput("RobotController/TXFullCount", RobotController.getCANStatus().txFullCount);
+        Logger.recordOutput("RobotController/CommsDisableCount", RobotController.getCommsDisableCount());
+        Logger.recordOutput("RobotController/RSLState", RobotController.getRSLState());
+        Logger.recordOutput("RobotController/IsBrownedOut", RobotController.isBrownedOut());
+
+        // Log CANivore information
+        CANBus.CANBusStatus status = canivore.getStatus();
+        Logger.recordOutput("CANivore/CANbusUtilization", status.BusUtilization);
+        Logger.recordOutput("CANivore/TXFullCount", status.TxFullCount);
+        Logger.recordOutput("CANivore/BussOffCount", status.BusOffCount);
     }
 }

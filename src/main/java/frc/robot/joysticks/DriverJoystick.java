@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -12,11 +11,7 @@ import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
-import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
-import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
-import frc.robot.subsystems.vision.limelight.LimelightConstants;
-import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 
 public class DriverJoystick {
     public final CommandXboxController joystick;
@@ -52,13 +47,21 @@ public class DriverJoystick {
             Commands.runOnce(
                 () -> {
                     drivetrain.toggleLockedToHub();
-                    Logger.recordOutput("SwerveDrive/LockedToHub", drivetrain.isLockedToHub());
                 }
             )
         );
 
         // MARK: Reset Shooter Angle - Y
-        joystick.y();
+        joystick.y().whileTrue(
+            Commands.runEnd(
+                () -> {
+                    drivetrain.setWiggleAgitation(true);
+                },
+                () -> {
+                    drivetrain.setWiggleAgitation(false);
+                }
+            )
+        );
 
         // MARK: RT - Shooter shoot
         joystick.rightTrigger().whileTrue(

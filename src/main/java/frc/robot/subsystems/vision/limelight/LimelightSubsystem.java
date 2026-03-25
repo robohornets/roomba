@@ -69,6 +69,8 @@ public class LimelightSubsystem extends SubsystemBase {
         this.questNavSubsystem = questNavSubsystem;
         this.limelightName = limelightName;
         this.angularVelocityZ = drivetrain.getPigeon2().getAngularVelocityZWorld();
+
+        setIMUMode(4);
     }
 
     Field2d limelightField2d = new Field2d();
@@ -85,6 +87,17 @@ public class LimelightSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         addOdometryMeasurement();
+    }
+
+    /**
+     * 0 - EXTERNAL_ONLY
+     * 1 - EXTERNAL_SEED
+     * 2 - INTERNAL_ONLY
+     * 3 - INTERNAL_MT1_ASSIST
+     * 4 - INTERNAL_EXTERNAL_ASSIST
+     */
+    public void setIMUMode(int mode) {
+        LimelightHelpers.SetIMUMode(limelightName, mode);
     }
 
     // MARK: Add Odometry
@@ -115,6 +128,7 @@ public class LimelightSubsystem extends SubsystemBase {
         // Give limelight current estimated rotation from pose for MegaTag 2
         double currentYaw = drivetrain.getState().Pose.getRotation().getDegrees();
 
+        // TODO: Switch to use internal Limelight IMU after first few seconds to allow more frequent rotation updates
         // Set the current yaw of the robot for increased accuracy
         LimelightHelpers.SetRobotOrientation(
             limelightName,
@@ -174,7 +188,10 @@ public class LimelightSubsystem extends SubsystemBase {
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
 
-    // MARK: Logging
-    public void logValues() {
+    public void resetLimelightGyro() {
+        
     }
+
+    // MARK: Logging
+    public void logValues() {}
 }
