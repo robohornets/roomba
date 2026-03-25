@@ -1,0 +1,42 @@
+# 1209 Public Robot Code 2026
+[![Build Robot Code](https://github.com/robohornets/roomba/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/robohornets/roomba/actions/workflows/main.yml)
+
+Our robot, codenamed roomba, has its full code publicly available. It is licensed under MIT, so fee free to use or modify the code in any way you want.
+
+## Contributing
+You cannot commit directly to the main branch. Instead, you must make a new branch and then create a pull request to merge with the main branch.
+
+Additionally, to merge your pull request, your code must compile. This is managed by GitHub Actions which will test running the code before merging.
+
+### Clear extra branches in VSCode
+This will delete the local branches without remotes from VSCode as well as updating with the current remote list.
+
+```
+git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -d
+```
+
+## Libraries
+### PathplannerLib
+![GitHub Release](https://img.shields.io/github/v/release/mjansen4857/pathplanner)
+
+[https://github.com/mjansen4857/pathplanner](https://github.com/mjansen4857/pathplanner)
+
+### CTRE-Phoenix (v6)
+![GitHub Release](https://img.shields.io/github/v/release/CrossTheRoadElec/Phoenix-Releases)
+
+[https://github.com/CrossTheRoadElec/Phoenix-Releases](https://github.com/CrossTheRoadElec/Phoenix-Releases)
+
+### WhatTime
+![GitHub Release](https://img.shields.io/github/v/release/robohornets/WhatTime)
+
+[https://github.com/robohornets/WhatTime](https://github.com/robohornets/WhatTime)
+
+# QuestNav
+![GitHub Release](https://img.shields.io/github/v/release/QuestNav/QuestNav)
+
+[https://github.com/QuestNav/QuestNav/releases](https://github.com/QuestNav/QuestNav/releases)
+
+# AdvantageKit
+![GitHub Release](https://img.shields.io/github/v/release/Mechanical-Advantage/AdvantageKit)
+
+[https://github.com/Mechanical-Advantage/AdvantageKit/releases](https://github.com/Mechanical-Advantage/AdvantageKit/releases)

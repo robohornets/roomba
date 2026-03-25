@@ -1,0 +1,222 @@
+plugins {
+    id "java"
+    id "edu.wpi.first.GradleRIO" version "2026.2.1"
+    id "com.peterabeles.gversion" version "1.10"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+def ROBOT_MAIN_CLASS = "frc.robot.Main"
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project DeployUtils.
+deploy {
+    targets {
+        roborio(getTargetTypeClass('RoboRIO')) {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
+            // want to store a team number in this file.
+            team = project.frc.getTeamNumber()
+            debug = project.frc.getDebugOrDefault(false)
+
+            artifacts {
+                // First part is artifact name, 2nd is artifact type
+                // getTargetTypeClass is a shortcut to get the class type using a string
+
+                frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
+                }
+
+                // Static files artifact
+                frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
+                    files = project.fileTree('src/main/deploy')
+                    directory = '/home/lvuser/deploy'
+                    deleteOldFiles = true  // Change to true to delete files on roboRIO that no
+                                           // longer exist in deploy directory of this project
+                }
+            }
+        }
+    }
+}
+
+def deployArtifact = deploy.targets.roborio.artifacts.frcJava
+
+// Set to true to use debug for all targets including JNI, which will drastically impact
+// performance.
+wpi.java.debugJni = false
+
+// Set this to true to enable desktop support.
+def includeDesktopSupport = true
+
+// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
+// Also defines JUnit 5.
+dependencies {
+    annotationProcessor wpi.java.deps.wpilibAnnotations()
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
+
+    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
+    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
+
+    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
+    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
+
+    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    simulationDebug wpi.sim.enableDebug()
+
+    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    simulationRelease wpi.sim.enableRelease()
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
+    annotationProcessor "org.littletonrobotics.akit:akit-autolog:$akitJson.version"
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+}
+
+// Simulation configuration (e.g. environment variables).
+wpi.sim.addGui().defaultEnabled = true
+wpi.sim.addDriverstation()
+
+def simSoftwareGl = (project.findProperty("simSoftwareGl") ?: System.getenv("SIM_SOFTWARE_GL"))?.toString()?.toBoolean()
+def simGlxVendor = (project.findProperty("simGlxVendor") ?: System.getenv("SIM_GLX_VENDOR"))?.toString()
+def waylandSession = System.getenv("WAYLAND_DISPLAY") != null
+
+tasks.withType(JavaExec).configureEach {
+    if (!name.startsWith("simulate")) {
+        return
+    }
+
+    doFirst {
+        // Hyprland/Wayland sessions are more reliable when GLFW targets Xwayland.
+        if (waylandSession && !environment.containsKey("GLFW_PLATFORM")) {
+            environment("GLFW_PLATFORM", "x11")
+        }
+
+        if (simSoftwareGl) {
+            environment("LIBGL_ALWAYS_SOFTWARE", "1")
+        }
+
+        environment("LIBGL_DRI3_DISABLE", "1")
+        environment("__GLX_VENDOR_LIBRARY_NAME", "mesa")
+        environment("MESA_LOADER_DRIVER_OVERRIDE", "llvmpipe")
+        environment("GALLIUM_DRIVER", "llvmpipe")
+
+        if (simGlxVendor) {
+            environment("__GLX_VENDOR_LIBRARY_NAME", simGlxVendor)
+        }
+
+        // Remove empty path entries (e.g. trailing ':') that can break extension loading.
+        def rawExtensions = (environment["HALSIM_EXTENSIONS"] ?: System.getenv("HALSIM_EXTENSIONS") ?: "").toString()
+        def cleanedExtensions = rawExtensions.split(":").findAll { !it.trim().isEmpty() }.join(":")
+        if (rawExtensions != cleanedExtensions) {
+            environment("HALSIM_EXTENSIONS", cleanedExtensions)
+        }
+    }
+}
+
+def patchWpilibJavaSimJson = { File jsonFile ->
+    if (!jsonFile.exists()) {
+        return
+    }
+
+    def parsed = new groovy.json.JsonSlurper().parseText(jsonFile.text)
+    if (!(parsed instanceof List)) {
+        return
+    }
+
+    parsed.each { entry ->
+        if (!(entry instanceof Map)) {
+            return
+        }
+
+        if (!(entry.environment instanceof Map)) {
+            entry.environment = [:]
+        }
+
+        // Force X11-backed GLFW on Hyprland/Wayland.
+        if (waylandSession) {
+            entry.environment["GLFW_PLATFORM"] = "x11"
+        }
+
+        // Software rendering avoids broken GLX context creation on this Hyprland setup.
+        entry.environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
+        entry.environment["LIBGL_DRI3_DISABLE"] = "1"
+        entry.environment["__GLX_VENDOR_LIBRARY_NAME"] = "mesa"
+        entry.environment["MESA_LOADER_DRIVER_OVERRIDE"] = "llvmpipe"
+        entry.environment["GALLIUM_DRIVER"] = "llvmpipe"
+
+        if (simGlxVendor) {
+            entry.environment["__GLX_VENDOR_LIBRARY_NAME"] = simGlxVendor
+        }
+
+        def enabledExtensions = []
+        if (entry.extensions instanceof List) {
+            enabledExtensions = entry.extensions
+                .findAll { it instanceof Map && it.defaultEnabled && it.libName }
+                .collect { it.libName.toString() }
+        }
+
+        if (!enabledExtensions.isEmpty()) {
+            // Override WPILib extension launcher value to avoid trailing path delimiters.
+            entry.environment["HALSIM_EXTENSIONS"] = enabledExtensions.join(":")
+        }
+    }
+
+    jsonFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(parsed)) + System.lineSeparator()
+}
+
+tasks.matching { it.name == "simulateExternalJavaRelease" }.configureEach {
+    doLast {
+        patchWpilibJavaSimJson(file("$buildDir/sim/release_java.json"))
+    }
+}
+
+tasks.matching { it.name == "simulateExternalJavaDebug" }.configureEach {
+    doLast {
+        patchWpilibJavaSimJson(file("$buildDir/sim/debug_java.json"))
+    }
+}
+
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
+jar {
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from('src') { into 'backup/src' }
+    from('vendordeps') { into 'backup/vendordeps' }
+    from('build.gradle') { into 'backup' }
+    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+// Configure jar and deploy tasks
+deployArtifact.jarTask = jar
+wpi.java.configureExecutableTasks(jar)
+wpi.java.configureTestTasks(test)
+
+// Configure string concat to always inline compile
+tasks.withType(JavaCompile) {
+    options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+
+project.compileJava.dependsOn(createVersionFile)
+gversion {
+    srcDir       = "src/main/java/"
+    classPackage = "frc.robot"
+    className    = "BuildConstants"
+    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+    timeZone     = "America/Chicago"
+    indent       = "    "
+}

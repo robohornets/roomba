@@ -1,0 +1,114 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.663615740740741,
+        "y": 6.056985387731482
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.801243791694095,
+        "y": 6.102338990503236
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.220258427372684,
+        "y": 6.056985387731482
+      },
+      "prevControl": {
+        "x": 4.973228584348182,
+        "y": 6.0185633022169
+      },
+      "nextControl": {
+        "x": 6.418199190643895,
+        "y": 6.24330855372744
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.42979152199074,
+        "y": 5.902603804976852
+      },
+      "prevControl": {
+        "x": 7.053724745020635,
+        "y": 6.407429885410136
+      },
+      "nextControl": {
+        "x": 7.728575245069312,
+        "y": 5.501521271086841
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.618749855324074,
+        "y": 2.138855613425926
+      },
+      "prevControl": {
+        "x": 7.64231099791091,
+        "y": 2.8055931665997473
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Full Loop Start"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.9936369243421055,
+      "rotationDegrees": 118.70034348639953
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeDown",
+      "waypointRelativePos": 1.0017779277408638,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDown"
+        }
+      }
+    },
+    {
+      "name": "IntakeIn",
+      "waypointRelativePos": 1.195701827242525,
+      "endWaypointRelativePos": 3.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIn"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.5,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Left Bump Full",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,74 @@
+{
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
+    "retained": {
+      "limelight-hornet": {
+        "double[]##v_/limelight-hornet/botpose": {
+          "open": true
+        }
+      }
+    },
+    "transitory": {
+      "CustomDashboard": {
+        "open": true
+      },
+      "Pose": {
+        "double[]##v_/Pose/robotPose": {
+          "open": true
+        }
+      },
+      "QuestNav": {
+        "open": true
+      },
+      "Shuffleboard": {
+        "open": true
+      },
+      "limelight-four": {
+        "double[]##v_/limelight-four/botpose": {
+          "open": true
+        },
+        "double[]##v_/limelight-four/robot_orientation_set": {
+          "open": true
+        }
+      },
+      "limelight-two": {
+        "double[]##v_/limelight-two/botpose": {
+          "open": true
+        }
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/PathPlanner": "Alerts"
+    },
+    "windows": {
+      "/Pose": {
+        "builtin": "",
+        "height": 8.051901817321777,
+        "width": 17.54825210571289,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT3)",
+    "serverTeam": "1209"
+  }
+}
