@@ -63,7 +63,7 @@ public class RegisterCommands {
                     shooterSubsystem
                 ), // Update the shooter calculations every tick
                 Commands.sequence(
-                    Commands.waitSeconds(2.0),
+                    Commands.waitSeconds(1.0),
                     Commands.runOnce(
                         () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
                         feederSubsystem
@@ -96,7 +96,7 @@ public class RegisterCommands {
                     shooterSubsystem
                 ), // Update the shooter calculations every tick
                 Commands.sequence(
-                    Commands.waitSeconds(2.0),
+                    Commands.waitSeconds(1.0),
                     Commands.runOnce(
                         () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
                         feederSubsystem
