@@ -89,7 +89,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 intakeWheelsMotor.getMotor().set(IntakeConstants.INTAKE_WHEELS_SPEED);
                 break;
             case INTAKE_OUT:
-                intakeWheelsMotor.getMotor().set(-IntakeConstants.INTAKE_WHEELS_SPEED);
+                intakeWheelsMotor.getMotor().set(-IntakeConstants.INTAKE_WHEELS_SPEED / 2);
                 break;
             case OFF:
                 intakeWheelsMotor.getMotor().set(0.0);

@@ -58,9 +58,16 @@ public class OperatorJoystick {
             )
         );
 
-        // MARK: Intake Agitate - Y
+        // MARK: Reset Shooter Angle - Y
         joystick.y().whileTrue(
-            NamedCommands.getCommand("IntakeAgitate")
+            Commands.runEnd(
+                () -> {
+                    drivetrain.setWiggleAgitation(true);
+                },
+                () -> {
+                    drivetrain.setWiggleAgitation(false);
+                }
+            )
         );
 
         // MARK: RT - Shooter shoot
@@ -70,21 +77,10 @@ public class OperatorJoystick {
             NamedCommands.getCommand("FeederOff")
         );
         
-        joystick.rightTrigger().onTrue(
-            Commands.runOnce(
-                () -> shooterSubsystem.shooterMotors.drive(0.05),
-                shooterSubsystem
-            )
-        ).whileTrue(
+        joystick.rightTrigger().whileTrue(
             NamedCommands.getCommand("FeederIn")
         ).onFalse(
-            Commands.sequence(
-                Commands.runOnce(
-                    () -> shooterSubsystem.shooterMotors.drive(0.0),
-                    shooterSubsystem
-                ),
-                NamedCommands.getCommand("FeederOff")
-            )
+            NamedCommands.getCommand("FeederOff")
         );
         
         // MARK: LT - Intake

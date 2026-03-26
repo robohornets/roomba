@@ -30,55 +30,6 @@ public class RegisterCommands {
     }
     
     public void registerCommands(){
-
-        Command shootWheel = Commands.runOnce(
-            () -> {
-                ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
-
-                double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                double maxRPM = 1300; // MARK: Populate max rpm
-
-                shooterDataPoint.speed = rpm / maxRPM;
-                Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
-
-                shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-            },
-            shooterSubsystem
-        );
-
-        NamedCommands.registerCommand("ShootAllSystems",
-            Commands.parallel(
-                Commands.run(
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
-
-                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                        double maxRPM = 1300; // MARK: Populate max rpm
-
-                        shooterDataPoint.speed = rpm / maxRPM;
-                        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
-
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                    },
-                    shooterSubsystem
-                ), // Update the shooter calculations every tick
-                Commands.sequence(
-                    Commands.waitSeconds(1.0),
-                    Commands.runOnce(
-                        () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
-                        feederSubsystem
-                    ),
-                    Commands.repeatingSequence(
-                        Commands.runOnce(() -> intakeSubsystem.setPosition(0.35)),
-                        Commands.waitSeconds(0.75),
-                        Commands.runOnce(() -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE)),
-                        Commands.waitSeconds(0.75)
-                    )
-                )
-            )
-        );
-
-
         NamedCommands.registerCommand("ShootWithFeeder",
             Commands.parallel(
                 Commands.run(
@@ -114,6 +65,7 @@ public class RegisterCommands {
                     double maxRPM = 1300; // MARK: Populate max rpm
 
                     shooterDataPoint.speed = rpm / maxRPM;
+                    shooterDataPoint.speed = 0.30;
                     Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
                     shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);

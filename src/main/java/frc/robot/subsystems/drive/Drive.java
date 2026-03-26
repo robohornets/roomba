@@ -205,11 +205,7 @@ public class Drive extends SubsystemBase {
         return this.applyRequest(
             () -> {
                 if (isLockedToHub()) {
-                    double wiggleFreqHz = 1.5;
-                    double wiggleOffsetDeg = isWiggling()
-                        ? 4.0 * Math.sin(2 * Math.PI * wiggleFreqHz * Timer.getFPGATimestamp())
-                        : 0.0;
-                    Rotation2d targetAngle = getAngleToHub().plus(Rotation2d.fromDegrees(wiggleOffsetDeg));
+                    Rotation2d targetAngle = getAngleToHub();
 
                     return driveFacingHub
                         .withVelocityX(
@@ -225,9 +221,9 @@ public class Drive extends SubsystemBase {
 
                     double rotRate;
                     if (isWiggling() && !joystickOverride) {
-                        // Sinusoidal ±4° wiggle at 1.5 Hz
-                        double wiggleFreqHz = 1.5;
-                        double wiggleAmplitudeRad = Math.toRadians(4.0);
+                        // Sinusoidal ±5° wiggle at 4 Hz
+                        double wiggleFreqHz = 4;
+                        double wiggleAmplitudeRad = Math.toRadians(5.0);
                         rotRate = wiggleAmplitudeRad * (2 * Math.PI * wiggleFreqHz)
                                 * Math.cos(2 * Math.PI * wiggleFreqHz * Timer.getFPGATimestamp());
                     } else {
