@@ -21,12 +21,6 @@
           "data": {
             "pathName": "Left Bump Full - Part 2"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootAllSystems"
-          }
         }
       ]
     }
