@@ -111,6 +111,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // }
 
         logValues();
+        logMotors();
     }
 
     // MARK: Get Pigeon
