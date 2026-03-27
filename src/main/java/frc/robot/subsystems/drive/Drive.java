@@ -205,8 +205,9 @@ public class Drive extends SubsystemBase {
         return this.applyRequest(
             () -> {
                 if (isLockedToHub()) {
-                    Rotation2d targetAngle = getAngleToHub();
 
+                    Rotation2d targetAngle = getAngleToHub();
+                    
                     return driveFacingHub
                         .withVelocityX(
                             -joystick.getLeftY() * DriveConstants.MAX_SPEED

@@ -4,7 +4,9 @@ import org.littletonrobotics.junction.Logger;
 
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -105,13 +107,6 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
         angleMotor.goTo(targetPosition);
         angleTarget = targetPosition;
-    }
-
-
-    public void setMinimumToCurrentPos() {
-        double pos = angleMotor.getCurrentValue();
-        Logger.recordOutput("IntakeSubsystem/MinimumPosition", pos);
-        angleMotor.setMinValue(pos);
     }
 
     public IntakeStates getIntakeState() {

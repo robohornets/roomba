@@ -42,7 +42,7 @@ public class RegisterCommands {
                         shooterDataPoint.speed = rpm / maxRPM;
                         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                        shooterSubsystem.setFlywheelSpeed(shooterDataPoint.speed);
                     },
                     shooterSubsystem
                 ), // Update the shooter calculations every tick
@@ -68,7 +68,10 @@ public class RegisterCommands {
                     shooterDataPoint.speed = 0.30;
                     Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
-                    shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
+                    if (shooterSubsystem.canShoot()) {
+                        shooterSubsystem.setFlywheelSpeed(shooterDataPoint.speed);
+                    }
+
                 },
                 shooterSubsystem
             )
@@ -77,7 +80,7 @@ public class RegisterCommands {
         NamedCommands.registerCommand("ShootStop",
             Commands.runOnce(
                 () -> {
-                    shooterSubsystem.shooterMotors.drive(0.0);
+                    shooterSubsystem.setFlywheelSpeed(0.0);
                     feederSubsystem.setFeederState(FeederState.OFF);
                 }, shooterSubsystem, feederSubsystem
             )
@@ -88,16 +91,6 @@ public class RegisterCommands {
             Commands.runOnce(
                 () -> intakeSubsystem.setPosition(IntakeConstants.INTAKE_MIN_VALUE),
                 intakeSubsystem
-            )
-        );
-        
-        NamedCommands.registerCommand("IntakeRecalibrate", 
-            Commands.sequence(
-                intakeSubsystem.angleMotor.brakelessReset(1.0),
-                Commands.runOnce(
-                    () -> intakeSubsystem.setMinimumToCurrentPos(),
-                    intakeSubsystem
-                )
             )
         );
 

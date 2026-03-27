@@ -77,27 +77,12 @@ public class ShooterSubsystem extends SubsystemBase {
         for (ShooterDataPoint point : ShooterConstants.shooterDataPoints) {
             dataPoints.put(point.distance, point);
         }
-
-        setDefaultCommand(
-            Commands.run(() -> {
-                if (pitchTarget != lastSentPitchTarget) {
-                    shooterPitchMotor.goTo(pitchTarget);
-                    lastSentPitchTarget = pitchTarget;
-                }
-                if (flywheelSpeed != lastSentFlywheelSpeed) {
-                    shooterMotors.drive(flywheelSpeed);
-                    lastSentFlywheelSpeed = flywheelSpeed;
-                }
-            }, this)
-        );
     }
 
     public double shooterAngleTarget = 65;
 
     /** Shared pitch target used by manual joystick control and button bindings. */
     public double pitchTarget = ShooterConstants.SHOOTER_MAX_ANGLE;
-    private double lastSentPitchTarget = Double.NaN;
-
     // MARK: Set Pitch Target
     public void setPitchTarget(double pitch) {
         // pitchTarget = MathUtil.clamp(pitch, ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE);
@@ -106,10 +91,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     /** Shared flywheel speed target used by manual joystick control and button bindings. */
     public double flywheelSpeed = 0.0;
-    private double lastSentFlywheelSpeed = Double.NaN;
+
+    public double lastSetFlywheelSpeed = 0.0;
 
     // MARK: Set Flywheel
     public void setFlywheelSpeed(double speed) {
+        lastSetFlywheelSpeed = speed;
         shooterMotors.drive(speed);
     }
 
@@ -139,6 +126,18 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterPitchMotor.goTo(shooterAngleTarget);
     }
 
+
+    public Boolean canShoot() {
+        if (leftShooterMotor.getMotor().get() >= 0.1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public Boolean isShooting() {
+        return lastSetFlywheelSpeed > 0.0;
+    }
 
 
     public ShooterDataPoint shooterCalculateTrajectory() {
@@ -197,6 +196,9 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("ShooterSubsystem/PitchMotorOutput", shooterPitchMotor.getMotor().get());
         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", flywheelSpeed);
         Logger.recordOutput("ShooterSubsystem/TargetAngle", shooterAngleTarget);
+        Logger.recordOutput("ShooterSubsystem/CanShoot", canShoot() || isShooting());
+        Logger.recordOutput("ShooterSubsystem/CanShootRaw", canShoot());
+        Logger.recordOutput("ShooterSubsystem/IsShooting", isShooting());
     }
 
     // MARK: Log Motors
