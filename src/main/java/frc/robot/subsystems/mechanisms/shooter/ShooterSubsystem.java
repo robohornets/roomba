@@ -194,7 +194,7 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("ShooterSubsystem/MotorConnected", shooterPitchMotor.getMotor().isConnected());
         Logger.recordOutput("ShooterSubsystem/PigeonAngle", getPigeonPosition());
         Logger.recordOutput("ShooterSubsystem/PitchMotorOutput", shooterPitchMotor.getMotor().get());
-        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", flywheelSpeed);
+        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", leftShooterMotor.getMotor().get());
         Logger.recordOutput("ShooterSubsystem/TargetAngle", shooterAngleTarget);
         Logger.recordOutput("ShooterSubsystem/CanShoot", canShoot() || isShooting());
         Logger.recordOutput("ShooterSubsystem/CanShootRaw", canShoot());

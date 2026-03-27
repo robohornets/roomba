@@ -1,5 +1,7 @@
 package frc.robot.commands.namedcommands;
 
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -48,48 +50,21 @@ public class RegisterCommands {
             )
         );
 
-        NamedCommands.registerCommand("ShootWithFeeder",
-            Commands.parallel(
-                Commands.run(
-                    () -> {
+        NamedCommands.registerCommand("ShootWheel", 
+            Commands.run(
+                () -> {
+                    if (shooterSubsystem.canShoot()) {
                         ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
 
                         double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
                         double maxRPM = 1300; // MARK: Populate max rpm
 
                         shooterDataPoint.speed = rpm / maxRPM;
+                        // shooterDataPoint.speed = 0.30;
                         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
                         shooterSubsystem.setFlywheelSpeed(shooterDataPoint.speed);
-                    },
-                    shooterSubsystem
-                ), // Update the shooter calculations every tick
-                Commands.sequence(
-                    Commands.waitSeconds(1.0),
-                    Commands.runOnce(
-                        () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
-                        feederSubsystem
-                    )
-                )
-            )
-        );
-
-        NamedCommands.registerCommand("ShootWheel", 
-            Commands.runOnce(
-                () -> {
-                    ShooterDataPoint shooterDataPoint = shooterSubsystem.shooterCalculateTrajectory();
-
-                    double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-                    double maxRPM = 1300; // MARK: Populate max rpm
-
-                    shooterDataPoint.speed = rpm / maxRPM;
-                    shooterDataPoint.speed = 0.30;
-                    Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
-
-                    if (shooterSubsystem.canShoot()) {
-                        shooterSubsystem.setFlywheelSpeed(shooterDataPoint.speed);
                     }
-
                 },
                 shooterSubsystem
             )
