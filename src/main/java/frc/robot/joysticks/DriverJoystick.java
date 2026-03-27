@@ -90,7 +90,7 @@ public class DriverJoystick {
         
         // MARK: Intake Out - LB
         joystick.leftBumper().onTrue(
-            NamedCommands.getCommand("IntakeDown")
+            NamedCommands.getCommand("IntakeRecalibrate")
         );
 
 

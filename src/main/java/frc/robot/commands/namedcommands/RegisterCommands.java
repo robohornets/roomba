@@ -90,6 +90,16 @@ public class RegisterCommands {
                 intakeSubsystem
             )
         );
+        
+        NamedCommands.registerCommand("IntakeRecalibrate", 
+            Commands.sequence(
+                intakeSubsystem.angleMotor.brakelessReset(1.0),
+                Commands.runOnce(
+                    () -> intakeSubsystem.setMinimumToCurrentPos(),
+                    intakeSubsystem
+                )
+            )
+        );
 
         // MARK: IntakeUp
         NamedCommands.registerCommand("IntakeUp",

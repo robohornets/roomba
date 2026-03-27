@@ -43,6 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle State
     public double anglePosition = 0.0;
     private double angleTarget = Double.NaN;
+    public double angleMinimum = IntakeConstants.INTAKE_MIN_VALUE;
     // public boolean forceIntakeDown = false;
 
 
@@ -104,6 +105,13 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
         angleMotor.goTo(targetPosition);
         angleTarget = targetPosition;
+    }
+
+
+    public void setMinimumToCurrentPos() {
+        double pos = angleMotor.getCurrentValue();
+        Logger.recordOutput("IntakeSubsystem/MinimumPosition", pos);
+        angleMotor.setMinValue(pos);
     }
 
     public IntakeStates getIntakeState() {
