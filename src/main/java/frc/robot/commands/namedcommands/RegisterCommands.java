@@ -6,6 +6,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeConstants;
@@ -18,18 +19,35 @@ public class RegisterCommands {
     IntakeSubsystem intakeSubsystem;
     ShooterSubsystem shooterSubsystem;
     FeederSubsystem feederSubsystem;
+    Drive drivetrain;
 
     public RegisterCommands(
         IntakeSubsystem intakeSubsystem, 
         ShooterSubsystem shooterSubsystem,
-        FeederSubsystem feederSubsystem
+        FeederSubsystem feederSubsystem,
+        Drive drivetrain
     ) {
         this.intakeSubsystem = intakeSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         this.feederSubsystem = feederSubsystem;
+        this.drivetrain = drivetrain;
     }
     
     public void registerCommands(){
+
+        NamedCommands.registerCommand("WiggleStart",
+            Commands.runOnce(
+                () ->  drivetrain.setWiggleAgitation(true),
+                drivetrain
+            )
+        );
+        NamedCommands.registerCommand("WiggleStop",
+            Commands.runOnce(
+                () ->  drivetrain.setWiggleAgitation(false),
+                drivetrain
+            )
+        );
+
         NamedCommands.registerCommand("ShootWithFeeder",
             Commands.parallel(
                 Commands.run(

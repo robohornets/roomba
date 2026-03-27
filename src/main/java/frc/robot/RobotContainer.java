@@ -55,7 +55,7 @@ public class RobotContainer {
     public final DebugJoystick debugJoystick = new DebugJoystick(new CommandXboxController(2), drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);
     
     // MARK: Register Commands
-    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, feederSubsystem);
+    public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, feederSubsystem, drivetrain);
 
     // MARK: Motor Config
     public static final TalonFXConfiguration mechanismsMotorConfiguration = new TalonFXConfiguration()
