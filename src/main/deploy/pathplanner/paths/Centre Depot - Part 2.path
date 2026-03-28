@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.41143287036357434,
+        "y": 6.940103153927096
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.825143012152778,
+        "y": 6.908675708912037
+      },
+      "isLocked": false,
+      "linkedName": "Centre Depot Part 1 End"
+    },
+    {
+      "anchor": {
+        "x": 2.8069390190972228,
+        "y": 5.178657190393519
+      },
+      "prevControl": {
+        "x": 2.0690890552057857,
+        "y": 5.583051679346699
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -32.79580930484294
+  },
+  "reversed": false,
+  "folder": "Centre Depot",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

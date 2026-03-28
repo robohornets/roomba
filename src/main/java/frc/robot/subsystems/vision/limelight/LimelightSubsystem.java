@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
@@ -72,8 +71,6 @@ public class LimelightSubsystem extends SubsystemBase {
 
         setIMUMode(4);
     }
-
-    Field2d limelightField2d = new Field2d();
 
     private int totalLimelightEstimates = 0;
     private int estimatesAddedToQuest = 0;
@@ -174,6 +171,7 @@ public class LimelightSubsystem extends SubsystemBase {
         Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
 
         Logger.recordOutput("Limelight/" + limelightName + "/AcceptedPose", transformedPose);
+        drivetrain.robotField2d.getObject("Limelight").setPose(transformedPose);
 
         // Add measurement to QuestNav pose estimator if enabled
         if (QuestNavConstants.USE_LIMELIGHT_FOR_VISION_MEASUREMENTS) {

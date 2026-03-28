@@ -25,6 +25,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,6 +42,8 @@ public class Drive extends SubsystemBase {
     
     public LimelightSubsystem limelightSubsystem;
 
+    public final Field2d robotField2d = new Field2d();
+
     // MARK: Constructor
     public Drive(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -48,6 +52,8 @@ public class Drive extends SubsystemBase {
         this.limelightSubsystem = new LimelightSubsystem(this, questNavSubsystem, "limelight-four");
 
         configureAutoBuilder();
+
+        SmartDashboard.putData("Field", robotField2d);
     }
 
     // MARK: Field Centric
@@ -57,7 +63,7 @@ public class Drive extends SubsystemBase {
             .withRotationalDeadband(DriveConstants.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-    // MARK: Heading Control
+    // MARK: Hub Centric
     public final SwerveRequest.FieldCentricFacingAngle driveFacingHub =
         new SwerveRequest.FieldCentricFacingAngle()
             .withHeadingPID(5, 0, 0)
@@ -300,6 +306,8 @@ public class Drive extends SubsystemBase {
     // MARK: Logging
     private void logValues() {
         Logger.recordOutput("SwerveDrive/Pose", getPose2d());
+        // Add to Field2d for visualizing in Elastic Dashboard
+        robotField2d.setRobotPose(getPose2d());
         
         // Log module states for AdvantageScope swerve visualization
         Logger.recordOutput("SwerveDrive/ModuleStates", drivetrain.getState().ModuleStates);

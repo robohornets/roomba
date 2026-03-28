@@ -33,6 +33,7 @@ import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
+import frc.robot.util.status.StatusChecks;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 
@@ -48,6 +49,8 @@ public class RobotContainer {
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(drivetrain);
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final FeederSubsystem feederSubsystem = new FeederSubsystem();
+
+    public final StatusChecks statusChecks = new StatusChecks(drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);
 
     // MARK: Xbox Controllers
     public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);

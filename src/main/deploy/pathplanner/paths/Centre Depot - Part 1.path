@@ -3,79 +3,84 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.622674768518519,
-        "y": 7.655257957175927
+        "x": 3.6262833478009266,
+        "y": 4.209195963541667
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6299217127542036,
-        "y": 7.656005397081356
+        "x": 2.946492621520982,
+        "y": 4.410357855894689
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1175990306712966,
-        "y": 7.428967230902778
+        "x": 2.2030596788126484,
+        "y": 4.93366746237617
       },
       "prevControl": {
-        "x": 1.335992547816416,
-        "y": 7.671321941663955
+        "x": 3.0624920428172784,
+        "y": 4.721286168973393
       },
       "nextControl": {
-        "x": 0.7449109178917661,
-        "y": 7.015389387761977
+        "x": 1.9603603742122908,
+        "y": 4.993642853550409
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.488262803819445,
-        "y": 5.365975260416667
+        "x": 0.5252015335580189,
+        "y": 4.93366746237617
       },
       "prevControl": {
-        "x": 0.17937723544928275,
-        "y": 5.743322756725376
+        "x": 1.04877358216913,
+        "y": 4.84633984374191
       },
       "nextControl": {
-        "x": 0.7162970578384296,
-        "y": 5.087399102648202
+        "x": -0.007171074346196682,
+        "y": 5.022462943719594
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.2262858072916667,
-        "y": 4.6377639612268515
+        "x": 0.41143287036357434,
+        "y": 6.940103153927096
       },
       "prevControl": {
-        "x": 1.473995442708334,
-        "y": 5.661353877314815
+        "x": 0.4463485570842047,
+        "y": 5.8587494317584605
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Centre Depot Part 1 End"
     }
   ],
-  "rotationTargets": [
+  "rotationTargets": [],
+  "constraintZones": [
     {
-      "waypointRelativePos": 2.022779605263158,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 2.7434827302631577,
-      "rotationDegrees": 0.0
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.393518999169439,
+      "maxWaypointRelativePos": 2.442171926910297,
+      "constraints": {
+        "maxVelocity": 1.75,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
-  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "IntakeDown",
-      "waypointRelativePos": 0.10430076827242518,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -86,7 +91,7 @@
     },
     {
       "name": "IntakeIn",
-      "waypointRelativePos": 0.6268947259136209,
+      "waypointRelativePos": 1.616330980066448,
       "endWaypointRelativePos": 3.0,
       "command": {
         "type": "named",
@@ -106,13 +111,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -14.735559407402302
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Depot Auto",
+  "folder": "Centre Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

@@ -43,13 +43,13 @@ public class DriverJoystick {
         );
 
         // MARK: X - Lock to hub
-        // joystick.x().onTrue(
-            // Commands.runOnce(
-            //     () -> {
-            //         drivetrain.toggleLockedToHub();
-            //     }
-            // )
-        // );
+        joystick.x().onTrue(
+            Commands.runOnce(
+                () -> {
+                    drivetrain.toggleLockedToHub();
+                }
+            )
+        );
 
         // MARK: Reset Shooter Angle - Y
         joystick.y().whileTrue(

@@ -117,6 +117,8 @@ public class Robot extends LoggedRobot {
     // MARK: Robot Periodic
     @Override
     public void robotPeriodic() {
+        robotContainer.statusChecks.runAllStatusChecks();
+
         m_timeAndJoystickReplay.update();
 
         CommandScheduler.getInstance().run();

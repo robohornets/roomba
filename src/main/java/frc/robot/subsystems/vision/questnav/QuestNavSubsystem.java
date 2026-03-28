@@ -144,6 +144,7 @@ public class QuestNavSubsystem extends SubsystemBase {
 
                 // Log pose with AdvantageKit and put to NetworkTables
                 Logger.recordOutput("QuestNav/Pose", transformedPose.toPose2d());
+                drivetrain.robotField2d.getObject("QuestNav").setPose(transformedPose.toPose2d());
 
                 // Add to both drivetrain and local pose estimator
                 drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
