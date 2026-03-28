@@ -1,4 +1,4 @@
-package frc.robot.util.status;
+package frc.robot.util.statuschecks;
 
 public class StatusCheckConstants {
     public static final String STATUS_GOOD_HEX = "#41A54B";

@@ -33,7 +33,7 @@ import frc.robot.joysticks.OperatorJoystick;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
-import frc.robot.util.status.StatusChecks;
+import frc.robot.util.statuschecks.StatusChecks;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 

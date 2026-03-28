@@ -1,11 +1,9 @@
-package frc.robot.util.status;
+package frc.robot.util.statuschecks;
 
 import org.littletonrobotics.junction.Logger;
 
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
-import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;

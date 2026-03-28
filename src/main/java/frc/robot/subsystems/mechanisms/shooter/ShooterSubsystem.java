@@ -202,76 +202,36 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: Log Motors
     private void logMotors() {
-        // Log connection status
+        logBasicMotorInformation(leftShooterMotor, "LeftShooterMotor");
+        logBasicMotorInformation(rightShooterMotor, "RightShooterMotor");
+        logBasicMotorInformation(shooterPitchMotor, "ShooterPitchMotor");
+    }
+
+    private void logBasicMotorInformation(Motor motor, String name) {
+        // Log connection
         Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/MotorConnections/ShooterPitchMotor", 
-            shooterPitchMotor.getMotor().isConnected()
+            "MotorStatus/ShooterSubsystem/MotorConnections/" + name, 
+            motor.getMotor().isConnected()
         );
 
+        // Log voltage
+         Logger.recordOutput(
+            "MotorStatus/ShooterSubsystem/Voltage/Output/" + name, 
+            motor.getMotor().getMotorVoltage().getValueAsDouble()
+        );
         Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/MotorConnections/LeftShooterMotor", 
-            leftShooterMotor.getMotor().isConnected()
+            "MotorStatus/ShooterSubsystem/Voltage/Supply/" + name, 
+            motor.getMotor().getSupplyVoltage().getValueAsDouble()
         );
 
+        // Log current
         Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/MotorConnections/RightShooterMotor", 
-            rightShooterMotor.getMotor().isConnected()
-        );
-
-        // Log current readings to AdvantageKit
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Stator/ShooterPitchMotor", 
-            shooterPitchMotor.getMotor().getStatorCurrent().getValueAsDouble()
+            "MotorStatus/ShooterSubsystem/Current/Stator/" + name, 
+            motor.getMotor().getStatorCurrent().getValueAsDouble()
         );
         Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Supply/ShooterPitchMotor", 
-            shooterPitchMotor.getMotor().getSupplyCurrent().getValueAsDouble()
-        );
-
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Stator/LeftShooterMotor", 
-            leftShooterMotor.getMotor().getStatorCurrent().getValueAsDouble()
-        );
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Supply/LeftShooterMotor", 
-            leftShooterMotor.getMotor().getSupplyCurrent().getValueAsDouble()
-        );
-
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Stator/RightShooterMotor", 
-            rightShooterMotor.getMotor().getStatorCurrent().getValueAsDouble()
-        );
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Supply/RightShooterMotor", 
-            rightShooterMotor.getMotor().getSupplyCurrent().getValueAsDouble()
-        );
-
-        // Log voltage readings to AdvantageKit
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Voltage/Output/ShooterPitchMotor", 
-            shooterPitchMotor.getMotor().getMotorVoltage().getValueAsDouble()
-        );
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Supply/ShooterPitchMotor", 
-            shooterPitchMotor.getMotor().getSupplyVoltage().getValueAsDouble()
-        );
-
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Voltage/Output/LeftShooterMotor", 
-            leftShooterMotor.getMotor().getMotorVoltage().getValueAsDouble()
-        );
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Supply/LeftShooterMotor", 
-            leftShooterMotor.getMotor().getSupplyVoltage().getValueAsDouble()
-        );
-
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Voltage/Output/RightShooterMotor", 
-            rightShooterMotor.getMotor().getMotorVoltage().getValueAsDouble()
-        );
-        Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/Current/Supply/RightShooterMotor", 
-            rightShooterMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+            "MotorStatus/ShooterSubsystem/Current/Supply/" + name, 
+            motor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
     }
 }
