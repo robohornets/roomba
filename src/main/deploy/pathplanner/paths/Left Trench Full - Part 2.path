@@ -36,7 +36,7 @@
         "y": 7.666227758007118
       },
       "prevControl": {
-        "x": 3.8730786665739045,
+        "x": 3.873078666573905,
         "y": 7.735222204546848
       },
       "nextControl": {
@@ -57,7 +57,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Trench Shoot"
     }
   ],
   "rotationTargets": [
@@ -73,10 +73,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6534031413612553,
-      "maxWaypointRelativePos": 2.0670157068062833,
+      "minWaypointRelativePos": 0.7479171342010773,
+      "maxWaypointRelativePos": 1.3176124887791747,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 2.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 720.0,
@@ -111,7 +111,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 3.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -123,7 +123,7 @@
     "rotation": -28.700848741385283
   },
   "reversed": false,
-  "folder": "Left Trench Full",
+  "folder": "Left Trench",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

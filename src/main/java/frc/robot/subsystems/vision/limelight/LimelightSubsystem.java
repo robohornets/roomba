@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers.PoseEstimate;
@@ -83,6 +84,7 @@ public class LimelightSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        updateHeartbeat();
         addOdometryMeasurement();
     }
 
@@ -179,6 +181,26 @@ public class LimelightSubsystem extends SubsystemBase {
             Logger.recordOutput("QuestNav/" + limelightName + "/LimelightEstimates", estimatesAddedToQuest);
             questNavSubsystem.addVisionMeasurement(transformedPose, estimate.timestampSeconds, LimelightConstants.calculateDynamicStdDevs(estimate), estimate);
         }
+    }
+
+    public int lastHeartbeatValue = -1;
+    private double lastHeartbeatChangeTime = 0.0;
+    private boolean isConnected = false;
+
+    private static final double HEARTBEAT_TIMEOUT_SECONDS = 1.5;
+
+    private void updateHeartbeat() {
+        int currentHeartbeat = (int) LimelightHelpers.getHeartbeat(limelightName);
+        if (currentHeartbeat != lastHeartbeatValue) {
+            lastHeartbeatValue = currentHeartbeat;
+            lastHeartbeatChangeTime = Timer.getFPGATimestamp();
+        }
+        isConnected = (Timer.getFPGATimestamp() - lastHeartbeatChangeTime) < HEARTBEAT_TIMEOUT_SECONDS;
+        Logger.recordOutput("Limelight/" + limelightName + "/Connected", isConnected);
+    }
+
+    public boolean limelightIsConnected() {
+        return isConnected;
     }
 
     // MARK: Get Bot Pose

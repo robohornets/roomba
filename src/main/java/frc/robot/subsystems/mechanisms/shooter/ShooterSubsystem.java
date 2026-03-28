@@ -147,7 +147,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
         double[] trajectory = (new MathSubsystem()).calculateTrajectoryFromExitAngle(currentDistance, aimHeight, 65);
 
-
         return new ShooterDataPoint(currentDistance, trajectory[1], trajectory[0]);
     }
 
@@ -192,7 +191,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: Logging
     private void logValues() {
-        Logger.recordOutput("ShooterSubsystem/MotorConnected", shooterPitchMotor.getMotor().isConnected());
         Logger.recordOutput("ShooterSubsystem/PigeonAngle", getPigeonPosition());
         Logger.recordOutput("ShooterSubsystem/PitchMotorOutput", shooterPitchMotor.getMotor().get());
         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", leftShooterMotor.getMotor().get());
@@ -211,13 +209,13 @@ public class ShooterSubsystem extends SubsystemBase {
         );
 
         Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/MotorConnections/ShooterPitchMotor", 
-            shooterPitchMotor.getMotor().isConnected()
+            "MotorStatus/ShooterSubsystem/MotorConnections/LeftShooterMotor", 
+            leftShooterMotor.getMotor().isConnected()
         );
 
         Logger.recordOutput(
-            "MotorStatus/ShooterSubsystem/MotorConnections/ShooterPitchMotor", 
-            shooterPitchMotor.getMotor().isConnected()
+            "MotorStatus/ShooterSubsystem/MotorConnections/RightShooterMotor", 
+            rightShooterMotor.getMotor().isConnected()
         );
 
         // Log current readings to AdvantageKit

@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.8069390190972228,
-        "y": 5.178657190393519
+        "x": 2.2906834821428577,
+        "y": 3.9796891964285717
       },
       "prevControl": {
-        "x": 2.0690890552057857,
-        "y": 5.583051679346699
+        "x": 2.2257762946428574,
+        "y": 4.837492544642857
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 3.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -32.79580930484294
+    "rotation": 1.1654183501263253
   },
   "reversed": false,
   "folder": "Centre Depot",

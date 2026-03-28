@@ -30,10 +30,31 @@ public class StatusChecks {
     }
 
     public boolean allChecksPassed = false;
+    public boolean visionChecksPassed = false;
+
+    public String checkStatusIndicator = StatusCheckConstants.STATUS_BAD_HEX;
 
     public void runAllStatusChecks() {
-        allChecksPassed = drivetrainStatusChecks() && shooterStatusChecks() && intakeStatusChecks() && feederStatusChecks();
+        allChecksPassed = drivetrainStatusChecks() && 
+            shooterStatusChecks() && 
+            intakeStatusChecks() && 
+            feederStatusChecks();
+        visionChecksPassed = visionStatusChecks();
 
+        // If vision and mechanisms pass, display green
+        if (allChecksPassed && visionChecksPassed) {
+            checkStatusIndicator = StatusCheckConstants.STATUS_GOOD_HEX;
+        }
+        // If only mechanism subsystems pass, display yellow
+        else if (allChecksPassed) {
+            checkStatusIndicator = StatusCheckConstants.STATUS_NEUTRAL_HEX;
+        }
+        // If mechanisms do not pass, display red
+        else {
+            checkStatusIndicator = StatusCheckConstants.STATUS_BAD_HEX;
+        }
+
+        Logger.recordOutput("StatusChecks/StatusCheckIndicator", checkStatusIndicator);
         Logger.recordOutput("StatusChecks/AllChecksPassed", allChecksPassed);
     }
 
@@ -71,6 +92,13 @@ public class StatusChecks {
             genericMotorCheck(feederSubsystem.shooterFeederMotor);
 
         return motorsConnected;
+    }
+
+    private boolean visionStatusChecks() {
+        boolean visionConnected = drivetrain.questNavSubsystem.questIsConnected() &&
+            drivetrain.limelightSubsystem.limelightIsConnected();
+        
+        return visionConnected;
     }
 
     private boolean genericMotorCheck(Motor motor) {
