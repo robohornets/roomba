@@ -148,7 +148,7 @@ public class LimelightSubsystem extends SubsystemBase {
         }
 
         // Translate the pose by its offset from the centre of the robot
-        Pose2d transformedPose = estimate.pose.transformBy(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE.inverse());
+        Pose2d transformedPose = estimate.pose;
         Logger.recordOutput("Limelight/" + limelightName + "/Pose", transformedPose);
 
         Matrix<N3, N1> calculatedStdDevs = LimelightConstants.calculateDynamicStdDevs(estimate);

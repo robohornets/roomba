@@ -72,8 +72,7 @@ public class StatusChecks {
 
     private boolean shooterStatusChecks() {
         boolean motorsConnected = genericMotorCheck(shooterSubsystem.leftShooterMotor) && 
-            genericMotorCheck(shooterSubsystem.rightShooterMotor) &&
-            genericMotorCheck(shooterSubsystem.shooterPitchMotor);
+            genericMotorCheck(shooterSubsystem.rightShooterMotor);
         
         return motorsConnected;
     }

@@ -98,7 +98,7 @@ public class Robot extends LoggedRobot {
         DriverStation.silenceJoystickConnectionWarning(true);
 
         // Enable motors (WhatTime Motor.isEnabled defaults to false — drive/goTo do nothing until this is called)
-        robotContainer.shooterSubsystem.shooterPitchMotor.toggleEnabled(true);
+        // robotContainer.shooterSubsystem.shooterPitchMotor.toggleEnabled(true);
         robotContainer.shooterSubsystem.leftShooterMotor.toggleEnabled(true);
         robotContainer.shooterSubsystem.rightShooterMotor.toggleEnabled(true);
         robotContainer.intakeSubsystem.intakeWheelsMotor.toggleEnabled(true);
@@ -107,7 +107,7 @@ public class Robot extends LoggedRobot {
         robotContainer.feederSubsystem.shooterFeederMotor.toggleEnabled(true);
 
         // Apply and log motor configs to AdvantageKit
-        Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/LeftShooter", robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/RightShooter", robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/IntakeWheels", robotContainer.intakeSubsystem.intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());

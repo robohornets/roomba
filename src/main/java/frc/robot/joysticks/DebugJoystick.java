@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -13,7 +12,6 @@ import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
-import frc.robot.subsystems.vision.limelight.LimelightConstants;
 import frc.robot.subsystems.vision.limelight.LimelightHelpers;
 
 public class DebugJoystick {
@@ -102,13 +100,7 @@ public class DebugJoystick {
                 )
             );
 
-        joystick.leftBumper().onTrue(
-            Commands.runOnce(
-                () -> {
-                    shooterSubsystem.setPitchTarget(50);
-                }
-            )
-        );
+        joystick.leftBumper();
 
         // Reset pose to limelight output
         joystick.povUp().onTrue(
@@ -133,9 +125,6 @@ public class DebugJoystick {
                     // Reset QuestNav pose to Limelight position
                     drivetrain.questNavSubsystem.setQuestPose(
                         LimelightHelpers.getBotPose3d_wpiBlue("limelight-four")
-                            .transformBy(
-                                new Transform3d(LimelightConstants.LIMELIGHT_4_TRANSFORM_FROM_CENTRE).inverse()
-                            )
                     );
 
                     Logger.recordOutput("QuestNav/SetQuestPose", false);
