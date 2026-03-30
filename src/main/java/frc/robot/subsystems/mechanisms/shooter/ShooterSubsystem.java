@@ -9,13 +9,8 @@ import org.littletonrobotics.junction.Logger;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
 
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.math.MathSubsystem;
@@ -60,6 +55,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public final MotorGroup shooterMotors = new MotorGroup(Arrays.asList(leftShooterMotor, rightShooterMotor))
         .setMotorSpeed(0.4)
         .setAccelerationSteps(50);
+    
     /** IMU sensor for shooter orientation feedback. */
     public final Pigeon2 shooterPigeon = new Pigeon2(34, "Mechanisms");
 

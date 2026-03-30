@@ -1,7 +1,5 @@
 package frc.robot.subsystems.vision.limelight;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.Matrix;

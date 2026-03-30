@@ -1,7 +1,5 @@
 package frc.robot.joysticks;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;

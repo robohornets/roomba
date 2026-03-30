@@ -37,6 +37,7 @@ public class StatusChecks {
             shooterStatusChecks() && 
             intakeStatusChecks() && 
             feederStatusChecks();
+        
         visionChecksPassed = visionStatusChecks();
 
         // If vision and mechanisms pass, display green

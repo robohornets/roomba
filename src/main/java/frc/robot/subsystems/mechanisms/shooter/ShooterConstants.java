@@ -10,9 +10,6 @@ public class ShooterConstants {
 
     // --- Shooter configuration and tuning fields ---
 
-    /** Entry angle to the hub in degrees (TODO: calculate actual value). */
-    // public double hubEnterAngle = -70;
-
     /** Speed for pitching the shooter (open-loop, 0..1). */
     // public double shooterPitchSpeed = 0.1;
     /** Hold speed for maintaining shooter pitch (open-loop, 0..1). */
