@@ -26,8 +26,8 @@ public class LimelightConstants {
     // TODO: Move transform logic to Limelight pipeline configuration
     // Position of Limelight relative to the centre of the robot in metres
     public static final Transform2d LIMELIGHT_4_TRANSFORM_FROM_CENTRE = new Transform2d(
-        new Translation2d(0.0762, -0.26035), 
-        new Rotation2d(-0.174532925199433)
+        new Translation2d(0.0, 0.0), 
+        new Rotation2d(0.0)
     );
 
     /** Calculate dynamic standard deviations */

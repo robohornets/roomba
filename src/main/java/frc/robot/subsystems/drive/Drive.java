@@ -41,6 +41,7 @@ public class Drive extends SubsystemBase {
     public QuestNavSubsystem questNavSubsystem;
     
     public LimelightSubsystem limelightSubsystem;
+    public LimelightSubsystem limelightTwoSubsystem;
 
     public final Field2d robotField2d = new Field2d();
 
@@ -50,6 +51,7 @@ public class Drive extends SubsystemBase {
 
         this.questNavSubsystem = new QuestNavSubsystem(this);
         this.limelightSubsystem = new LimelightSubsystem(this, questNavSubsystem, "limelight-four");
+        this.limelightTwoSubsystem = new LimelightSubsystem(this, questNavSubsystem, "limelight-two");
 
         configureAutoBuilder();
 
