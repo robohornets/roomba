@@ -113,6 +113,17 @@
           "name": "IntakeIn"
         }
       }
+    },
+    {
+      "name": "ShootWheel",
+      "waypointRelativePos": 2.250118972081219,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootWheel"
+        }
+      }
     }
   ],
   "globalConstraints": {

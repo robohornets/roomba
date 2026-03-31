@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 5.152641600947584,
-        "y": 0.25402307854179423
+        "y": 0.2540230785417943
       },
       "isLocked": false,
       "linkedName": null
@@ -95,6 +95,17 @@
         "type": "named",
         "data": {
           "name": "IntakeIn"
+        }
+      }
+    },
+    {
+      "name": "ShootWheel",
+      "waypointRelativePos": 2.162347319162439,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootWheel"
         }
       }
     }

@@ -46,16 +46,23 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.48597861842105267,
-      "rotationDegrees": 0.0
-    },
-    {
       "waypointRelativePos": 1.497327302631579,
       "rotationDegrees": 141.52027658850795
     }
   ],
   "constraintZones": [],
-  "pointTowardsZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 6.9,
+        "y": 5.8
+      },
+      "rotationOffset": 90.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 1.2761342005076137,
+      "name": "Point Towards Zone"
+    }
+  ],
   "eventMarkers": [
     {
       "name": "IntakeIn",
