@@ -78,14 +78,6 @@ public class DriverJoystick {
                 )
             );
 
-        joystick.rightBumper().whileTrue(
-            Commands.runEnd(
-                () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT),
-                () -> feederSubsystem.setFeederState(FeederState.OFF),
-                feederSubsystem
-            )
-        );
-        
         // MARK: Intake Out - LB
         joystick.leftBumper().onTrue(
             NamedCommands.getCommand("IntakeDown")

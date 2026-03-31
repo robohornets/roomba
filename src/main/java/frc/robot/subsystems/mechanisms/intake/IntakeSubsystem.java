@@ -16,7 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
         .setMotorSpeed(0.5)
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
-        .setPG(0.4)
+        .setPG(0.5)
         .setThreshold(IntakeConstants.INTAKE_THRESHOLD);
     // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
@@ -51,7 +51,6 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // runAngleControl();
-        runIntakeWheels();
 
         logValues();
         logMotors();
@@ -83,26 +82,7 @@ public class IntakeSubsystem extends SubsystemBase {
     //     }
     // }
 
-    // MARK: Intake Wheels
-    private void runIntakeWheels() {
-        switch (intakeState) {
-            case INTAKE_IN:
-                intakeWheelsMotor.getMotor().set(IntakeConstants.INTAKE_WHEELS_SPEED);
-                break;
-            case INTAKE_OUT:
-                intakeWheelsMotor.getMotor().set(-IntakeConstants.INTAKE_WHEELS_SPEED / 2);
-                break;
-            case OFF:
-                intakeWheelsMotor.getMotor().set(0.0);
-                break;
-            default:
-                intakeWheelsMotor.getMotor().set(0.0);
-                break;
-        }
-    }
-
     public void setPosition(double targetPosition) {
-        Logger.recordOutput("IntakeSubsystem/SetPosition", targetPosition);
         angleMotor.goTo(targetPosition);
         angleTarget = targetPosition;
     }
@@ -117,6 +97,21 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
         this.intakeState = intakeState;
+
+        switch (intakeState) {
+            case INTAKE_IN:
+                intakeWheelsMotor.drive(IntakeConstants.INTAKE_WHEELS_SPEED);
+                break;
+            case INTAKE_OUT:
+                intakeWheelsMotor.drive(-IntakeConstants.INTAKE_WHEELS_SPEED / 2);
+                break;
+            case OFF:
+                intakeWheelsMotor.drive(0.0);
+                break;
+            default:
+                intakeWheelsMotor.drive(0.0);
+                break;
+        }
 
         // forceIntakeDown = intakeState.equals(IntakeStates.INTAKE_IN);
     }
