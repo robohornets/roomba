@@ -5,7 +5,6 @@
   "pathFolders": [
     "Centre Depot",
     "Generic Paths",
-    "Left Bump Full",
     "Left Trench",
     "Right Bump Double",
     "Right Trench Full"
@@ -13,8 +12,9 @@
   "autoFolders": [
     "Left Full",
     "Left Half",
-    "Right Half",
+    "Double Neutral Zone",
     "Right Full",
+    "Right Half",
     "Testing Pose"
   ],
   "defaultMaxVel": 3.5,

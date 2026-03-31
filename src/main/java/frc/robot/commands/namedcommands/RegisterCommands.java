@@ -154,7 +154,7 @@ public class RegisterCommands {
                     () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
                     feederSubsystem
                 ),
-                Commands.waitSeconds(6.5),
+                Commands.waitSeconds(5),
                 getShootStopCommand(),
                 Commands.runOnce(
                     () -> feederSubsystem.setFeederState(FeederState.OFF),

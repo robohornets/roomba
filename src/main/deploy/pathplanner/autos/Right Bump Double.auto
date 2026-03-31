@@ -23,15 +23,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AutoShootSequence"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Right Bump Double - Part 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShootSequence"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Half",
+  "folder": "Double Neutral Zone",
   "choreoAuto": false
 }
