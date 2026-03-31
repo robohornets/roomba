@@ -6,11 +6,17 @@
     "Centre Depot",
     "Generic Paths",
     "Left Bump Full",
-    "Basic Depot Autos",
     "Left Trench",
+    "Right Bump Double",
     "Right Trench Full"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Left Full",
+    "Left Half",
+    "Right Half",
+    "Right Full",
+    "Testing Pose"
+  ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

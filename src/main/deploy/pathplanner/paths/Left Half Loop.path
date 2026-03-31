@@ -3,45 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.618749855324074,
-        "y": 2.138855613425926
+        "x": 7.63627885549082,
+        "y": 5.333796897069209
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.77859875388722,
-        "y": 1.2118545628561121
+        "x": 7.6756159283181145,
+        "y": 5.086911104239042
       },
       "isLocked": false,
-      "linkedName": "Left Full Loop Start"
+      "linkedName": "Left Trench Half 2"
     },
     {
       "anchor": {
-        "x": 6.505929615162038,
-        "y": 1.43295189525463
+        "x": 7.296410387976696,
+        "y": 4.412997219279661
       },
       "prevControl": {
-        "x": 6.799207086478625,
-        "y": 1.1443928577422602
+        "x": 7.761298904124236,
+        "y": 4.657552246100957
       },
       "nextControl": {
-        "x": 6.1117797933221745,
-        "y": 1.8207603849937142
+        "x": 6.90619341833402,
+        "y": 4.207723227424797
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.8198977643891245,
-        "y": 2.951088618908898
+        "x": 6.219369924081922,
+        "y": 4.6719146694032485
       },
       "prevControl": {
-        "x": 6.83431701315325,
-        "y": 2.591091267213982
+        "x": 6.380783122816522,
+        "y": 4.354839347471268
+      },
+      "nextControl": {
+        "x": 5.962351468796443,
+        "y": 5.1767941345955455
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.92636383918393,
+        "y": 6.187499889297908
+      },
+      "prevControl": {
+        "x": 6.808865587482345,
+        "y": 5.528989009533898
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Full Loop End"
+      "linkedName": "Left Trench Half 3"
     }
   ],
   "rotationTargets": [],
@@ -49,12 +65,12 @@
   "pointTowardsZones": [
     {
       "fieldPosition": {
-        "x": 7.15,
-        "y": 1.9
+        "x": 7.0,
+        "y": 5.0
       },
       "rotationOffset": -90.0,
-      "minWaypointRelativePos": 0.13003648477157367,
-      "maxWaypointRelativePos": 1.599361516497462,
+      "minWaypointRelativePos": 0.3205702728426389,
+      "maxWaypointRelativePos": 2.5948405774111674,
       "name": "Point Towards Zone"
     }
   ],
@@ -62,7 +78,7 @@
     {
       "name": "IntakeIn",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 2.0,
+      "endWaypointRelativePos": 3.0,
       "command": {
         "type": "named",
         "data": {
@@ -81,12 +97,12 @@
   },
   "goalEndState": {
     "velocity": 2.0,
-    "rotation": -90.0
+    "rotation": -103.97473086915045
   },
   "reversed": false,
   "folder": "Generic Paths",
   "idealStartingState": {
-    "velocity": 1.5,
+    "velocity": 2.0,
     "rotation": 90.0
   },
   "useDefaultConstraints": true

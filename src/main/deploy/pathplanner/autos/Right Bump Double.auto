@@ -7,43 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Full - Part 1"
+            "pathName": "Right Bump Double - Part 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Full Loop"
+            "pathName": "Right Bump Double Loop"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Full - Part 2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoShootSequence"
+            "pathName": "Right Bump Double - Part 2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Shoot to Depot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoShootSequence"
+            "pathName": "Right Bump Double - Part 3"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Left Full",
+  "folder": "Right Half",
   "choreoAuto": false
 }

@@ -8,59 +8,55 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.7984211222694775,
-        "y": 7.124675574906971
+        "x": 5.455928530092593,
+        "y": 7.19860865162037
       },
       "isLocked": false,
       "linkedName": "Left Trench Start"
     },
     {
       "anchor": {
-        "x": 7.160853949652778,
-        "y": 7.029202256944444
+        "x": 6.954896771275545,
+        "y": 7.19860865162037
       },
       "prevControl": {
-        "x": 6.7047045079777305,
-        "y": 7.578270219602648
+        "x": 6.500635360881439,
+        "y": 7.176768656451076
       },
       "nextControl": {
-        "x": 7.693869075310608,
-        "y": 6.38761092223568
+        "x": 7.308734659351464,
+        "y": 7.215620481349836
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.618749855324074,
-        "y": 2.138855613425926
+        "x": 7.63627885549082,
+        "y": 5.333796897069209
       },
       "prevControl": {
-        "x": 7.639859474311441,
-        "y": 3.4786492540607346
+        "x": 7.784729376324153,
+        "y": 6.33399921654308
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Full Loop Start"
+      "linkedName": "Left Trench Half 2"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.1729029605263157,
+      "waypointRelativePos": 0.2003171247357294,
       "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 1.0609580592105259,
-      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.5277486910994709,
-      "maxWaypointRelativePos": 1.2314136125654458,
+      "minWaypointRelativePos": 0.7335421954314715,
+      "maxWaypointRelativePos": 1.5217124048223354,
       "constraints": {
-        "maxVelocity": 2.5,
+        "maxVelocity": 1.75,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -73,7 +69,7 @@
   "eventMarkers": [
     {
       "name": "IntakeDown",
-      "waypointRelativePos": 0.3688745847176078,
+      "waypointRelativePos": 0.20576221446700507,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -84,7 +80,7 @@
     },
     {
       "name": "IntakeIn",
-      "waypointRelativePos": 0.7300924003322256,
+      "waypointRelativePos": 0.4314324238578679,
       "endWaypointRelativePos": 2.0,
       "command": {
         "type": "named",
@@ -103,7 +99,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.5,
+    "velocity": 2.0,
     "rotation": 90.0
   },
   "reversed": false,

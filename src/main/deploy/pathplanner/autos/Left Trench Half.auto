@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Testing Pose Centre"
+            "pathName": "Left Trench Half - Part 1"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "IntakeDown"
+            "pathName": "Left Half Loop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Half - Part 2"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Testing Pose",
+  "folder": "Left Half",
   "choreoAuto": false
 }

@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.613180835098871,
+        "y": 2.401463629943503
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.886847468661723,
+        "y": 2.7755899099576267
+      },
+      "isLocked": false,
+      "linkedName": "Right Bump Double 2"
+    },
+    {
+      "anchor": {
+        "x": 3.056038356285311,
+        "y": 2.5784139411193507
+      },
+      "prevControl": {
+        "x": 4.181371906717937,
+        "y": 2.1131699211999604
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Bump Double Shoot"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 41.86626693936349
+  },
+  "reversed": false,
+  "folder": "Right Bump Double",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 105.74858899561079
+  },
+  "useDefaultConstraints": true
+}

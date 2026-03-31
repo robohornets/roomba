@@ -33,28 +33,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     TreeMap<Double, ShooterDataPoint> dataPoints = new TreeMap<>();
 
-    // public ShooterConstants shooterConstants = new ShooterConstants();
-
     // MARK: Motors
-    /** Motor controlling the shooter angle */
-    // public final Motor shooterPitchMotor = new Motor(11, "Mechanisms")
-    //     .setFree(false)
-    //     .setRange(ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE)
-    //     .setMotorSpeed(0.4)
-    //     .setHoldSpeed(0.0)
-    //     .setPG(0.01)
-    //     .setThreshold(ShooterConstants.POSITION_THRESHOLD)
-    //     .setPositionSupplier(() -> getPigeonPosition());
-
     public final Motor leftShooterMotor = new Motor(13, "Mechanisms");
     public final Motor rightShooterMotor = new Motor(14, "Mechanisms", true);
 
     public final MotorGroup shooterMotors = new MotorGroup(Arrays.asList(leftShooterMotor, rightShooterMotor))
         .setMotorSpeed(0.4)
         .setAccelerationSteps(50);
-    
-    /** IMU sensor for shooter orientation feedback. */
-    // public final Pigeon2 shooterPigeon = new Pigeon2(34, "Mechanisms");
 
     // MARK: Constructor
     /**
@@ -73,14 +58,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double shooterAngleTarget = 65;
 
-    /** Shared pitch target used by manual joystick control and button bindings. */
-    public double pitchTarget = ShooterConstants.SHOOTER_MAX_ANGLE;
-    // MARK: Set Pitch Target
-    // public void setPitchTarget(double pitch) {
-    //     // pitchTarget = MathUtil.clamp(pitch, ShooterConstants.SHOOTER_MIN_ANGLE, ShooterConstants.SHOOTER_MAX_ANGLE);
-    //     shooterPitchMotor.goTo(pitchTarget / 180);
-    // }
-
     /** Shared flywheel speed target used by manual joystick control and button bindings. */
     public double flywheelSpeed = 0.0;
 
@@ -98,19 +75,6 @@ public class ShooterSubsystem extends SubsystemBase {
         logValues();
         logMotors();
     }
-
-    // MARK: Get Pigeon
-    // public double getPigeonPosition() {
-    //     return shooterPigeon.getRoll().refresh().getValueAsDouble() * -1;
-    // }
-
-    // MARK: Increment Shooter
-    /** For testing shooter angle manually */
-    // public void incrementShooterAngle(double incrementValue) {
-    //     shooterAngleTarget += incrementValue;
-        
-    //     shooterPitchMotor.goTo(shooterAngleTarget);
-    // }
 
     // MARK: CanShoot
     public Boolean canShoot() {
@@ -139,13 +103,12 @@ public class ShooterSubsystem extends SubsystemBase {
     // MARK: GetRequiredRPM
     public double getRequiredRPM(ShooterDataPoint shooterDataPoint){
         double vWheel = 2 * shooterDataPoint.speed;
-        return vWheel * 60 / (Math.PI * 4 * 0.0254); // get rpm required for wheel with diameter of 4 inches
+         // get rpm required for wheel with diameter of 4 inches
+        return vWheel * 60 / (Math.PI * 4 * 0.0254);
     }
 
     // MARK: Logging
     private void logValues() {
-        // Logger.recordOutput("ShooterSubsystem/PigeonAngle", getPigeonPosition());
-        // Logger.recordOutput("ShooterSubsystem/PitchMotorOutput", shooterPitchMotor.getMotor().get());
         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", leftShooterMotor.getMotor().get());
         Logger.recordOutput("ShooterSubsystem/TargetAngle", shooterAngleTarget);
         Logger.recordOutput("ShooterSubsystem/CanShoot", canShoot() || isShooting());
@@ -157,7 +120,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private void logMotors() {
         logBasicMotorInformation(leftShooterMotor, "LeftShooterMotor");
         logBasicMotorInformation(rightShooterMotor, "RightShooterMotor");
-        // logBasicMotorInformation(shooterPitchMotor, "ShooterPitchMotor");
     }
 
     private void logBasicMotorInformation(Motor motor, String name) {

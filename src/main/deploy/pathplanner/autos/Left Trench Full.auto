@@ -23,52 +23,15 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootWheel"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FeederIn"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 6.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootStop"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FeederOff"
-                }
-              }
-            ]
+            "name": "AutoShootSequence"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Left Full",
   "choreoAuto": false
 }

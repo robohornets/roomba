@@ -36,8 +36,8 @@
         "y": 6.4938203125
       },
       "prevControl": {
-        "x": 0.17309825044162008,
-        "y": 6.282719894222302
+        "x": 0.17309825044161933,
+        "y": 6.282719894222301
       },
       "nextControl": {
         "x": 0.8084673214285719,
@@ -102,7 +102,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeIn",
+      "waypointRelativePos": 0.9544336928934015,
+      "endWaypointRelativePos": 2.7073286802030467,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIn"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 3.0,

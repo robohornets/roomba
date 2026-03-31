@@ -1,0 +1,150 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.056038356285311,
+        "y": 2.5784139411193507
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.9997647427857124,
+        "y": 2.3981790801670657
+      },
+      "isLocked": false,
+      "linkedName": "Right Bump Double Shoot"
+    },
+    {
+      "anchor": {
+        "x": 5.436992178799553,
+        "y": 2.5784139411193507
+      },
+      "prevControl": {
+        "x": 4.73953864007889,
+        "y": 2.103727090557361
+      },
+      "nextControl": {
+        "x": 6.084399828636932,
+        "y": 3.019039561708721
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.903497157394928,
+        "y": 3.780050262623587
+      },
+      "prevControl": {
+        "x": 5.924338796506099,
+        "y": 3.5309205251790985
+      },
+      "nextControl": {
+        "x": 5.8471983352519965,
+        "y": 4.4530160837899695
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.0733387402895485,
+        "y": 4.736898062323446
+      },
+      "prevControl": {
+        "x": 5.873619872008814,
+        "y": 4.5865239500146355
+      },
+      "nextControl": {
+        "x": 6.65101676181531,
+        "y": 5.171848552655388
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.4096353614936445,
+        "y": 3.780050262623587
+      },
+      "prevControl": {
+        "x": 7.580627661710824,
+        "y": 4.484640622605017
+      },
+      "nextControl": {
+        "x": 7.3126097644969335,
+        "y": 3.3802468783279385
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.788241799183622,
+        "y": 3.0533919996593704
+      },
+      "prevControl": {
+        "x": 7.026623403390343,
+        "y": 3.128719357079034
+      },
+      "nextControl": {
+        "x": 6.529312591313157,
+        "y": 2.971571705461103
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.056038356285311,
+        "y": 2.5784139411193507
+      },
+      "prevControl": {
+        "x": 3.0808385308005795,
+        "y": 2.9029616913838483
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Bump Double Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7530886627906979,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 6.5,
+        "y": 4.0
+      },
+      "rotationOffset": -90.0,
+      "minWaypointRelativePos": 1.9820153870558364,
+      "maxWaypointRelativePos": 5.258744447969544,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 41.86626693936349
+  },
+  "reversed": false,
+  "folder": "Right Bump Double",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 41.86626693936349
+  },
+  "useDefaultConstraints": true
+}

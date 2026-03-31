@@ -4,7 +4,9 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
@@ -68,12 +70,7 @@ public class RegisterCommands {
         );
 
         NamedCommands.registerCommand("ShootStop",
-            Commands.runOnce(
-                () -> {
-                    shooterSubsystem.setFlywheelSpeed(0.0);
-                    feederSubsystem.setFeederState(FeederState.OFF);
-                }, shooterSubsystem, feederSubsystem
-            )
+            getShootStopCommand()
         );
 
         // MARK: IntakeDown
@@ -129,6 +126,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: FeederIn
         NamedCommands.registerCommand("FeederIn",
             Commands.runOnce(
                 () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
@@ -149,5 +147,29 @@ public class RegisterCommands {
                 feederSubsystem
             )
         );
+
+        NamedCommands.registerCommand("AutoShootSequence", 
+            Commands.sequence(
+                Commands.runOnce(
+                    () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_IN),
+                    feederSubsystem
+                ),
+                Commands.waitSeconds(6.5),
+                getShootStopCommand(),
+                Commands.runOnce(
+                    () -> feederSubsystem.setFeederState(FeederState.OFF),
+                    feederSubsystem
+                )
+            )
+        );
+    }
+
+    private Command getShootStopCommand() {
+        return Commands.runOnce(
+                () -> {
+                    shooterSubsystem.setFlywheelSpeed(0.0);
+                    feederSubsystem.setFeederState(FeederState.OFF);
+                }, shooterSubsystem, feederSubsystem
+            );
     }
 }
