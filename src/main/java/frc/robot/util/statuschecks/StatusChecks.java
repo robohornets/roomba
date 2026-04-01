@@ -94,8 +94,8 @@ public class StatusChecks {
     }
 
     private boolean visionStatusChecks() {
-        boolean visionConnected = drivetrain.questNavSubsystem.questIsConnected() &&
-            drivetrain.limelightSubsystem.limelightIsConnected();
+        boolean visionConnected = drivetrain.limelightSubsystem.limelightIsConnected() && 
+            drivetrain.limelightTwoSubsystem.limelightIsConnected();
         
         return visionConnected;
     }

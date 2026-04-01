@@ -148,18 +148,6 @@
             }
           },
           {
-            "title": "PowerDistribution",
-            "x": 1088.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 512.0,
-            "type": "PowerDistribution",
-            "properties": {
-              "topic": "/SmartDashboard/PowerDistribution",
-              "period": 0.06
-            }
-          },
-          {
             "title": "Is Shooting",
             "x": 832.0,
             "y": 256.0,
@@ -586,6 +574,117 @@
                 }
               }
             ]
+          },
+          {
+            "title": "Intake Motor Connections",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "AngleMotor",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/MotorStatus/IntakeSubsystem/MotorConnections/AngleMotor",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IntakeLeftMotor",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/MotorStatus/IntakeSubsystem/MotorConnections/IntakeLeftMotor",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IntakeRightMotor",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/MotorStatus/IntakeSubsystem/MotorConnections/IntakeRightMotor",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Shooter Motor Connections",
+            "x": 256.0,
+            "y": 320.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "LeftShooterMotor",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/MotorStatus/ShooterSubsystem/MotorConnections/LeftShooterMotor",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "RightShooterMotor",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/MotorStatus/ShooterSubsystem/MotorConnections/RightShooterMotor",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
           }
         ],
         "containers": [
@@ -667,8 +766,8 @@
           },
           {
             "title": "IsFMSAttached",
-            "x": 512.0,
-            "y": 448.0,
+            "x": 768.0,
+            "y": 320.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Boolean Box",
@@ -683,24 +782,6 @@
             }
           },
           {
-            "title": "Quest Battery",
-            "x": 768.0,
-            "y": 320.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Number Bar",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/QuestNav/Battery",
-              "period": 0.06,
-              "data_type": "int",
-              "min_value": 0.0,
-              "max_value": 100.0,
-              "divisions": 5,
-              "inverted": false,
-              "orientation": "horizontal"
-            }
-          },
-          {
             "title": "Checks Passing",
             "x": 1024.0,
             "y": 128.0,
@@ -712,6 +793,40 @@
               "period": 0.06,
               "data_type": "string"
             }
+          },
+          {
+            "title": "Limelight 4 Connected",
+            "x": 512.0,
+            "y": 448.0,
+            "width": 192.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Limelight/limelight-four/Connected",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Limelight 2 Connected",
+            "x": 704.0,
+            "y": 448.0,
+            "width": 192.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Limelight/limelight-two/Connected",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
           }
         ]
       }
@@ -720,7 +835,20 @@
       "name": "Debug",
       "grid_layout": {
         "layouts": [],
-        "containers": []
+        "containers": [
+          {
+            "title": "PowerDistribution",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 512.0,
+            "type": "PowerDistribution",
+            "properties": {
+              "topic": "/SmartDashboard/PowerDistribution",
+              "period": 0.06
+            }
+          }
+        ]
       }
     }
   ]
