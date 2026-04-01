@@ -1,8 +1,11 @@
 package frc.robot.subsystems.mechanisms.intake;
 
+import java.util.Arrays;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
+import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -22,7 +25,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     // MARK: Intake Wheels
-    public Motor intakeWheelsMotor = new Motor(10, "Mechanisms");
+    public Motor intakeWheelLeft = new Motor(10, "Mechanisms");
+    public Motor intakeWheelRight = new Motor(10, "Mechanisms", true);
+
+    public MotorGroup intakeWheelsMotor = new MotorGroup(Arrays.asList(intakeWheelLeft, intakeWheelRight));
+
 
     public IntakeSubsystem() {
         angleMotor.toggleEnabled(true);
@@ -33,7 +40,9 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeWheelsMotor.setDefaultCommand(Commands.run(() -> {}, intakeWheelsMotor));
 
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        intakeWheelLeft.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+        intakeWheelRight.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
+    
     }
 
     // MARK: Intake Wheel State
@@ -133,8 +142,13 @@ public class IntakeSubsystem extends SubsystemBase {
         );
 
         Logger.recordOutput(
-            "MotorStatus/IntakeSubsystem/MotorConnections/IntakeWheelsMotor", 
-            intakeWheelsMotor.getMotor().isConnected()
+            "MotorStatus/IntakeSubsystem/MotorConnections/IntakeLeftMotor", 
+            intakeWheelLeft.getMotor().isConnected()
+        );
+
+        Logger.recordOutput(
+            "MotorStatus/IntakeSubsystem/MotorConnections/IntakeRightMotor", 
+            intakeWheelRight.getMotor().isConnected()
         );
 
         // Log current readings to AdvantageKit
@@ -148,12 +162,21 @@ public class IntakeSubsystem extends SubsystemBase {
         );
 
         Logger.recordOutput(
-            "MotorStatus/IntakeSubsystem/Current/Stator/IntakeWheelsMotor", 
-            intakeWheelsMotor.getMotor().getStatorCurrent().getValueAsDouble()
+            "MotorStatus/IntakeSubsystem/Current/Stator/IntakeLeftMotor", 
+            intakeWheelLeft.getMotor().getStatorCurrent().getValueAsDouble()
         );
         Logger.recordOutput(
-            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
-            intakeWheelsMotor.getMotor().getSupplyCurrent().getValueAsDouble()
+            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeLeftMotor", 
+            intakeWheelLeft.getMotor().getSupplyCurrent().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "MotorStatus/IntakeSubsystem/Current/Stator/IntakeRightMotor", 
+            intakeWheelRight.getMotor().getStatorCurrent().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeRightMotor", 
+            intakeWheelRight.getMotor().getSupplyCurrent().getValueAsDouble()
         );
 
         // Log voltage readings to AdvantageKit
@@ -167,12 +190,21 @@ public class IntakeSubsystem extends SubsystemBase {
         );
 
         Logger.recordOutput(
-            "MotorStatus/IntakeSubsystem/Voltage/Output/IntakeWheelsMotor", 
-            intakeWheelsMotor.getMotor().getMotorVoltage().getValueAsDouble()
+            "MotorStatus/IntakeSubsystem/Voltage/Output/IntakeLeftMotor", 
+            intakeWheelLeft.getMotor().getMotorVoltage().getValueAsDouble()
         );
         Logger.recordOutput(
-            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeWheelsMotor", 
-            intakeWheelsMotor.getMotor().getSupplyVoltage().getValueAsDouble()
+            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeLeftMotor", 
+            intakeWheelLeft.getMotor().getSupplyVoltage().getValueAsDouble()
+        );
+
+        Logger.recordOutput(
+            "MotorStatus/IntakeSubsystem/Voltage/Output/IntakeRightMotor", 
+            intakeWheelRight.getMotor().getMotorVoltage().getValueAsDouble()
+        );
+        Logger.recordOutput(
+            "MotorStatus/IntakeSubsystem/Current/Supply/IntakeRightMotor", 
+            intakeWheelRight.getMotor().getSupplyVoltage().getValueAsDouble()
         );
     }
 }

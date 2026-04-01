@@ -79,7 +79,8 @@ public class StatusChecks {
 
     private boolean intakeStatusChecks() {
         boolean motorsConnected = genericMotorCheck(intakeSubsystem.angleMotor) && 
-            genericMotorCheck(intakeSubsystem.intakeWheelsMotor);
+            genericMotorCheck(intakeSubsystem.intakeWheelLeft) &&
+            genericMotorCheck(intakeSubsystem.intakeWheelRight);
 
         return motorsConnected;
     }

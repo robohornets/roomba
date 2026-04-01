@@ -110,9 +110,10 @@ public class Robot extends LoggedRobot {
         // Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/LeftShooter", robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/RightShooter", robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/IntakeWheels", robotContainer.intakeSubsystem.intakeWheelsMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/IntakeWheelLeft", robotContainer.intakeSubsystem.intakeWheelLeft.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/IntakeWheelRight", robotContainer.intakeSubsystem.intakeWheelRight.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/FeederBed", robotContainer.feederSubsystem.feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/FeederFeeder", robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        Logger.recordOutput("MotorConfig/FeederFeeder",robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/ShooterFeeder", robotContainer.feederSubsystem.shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
     }
 
