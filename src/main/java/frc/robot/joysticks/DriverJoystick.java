@@ -78,11 +78,6 @@ public class DriverJoystick {
                 )
             );
 
-        // MARK: Intake Out - LB
-        joystick.leftBumper().onTrue(
-            NamedCommands.getCommand("IntakeDown")
-        );
-
 
         joystick.povUp();
 

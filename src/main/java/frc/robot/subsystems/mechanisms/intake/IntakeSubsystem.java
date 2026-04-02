@@ -16,19 +16,20 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
     public Motor angleMotor = new Motor(9, "Mechanisms")
         .setFree(false)
-        .setMotorSpeed(0.5)
+        .setMotorSpeed(0.25)
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
-        .setPG(0.5)
+        .setPG(0.25)
         .setThreshold(IntakeConstants.INTAKE_THRESHOLD);
     // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
 
     // MARK: Intake Wheels
-    public Motor intakeWheelLeft = new Motor(10, "Mechanisms");
-    public Motor intakeWheelRight = new Motor(10, "Mechanisms", true);
+    public Motor intakeWheelLeft = new Motor(10, "Mechanisms", true);
+    public Motor intakeWheelRight = new Motor(11, "Mechanisms");
 
-    public MotorGroup intakeWheelsMotor = new MotorGroup(Arrays.asList(intakeWheelLeft, intakeWheelRight));
+    public MotorGroup intakeWheelsMotor = new MotorGroup(Arrays.asList(intakeWheelLeft, intakeWheelRight))
+    .setAccelerationSteps(0);
 
 
     public IntakeSubsystem() {
@@ -36,8 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeWheelsMotor.toggleEnabled(true);
 
         angleMotor.setNeutralMode(NeutralModeValue.Brake);
-
-        intakeWheelsMotor.setDefaultCommand(Commands.run(() -> {}, intakeWheelsMotor));
+        intakeWheelsMotor.setNeutralMode(NeutralModeValue.Coast);
 
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         intakeWheelLeft.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
@@ -110,15 +110,18 @@ public class IntakeSubsystem extends SubsystemBase {
         switch (intakeState) {
             case INTAKE_IN:
                 intakeWheelsMotor.drive(IntakeConstants.INTAKE_WHEELS_SPEED);
+                angleMotor.getMotor().set(IntakeConstants.INTAKE_ANGLE_DOWN_SPEED);
                 break;
             case INTAKE_OUT:
                 intakeWheelsMotor.drive(-IntakeConstants.INTAKE_WHEELS_SPEED / 2);
                 break;
             case OFF:
                 intakeWheelsMotor.drive(0.0);
+                angleMotor.getMotor().set(0.0);
                 break;
             default:
                 intakeWheelsMotor.drive(0.0);
+                angleMotor.getMotor().set(0.0);
                 break;
         }
 
