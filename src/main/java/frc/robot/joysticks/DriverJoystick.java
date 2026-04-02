@@ -78,6 +78,10 @@ public class DriverJoystick {
                 )
             );
 
+        joystick.leftBumper()
+            .onTrue(
+                NamedCommands.getCommand("IntakeDown")
+            );
 
         joystick.povUp();
 

@@ -21,7 +21,6 @@ public class IntakeSubsystem extends SubsystemBase {
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
         .setPG(0.25)
         .setThreshold(IntakeConstants.INTAKE_THRESHOLD);
-    // public TalonFX angleMotor = new TalonFX(9, "Mechanisms");
 
 
     // MARK: Intake Wheels
@@ -36,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
         angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
 
-        angleMotor.setNeutralMode(NeutralModeValue.Brake);
+        angleMotor.setNeutralMode(NeutralModeValue.Coast); // MARK: Change to break mode
         intakeWheelsMotor.setNeutralMode(NeutralModeValue.Coast);
 
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
