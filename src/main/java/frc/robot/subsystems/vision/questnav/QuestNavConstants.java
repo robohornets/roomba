@@ -9,6 +9,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 public class QuestNavConstants {
+    public static final boolean QUEST_MEASUREMENTS_ENABLED = false;
     // 🏳️‍⚧️ TRANS-form 3d
     public static final Transform3d ROBOT_TO_QUEST = new Transform3d(
         new Translation3d(0.0762, 0.254, 0.3556),

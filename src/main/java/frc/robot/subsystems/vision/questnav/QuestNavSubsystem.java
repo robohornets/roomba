@@ -105,56 +105,58 @@ public class QuestNavSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        questPeriodicCommand();
+        if (QuestNavConstants.QUEST_MEASUREMENTS_ENABLED) {
+            questPeriodicCommand();
 
-        // Update pose estimator with latest odometry from drivetrain
-        poseEstimator.update(
-            drivetrain.getState().RawHeading,
-            drivetrain.getState().ModulePositions
-        );
+            // Update pose estimator with latest odometry from drivetrain
+            poseEstimator.update(
+                drivetrain.getState().RawHeading,
+                drivetrain.getState().ModulePositions
+            );
 
-        // Log hardware pose and drift metrics
-        if (lastQuestHardwarePose != null) {
-            Logger.recordOutput("QuestNav/HardwarePose", lastQuestHardwarePose);
+            // Log hardware pose and drift metrics
+            if (lastQuestHardwarePose != null) {
+                Logger.recordOutput("QuestNav/HardwarePose", lastQuestHardwarePose);
 
-            Pose2d fusedPose = getEstimatedPose();
-            double drift = fusedPose.getTranslation().getDistance(lastQuestHardwarePose.getTranslation());
-            Logger.recordOutput("QuestNav/Drift", drift);
-        }
-
-        Logger.recordOutput("QuestNav/HighConfidenceLimelight",
-            LimelightConstants.isHighConfidenceForQuestNavCorrection(lastLimelightEstimate));
-        Logger.recordOutput("QuestNav/LastCorrectionTime", lastCorrectionTime);
-
-        // Gets most recent pose frames from the Quest
-        PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
-
-        for (PoseFrame questFrame : questFrames) {
-            // Checks to make sure the Quest was tracking the pose in the frame
-            if (questFrame.isTracking()) {
-                Pose3d questPose = questFrame.questPose3d();
-
-                double timestamp = questFrame.dataTimestamp();
-
-                // Transform questPose by Transform3d based on the location of the Quest mount
-                Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
-
-                // Store as the most recent hardware pose for drift calculation
-                lastQuestHardwarePose = transformedPose.toPose2d();
-
-                // Log pose with AdvantageKit and put to NetworkTables
-                Logger.recordOutput("QuestNav/Pose", transformedPose.toPose2d());
-                drivetrain.robotField2d.getObject("QuestNav").setPose(transformedPose.toPose2d());
-
-                // Add to both drivetrain and local pose estimator
-                drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
-                addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
-                incrementPoseCounter();
+                Pose2d fusedPose = getEstimatedPose();
+                double drift = fusedPose.getTranslation().getDistance(lastQuestHardwarePose.getTranslation());
+                Logger.recordOutput("QuestNav/Drift", drift);
             }
-        }
 
-        // Automatic QuestNav correction logic
-        correctQuestNavDrift();
+            Logger.recordOutput("QuestNav/HighConfidenceLimelight",
+                LimelightConstants.isHighConfidenceForQuestNavCorrection(lastLimelightEstimate));
+            Logger.recordOutput("QuestNav/LastCorrectionTime", lastCorrectionTime);
+
+            // Gets most recent pose frames from the Quest
+            PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
+
+            for (PoseFrame questFrame : questFrames) {
+                // Checks to make sure the Quest was tracking the pose in the frame
+                if (questFrame.isTracking()) {
+                    Pose3d questPose = questFrame.questPose3d();
+
+                    double timestamp = questFrame.dataTimestamp();
+
+                    // Transform questPose by Transform3d based on the location of the Quest mount
+                    Pose3d transformedPose = questPose.transformBy(QuestNavConstants.ROBOT_TO_QUEST.inverse());
+
+                    // Store as the most recent hardware pose for drift calculation
+                    lastQuestHardwarePose = transformedPose.toPose2d();
+
+                    // Log pose with AdvantageKit and put to NetworkTables
+                    Logger.recordOutput("QuestNav/Pose", transformedPose.toPose2d());
+                    drivetrain.robotField2d.getObject("QuestNav").setPose(transformedPose.toPose2d());
+
+                    // Add to both drivetrain and local pose estimator
+                    drivetrain.addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
+                    addVisionMeasurement(transformedPose.toPose2d(), timestamp, QuestNavConstants.QUESTNAV_STD_DEVS);
+                    incrementPoseCounter();
+                }
+            }
+
+            // Automatic QuestNav correction logic
+            correctQuestNavDrift();
+        }
 
         logValues();
     }

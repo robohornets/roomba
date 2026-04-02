@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 4.337066491414587,
-        "y": 0.05584307793538601
+        "y": 0.05584307793538612
       },
       "nextControl": {
         "x": 6.6447806028142775,
@@ -171,7 +171,19 @@
       "name": "Point Towards Zone"
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeIn",
+      "waypointRelativePos": 1.0219895287958078,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIn"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 3.0,
