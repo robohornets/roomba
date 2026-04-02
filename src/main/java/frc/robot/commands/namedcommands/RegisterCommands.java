@@ -110,6 +110,10 @@ public class RegisterCommands {
             )
         );
 
+        NamedCommands.registerCommand("IntakeReset",
+            intakeSubsystem.ResetOffset()
+        );
+
         // MARK: RunIntakeIn
         NamedCommands.registerCommand("IntakeIn",
             Commands.runOnce(

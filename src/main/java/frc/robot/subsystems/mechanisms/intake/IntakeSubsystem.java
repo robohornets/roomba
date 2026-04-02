@@ -8,6 +8,8 @@ import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -16,10 +18,10 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
     public Motor angleMotor = new Motor(9, "Mechanisms")
         .setFree(false)
-        .setMotorSpeed(0.25)
+        .setMotorSpeed(0.2)
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
-        .setPG(0.25)
+        .setPG(0.05)
         .setThreshold(IntakeConstants.INTAKE_THRESHOLD);
 
 
@@ -30,12 +32,14 @@ public class IntakeSubsystem extends SubsystemBase {
     public MotorGroup intakeWheelsMotor = new MotorGroup(Arrays.asList(intakeWheelLeft, intakeWheelRight))
     .setAccelerationSteps(0);
 
+    public double angleOffset = 0.0;
+
 
     public IntakeSubsystem() {
         angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
 
-        angleMotor.setNeutralMode(NeutralModeValue.Coast); // MARK: Change to break mode
+        angleMotor.setNeutralMode(NeutralModeValue.Brake);
         intakeWheelsMotor.setNeutralMode(NeutralModeValue.Coast);
 
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
@@ -64,39 +68,29 @@ public class IntakeSubsystem extends SubsystemBase {
         logMotors();
     }
 
-    // MARK: Angle Control
-    // private void runAngleControl() {
-    //     // Force the intake down with constant motor speed
-    //     // if (forceIntakeDown) {
-    //     //     // angleMotor.getMotor().set(IntakeConstants.INTAKE_DOWN_FORCE_SPEED);
-    //     //     return;
-    //     // }
-
-    //     if (Double.isNaN(angleTarget) || angleAtTarget) {
-    //         angleMotor.set(0.0);
-    //         return;
-    //     }
-
-    //     double currentPos = angleMotor.getMotor().getPosition().refresh().getValueAsDouble();
-    //     double error = angleTarget - currentPos;
-
-    //     if (Math.abs(error) <= IntakeConstants.INTAKE_THRESHOLD) {
-    //         angleMotor.set(0.0);
-    //         angleAtTarget = true;
-    //     } else if (error < 0) {
-    //         angleMotor.set(-IntakeConstants.INTAKE_DOWN_SPEED);
-    //     } else {
-    //         angleMotor.set(IntakeConstants.INTAKE_UP_SPEED);
-    //     }
-    // }
-
     public void setPosition(double targetPosition) {
-        angleMotor.goTo(targetPosition);
-        angleTarget = targetPosition;
+        angleTarget = targetPosition - angleOffset;
+        angleMotor.goTo(angleTarget);
     }
 
     public IntakeStates getIntakeState() {
         return intakeState;
+    }
+
+    public Command ResetOffset() {
+        return Commands.sequence(
+            angleMotor.brakelessReset(0.5),
+            Commands.runOnce(
+                () -> {
+                    angleOffset = angleMotor.getCurrentValue();
+                    angleMotor.setRange(
+                        IntakeConstants.INTAKE_MIN_VALUE - angleOffset,
+                        IntakeConstants.INTAKE_MAX_VALUE - angleOffset
+                    );
+                
+                }
+            )
+        );
     }
 
     public void setIntake(IntakeStates intakeState) {
@@ -129,9 +123,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // MARK: Logging
     private void logValues() {
-        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getMotor().getPosition().refresh().getValueAsDouble());
+        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getCurrentValue() - angleOffset);
         Logger.recordOutput("IntakeSubsystem/AngleTarget", angleTarget);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
+        Logger.recordOutput("IntakeSubsystem/AngleOffset", angleOffset);
         Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
     }
 

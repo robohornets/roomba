@@ -48,12 +48,7 @@ public class OperatorJoystick {
 
         // MARK: Lock to hub - X
         joystick.x().onTrue(
-            Commands.runOnce(
-                () -> {
-                    drivetrain.toggleLockedToHub();
-                    Logger.recordOutput("SwerveDrive/LockedToHub", drivetrain.isLockedToHub());
-                }
-            )
+            NamedCommands.getCommand("IntakeReset")
         );
 
         // MARK: Reset Shooter Angle - Y
