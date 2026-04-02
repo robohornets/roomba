@@ -56,10 +56,6 @@ public class Robot extends LoggedRobot {
     // The current alliance for the robot
     public Optional<Alliance> currentAlliance;
 
-    // MARK: Hub Manager
-    public MatchTimeManager matchTimeManager = new MatchTimeManager();
-    public RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
-
     public Robot() {
         robotContainer = new RobotContainer();
     }
@@ -131,11 +127,6 @@ public class Robot extends LoggedRobot {
         logDriveStationValues();
         logPowerDistribution();
         logRobotController();
-
-        // if (!currentAlliance.equals(DriverStation.getAlliance())) {
-        //     currentAlliance = DriverStation.getAlliance();
-        //     Logger.recordOutput("FieldInfo/CurrentAlliance", currentAlliance.toString());
-        // }
     }
 
     // MARK: Disabled Init

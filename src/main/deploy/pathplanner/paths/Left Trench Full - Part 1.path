@@ -92,17 +92,6 @@
           "name": "IntakeIn"
         }
       }
-    },
-    {
-      "name": "IntakeReset",
-      "waypointRelativePos": 1.0527668189368777,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeReset"
-        }
-      }
     }
   ],
   "globalConstraints": {
