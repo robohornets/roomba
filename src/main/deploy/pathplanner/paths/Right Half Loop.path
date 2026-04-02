@@ -1,0 +1,125 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.480648878306819,
+        "y": 1.6934984115959706
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.7959956660429945,
+        "y": 2.721764640660958
+      },
+      "isLocked": false,
+      "linkedName": "Right Half Loop Start"
+    },
+    {
+      "anchor": {
+        "x": 7.480648878306819,
+        "y": 3.5519292983490915
+      },
+      "prevControl": {
+        "x": 8.116697525079804,
+        "y": 3.171523795793333
+      },
+      "nextControl": {
+        "x": 7.1067826826224065,
+        "y": 3.775529739572416
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.483472908325883,
+        "y": 3.350873153070545
+      },
+      "prevControl": {
+        "x": 6.66090378461801,
+        "y": 3.6066625664895358
+      },
+      "nextControl": {
+        "x": 6.340982692580451,
+        "y": 3.1454551927632237
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.483472908325883,
+        "y": 2.630656576090664
+      },
+      "prevControl": {
+        "x": 6.333290808913503,
+        "y": 2.903565270630426
+      },
+      "nextControl": {
+        "x": 6.775995477726099,
+        "y": 2.099088880268128
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.932867248093167,
+        "y": 1.1348179420389306
+      },
+      "prevControl": {
+        "x": 7.631682115112994,
+        "y": 1.556969842425847
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Half Loop End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 7.0,
+        "y": 3.0
+      },
+      "rotationOffset": 90.0,
+      "minWaypointRelativePos": 0.35604378172588835,
+      "maxWaypointRelativePos": 2.968868972081218,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "IntakeIn",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 4.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIn"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.5,
+    "rotation": 66.85652527474281
+  },
+  "reversed": false,
+  "folder": "Generic Paths",
+  "idealStartingState": {
+    "velocity": 2.5,
+    "rotation": -103.60152222405776
+  },
+  "useDefaultConstraints": true
+}

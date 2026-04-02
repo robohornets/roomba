@@ -1,0 +1,194 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.9414101672846042,
+        "y": 1.6397111692266946
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.3479252436770914,
+        "y": 0.8856908327707548
+      },
+      "isLocked": false,
+      "linkedName": "Right Trench Shoot"
+    },
+    {
+      "anchor": {
+        "x": 5.304666975635594,
+        "y": 0.4268007371115812
+      },
+      "prevControl": {
+        "x": 4.337066491414587,
+        "y": 0.05584307793538601
+      },
+      "nextControl": {
+        "x": 6.6447806028142775,
+        "y": 0.9405720944797511
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.8753885835981645,
+        "y": 2.4859952661546605
+      },
+      "prevControl": {
+        "x": 5.977213105960585,
+        "y": 2.2576714464475063
+      },
+      "nextControl": {
+        "x": 5.618593186117012,
+        "y": 3.061814378052134
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.305837029925848,
+        "y": 3.552826127736582
+      },
+      "prevControl": {
+        "x": 5.98970605008412,
+        "y": 3.4869668395766076
+      },
+      "nextControl": {
+        "x": 6.550582340858179,
+        "y": 3.603813702464515
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.306184509622176,
+        "y": 2.7124452131885595
+      },
+      "prevControl": {
+        "x": 7.154835135438269,
+        "y": 3.494966133048595
+      },
+      "nextControl": {
+        "x": 7.413162440668795,
+        "y": 2.1593377460535876
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.878300560557911,
+        "y": 1.1336342469985867
+      },
+      "prevControl": {
+        "x": 7.085843868074908,
+        "y": 1.361701130970529
+      },
+      "nextControl": {
+        "x": 6.267685582770232,
+        "y": 0.4626366756640955
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.757034615553059,
+        "y": 0.28735015007225795
+      },
+      "prevControl": {
+        "x": 6.034721578196118,
+        "y": 0.37431376688869766
+      },
+      "nextControl": {
+        "x": 5.478834408986875,
+        "y": 0.2002257999342415
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.7777103845597377,
+        "y": 0.4268007371115812
+      },
+      "prevControl": {
+        "x": 4.188786011883426,
+        "y": 0.08633138861860962
+      },
+      "nextControl": {
+        "x": 3.447574841431569,
+        "y": 0.700232256306745
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9414101672846042,
+        "y": 1.6397111692266946
+      },
+      "prevControl": {
+        "x": 3.6158078084015797,
+        "y": 1.024087205558764
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Trench Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.41651526162790686,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.9230477008456661,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 5.917233747357296,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 7.0,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 6.5,
+        "y": 2.8
+      },
+      "rotationOffset": -90.0,
+      "minWaypointRelativePos": 1.8149686706852777,
+      "maxWaypointRelativePos": 5.2,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 57.47634707968849
+  },
+  "reversed": false,
+  "folder": "Right Trench Double",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 57.47634707968849
+  },
+  "useDefaultConstraints": true
+}

@@ -322,6 +322,10 @@ public class Drive extends SubsystemBase {
 
         Logger.recordOutput("SwerveDrive/TargetHubAngle", getAngleToHub());
         Logger.recordOutput("SwerveDrive/DistanceToHub", getDistanceToHub());
+
+        Logger.recordOutput("SwerveDrive/VelocityX", drivetrain.getState().Speeds.vxMetersPerSecond);
+        Logger.recordOutput("SwerveDrive/VelocityY", drivetrain.getState().Speeds.vyMetersPerSecond);
+        Logger.recordOutput("SwerveDrive/AngularVelocity", drivetrain.getState().Speeds.omegaRadiansPerSecond);
     }
 
     // MARK: Motor Logging

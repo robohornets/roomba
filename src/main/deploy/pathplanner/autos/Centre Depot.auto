@@ -15,6 +15,12 @@
           "data": {
             "pathName": "Centre Depot - Part 2"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShootSequence"
+          }
         }
       ]
     }

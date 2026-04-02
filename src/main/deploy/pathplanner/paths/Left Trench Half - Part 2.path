@@ -63,7 +63,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5169628699788581,
-      "rotationDegrees": -1.005375870483045
+      "rotationDegrees": -1.0053758704830453
     },
     {
       "waypointRelativePos": 1.245581725687105,
@@ -90,7 +90,7 @@
     },
     {
       "name": "ShootWheel",
-      "waypointRelativePos": 1.6106440355329958,
+      "waypointRelativePos": 1.3227613420050761,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

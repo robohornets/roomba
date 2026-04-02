@@ -1,18 +1,19 @@
 {
   "robotWidth": 0.7874,
-  "robotLength": 0.7874,
+  "robotLength": 0.787,
   "holonomicMode": true,
   "pathFolders": [
     "Centre Depot",
     "Generic Paths",
     "Left Trench",
+    "Right Trench Double",
     "Right Bump Double",
     "Right Trench Full"
   ],
   "autoFolders": [
+    "Double Autos",
     "Left Full",
     "Left Half",
-    "Double Neutral Zone",
     "Right Full",
     "Right Half",
     "Testing Pose"
@@ -22,7 +23,7 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 52.0,
+  "robotMass": 50.0,
   "robotMOI": 5.5,
   "robotTrackwidth": 0.5588,
   "driveWheelRadius": 0.051,
