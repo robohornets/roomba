@@ -39,7 +39,6 @@ public class IntakeSubsystem extends SubsystemBase {
         angleMotor.toggleEnabled(true);
         intakeWheelsMotor.toggleEnabled(true);
 
-        angleMotor.setNeutralMode(NeutralModeValue.Brake);
         intakeWheelsMotor.setNeutralMode(NeutralModeValue.Coast);
 
         angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);

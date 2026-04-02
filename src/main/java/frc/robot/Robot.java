@@ -17,6 +17,7 @@ import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
 import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.HootAutoReplay;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AdvantageKit.AdvantageKitConstants;
+import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.util.Elastic;
 
 
@@ -142,6 +144,8 @@ public class Robot extends LoggedRobot {
         if (DriverStation.isFMSAttached()) {
             Elastic.selectTab("Disabled");
         }
+
+        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(NeutralModeValue.Coast);
     }
 
     // MARK: Disabled Periodic
@@ -153,6 +157,7 @@ public class Robot extends LoggedRobot {
     // MARK: Disabled Exit
     @Override
     public void disabledExit() {
+        robotContainer.intakeSubsystem.angleMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
     // MARK: Autonomous Init

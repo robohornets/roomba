@@ -111,7 +111,7 @@ public class RobotContainer {
         driverJoystick.configureBindings();
         operatorJoystick.configureBindings();
         debugJoystick.configureBindings();
-        
+
         drivetrain.setDefaultCommand(drivetrain.joysticksDefaultCommand(driverJoystick.joystick));
 
         // Idle while the robot is disabled. This ensures the configured
