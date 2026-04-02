@@ -79,7 +79,7 @@ public class DriverJoystick {
             );
 
         joystick.leftBumper()
-            .onTrue(
+            .whileTrue(
                 NamedCommands.getCommand("IntakeDown")
             );
 
