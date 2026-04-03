@@ -35,10 +35,6 @@ public class DriverJoystick {
     public void configureBindings() {
         // MARK: Intake Down - A
         joystick.a();
-        // MARK: Intake Agitate - B
-        joystick.b().whileTrue(
-            NamedCommands.getCommand("IntakeAgitate")
-        );
 
         // MARK: X - Lock to hub
         joystick.x().onTrue(
@@ -78,10 +74,14 @@ public class DriverJoystick {
                 )
             );
 
-        joystick.leftBumper()
-            .whileTrue(
-                NamedCommands.getCommand("IntakeDown")
-            );
+        // MARK: Intake Out - LB
+        joystick.leftBumper().whileTrue(
+            Commands.runEnd(
+                () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_OUT),
+                () -> intakeSubsystem.setIntake(IntakeStates.OFF),
+                intakeSubsystem
+            )
+        );
 
         joystick.povUp();
 

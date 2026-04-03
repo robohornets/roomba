@@ -49,7 +49,7 @@ public class RegisterCommands {
             )
         );
 
-        NamedCommands.registerCommand("ShootWheel", 
+        NamedCommands.registerCommand("ShootWheel",
             Commands.run(
                 () -> {
                     if (shooterSubsystem.canShoot()) {
