@@ -8,8 +8,6 @@ import static edu.wpi.first.units.Units.Amps;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
-import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -53,9 +51,6 @@ public class RobotContainer {
     public final FeederSubsystem feederSubsystem = new FeederSubsystem();
 
     public final StatusChecks statusChecks = new StatusChecks(drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);
-
-    public final MatchTimeManager matchTimeManager = new MatchTimeManager();
-    public final RebuiltHubManager rebuiltHubManager = new RebuiltHubManager(matchTimeManager);
 
     // MARK: Xbox Controllers
     public final DriverJoystick driverJoystick = new DriverJoystick(new CommandXboxController(0), drivetrain, shooterSubsystem, intakeSubsystem, feederSubsystem);

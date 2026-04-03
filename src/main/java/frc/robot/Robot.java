@@ -17,6 +17,9 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.math.geometry.Pose2d;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -26,6 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AdvantageKit.AdvantageKitConstants;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.Elastic;
 
 
@@ -157,10 +161,20 @@ public class Robot extends LoggedRobot {
     // MARK: Autonomous Init
     @Override
     public void autonomousInit() {
-        // Set to use internal IMU as main and external as drift correction
-        robotContainer.drivetrain.limelightSubsystem.setIMUMode(3);
+        // Use external-only heading during auto so pose resets are reflected immediately
+        robotContainer.drivetrain.limelightSubsystem.setIMUMode(0);
 
         m_autonomousCommand = robotContainer.getAutonomousCommand();
+
+        // Pre-reset pose before scheduling so CTRE's background thread has time to update getState().Pose
+        if (m_autonomousCommand instanceof PathPlannerAuto auto) {
+            Pose2d startingPose = auto.getStartingPose();
+            if (startingPose != null) {
+                robotContainer.drivetrain.resetPose(
+                    Drive.flipAlliance(startingPose)
+                );
+            }
+        }
 
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);

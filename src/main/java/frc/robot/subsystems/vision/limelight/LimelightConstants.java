@@ -12,7 +12,7 @@ public class LimelightConstants {
     // Maximum allowed rate of angular rotation before discarding results for innacuracy
     public static final double MAX_ANGULAR_VELOCITY_DEG_PER_SEC = 720.0;
 
-    // TODO: Move transform logic to Limelight pipeline configuration
+    
     // Position of Limelight relative to the centre of the robot in metres
     // public static final Transform2d LIMELIGHT_4_TRANSFORM_FROM_CENTRE = new Transform2d(
     //     new Translation2d(0.0, 0.0), 

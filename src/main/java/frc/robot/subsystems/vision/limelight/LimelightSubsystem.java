@@ -74,6 +74,7 @@ public class LimelightSubsystem extends SubsystemBase {
     }
 
     private int totalLimelightEstimates = 0;
+    private int totalAcceptedEstimates = 0;
     private int estimatesAddedToQuest = 0;
 
     public boolean limelightEnabled = true;
@@ -146,6 +147,8 @@ public class LimelightSubsystem extends SubsystemBase {
         if (estimate == null || estimate.tagCount == 0) {
             return;
         }
+        totalLimelightEstimates++;
+        Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
         
         // Discard result if the angular velocity is too high
         double angularVelDegPerSec = Math.abs(angularVelocityZ.refresh().getValueAsDouble());
@@ -177,8 +180,8 @@ public class LimelightSubsystem extends SubsystemBase {
             drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
         }
 
-        totalLimelightEstimates++;
-        Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
+        totalAcceptedEstimates++;
+        Logger.recordOutput("Limelight/" + limelightName + "/AcceotedEstimates", totalAcceptedEstimates);
 
         Logger.recordOutput("Limelight/" + limelightName + "/AcceptedPose", transformedPose);
         drivetrain.robotField2d.getObject("Limelight").setPose(transformedPose);

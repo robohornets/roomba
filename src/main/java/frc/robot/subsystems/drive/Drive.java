@@ -1,16 +1,25 @@
 package frc.robot.subsystems.drive;
 
+import java.io.IOException;
+import java.nio.file.PathMatcher;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
@@ -92,6 +101,7 @@ public class Drive extends SubsystemBase {
 
         logValues();
         logMotorInformation();
+        logPathPlanner();
     }
 
     @Override
@@ -385,5 +395,40 @@ public class Drive extends SubsystemBase {
                 drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble()
             );
         }
+    }
+
+    // MARK: PathPlanner Logging
+    public void logPathPlanner() {
+        String currentPathName = PathPlannerAuto.currentPathName;
+        Logger.recordOutput(
+            "PathPlanner/CurrentPathName", 
+            currentPathName
+        );
+
+        // List<PathPlannerPath> pathGroup;
+        // try {
+        //     pathGroup = PathPlannerAuto.getPathGroupFromAutoFile();
+
+        //     for (int i = 1; i < pathGroup.size(); i++) {
+        //         Logger.recordOutput(
+        //             "PathPlanner/AutoFilePaths/Path" + i, 
+        //             pathGroup.get(i).name
+        //         );
+        //     }
+        // } catch (IOException | ParseException e) {
+        //     e.printStackTrace();
+        // }
+
+        PathPlannerLogging.setLogTargetPoseCallback(
+            (pose) -> {
+                Logger.recordOutput("PathPlanner/TargetPose", pose);
+            }
+        );
+
+        PathPlannerLogging.setLogCurrentPoseCallback(
+            (pose) -> {
+                Logger.recordOutput("PathPlanner/CurrentPose", pose);
+            }
+        );
     }
 }
