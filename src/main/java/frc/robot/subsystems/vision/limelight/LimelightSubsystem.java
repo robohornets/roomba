@@ -76,6 +76,8 @@ public class LimelightSubsystem extends SubsystemBase {
     private int totalLimelightEstimates = 0;
     private int estimatesAddedToQuest = 0;
 
+    public boolean limelightEnabled = true;
+
     // MARK: Periodic Loop
     /**
      * Periodic update called by the scheduler. Adds a vision odometry measurement each cycle.
@@ -86,6 +88,10 @@ public class LimelightSubsystem extends SubsystemBase {
     public void periodic() {
         updateHeartbeat();
         addOdometryMeasurement();
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        limelightEnabled = isEnabled;
     }
 
     /**
@@ -208,8 +214,16 @@ public class LimelightSubsystem extends SubsystemBase {
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
 
-    public void resetLimelightGyro() {
-        
+    public void resetLimelightGyro(double yaw) {
+        LimelightHelpers.SetRobotOrientation(
+            limelightName, 
+            yaw, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0
+        );
     }
 
     // MARK: Logging

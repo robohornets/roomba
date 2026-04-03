@@ -60,6 +60,9 @@ public class Robot extends LoggedRobot {
     // MARK: Robot Init
     @Override
     public void robotInit() {
+        // TODO: Remove this later
+        robotContainer.drivetrain.limelightSubsystem.setEnabled(false);
+
         // Configure logging for AdvantageKit
         Logger.recordMetadata("ProjectName", "1209Roomba");
         Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -129,6 +132,9 @@ public class Robot extends LoggedRobot {
     // MARK: Disabled Init
     @Override
     public void disabledInit() {
+        // Set Limelight to use external yaw to seed internal imu
+        robotContainer.drivetrain.limelightSubsystem.setIMUMode(1);
+
         if (DriverStation.isFMSAttached()) {
             Elastic.selectTab("Disabled");
         }
@@ -151,6 +157,9 @@ public class Robot extends LoggedRobot {
     // MARK: Autonomous Init
     @Override
     public void autonomousInit() {
+        // Set to use internal IMU as main and external as drift correction
+        robotContainer.drivetrain.limelightSubsystem.setIMUMode(3);
+
         m_autonomousCommand = robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
@@ -175,6 +184,9 @@ public class Robot extends LoggedRobot {
     // MARK: Teleop Init
     @Override
     public void teleopInit() {
+        // Set to use internal IMU as main and external as drift correction
+        robotContainer.drivetrain.limelightSubsystem.setIMUMode(3);
+
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }

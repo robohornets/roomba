@@ -145,6 +145,8 @@ public class Drive extends SubsystemBase {
         questNavSubsystem.setQuestPose(
             new Pose3d(pose)
         );
+
+        limelightSubsystem.resetLimelightGyro(pose.getRotation().getDegrees());
     }
 
     public void registerTelemetry(Consumer<SwerveDriveState> telemetryFunction) {
