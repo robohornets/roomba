@@ -13,8 +13,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import com.btwrobotics.WhatTime.frc.DriverStation.MatchTimeManager;
-import com.btwrobotics.WhatTime.frc.YearlyMethods.Rebuilt.RebuiltHubManager;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -28,7 +26,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AdvantageKit.AdvantageKitConstants;
-import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 import frc.robot.util.Elastic;
 
 
@@ -188,13 +185,8 @@ public class Robot extends LoggedRobot {
     }
 
     // MARK: Teleop Periodic
-    @Override
-    public void teleopPeriodic() {
-        // NetworkTablesUtil.put("Hub is Active", rebuiltHubManager.hubIsActive());
-        // NetworkTablesUtil.put("First Inactive Hub", rebuiltHubManager.getInactiveFirstAlliance());
-        Logger.recordOutput("RebuiltHubManager/IsActive", rebuiltHubManager.hubIsActive());
-        Logger.recordOutput("RebuiltHubManager/InactiveFirst", rebuiltHubManager.getInactiveFirstAlliance().toString());
-    }
+    @Override 
+    public void teleopPeriodic() {}
 
     // MARK: Teleop Exit
     @Override

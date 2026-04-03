@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.6732881203222725,
-        "y": 1.1087369020731377
+        "x": 6.5711899165783905,
+        "y": 0.7214276019597456
       },
       "isLocked": false,
       "linkedName": "Right Half Loop End"
     },
     {
       "anchor": {
-        "x": 4.621446195268362,
-        "y": 0.5646061749646889
+        "x": 5.242248079978814,
+        "y": 0.3818494548905369
       },
       "prevControl": {
-        "x": 4.870587340864295,
-        "y": 0.5439013549667703
+        "x": 6.0454060864322985,
+        "y": 0.41506655870475034
       },
       "nextControl": {
-        "x": 4.026970140959672,
-        "y": 0.6140099764447415
+        "x": 4.829140767181184,
+        "y": 0.3647641137928331
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.5828248035840398,
+        "y": 0.3818494548905369
+      },
+      "prevControl": {
+        "x": 4.30990944558983,
+        "y": 0.075927207414411
+      },
+      "nextControl": {
+        "x": 3.35239118318175,
+        "y": 0.4788048394150357
       },
       "isLocked": false,
       "linkedName": null
@@ -33,11 +49,11 @@
     {
       "anchor": {
         "x": 2.9414101672846042,
-        "y": 1.6397111692266946
+        "y": 1.8376967542343108
       },
       "prevControl": {
-        "x": 2.9581035928672312,
-        "y": 0.5496546720515538
+        "x": 2.7202296930834677,
+        "y": 1.7211669390273845
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,17 +62,35 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6103329809725153,
+      "waypointRelativePos": 0.8328736125792808,
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 1.1344476744186045,
+      "waypointRelativePos": 1.7171313424947146,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "ShootWheel",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "IntakeIn",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIn"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 3.0,
@@ -67,7 +101,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 57.47634707968849
+    "rotation": 52.266400293742436
   },
   "reversed": false,
   "folder": "Right Trench Double",
