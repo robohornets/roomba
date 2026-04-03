@@ -70,7 +70,7 @@ public class LimelightSubsystem extends SubsystemBase {
         this.limelightName = limelightName;
         this.angularVelocityZ = drivetrain.getPigeon2().getAngularVelocityZWorld();
 
-        setIMUMode(4);
+        setIMUMode(0);
     }
 
     private int totalLimelightEstimates = 0;
