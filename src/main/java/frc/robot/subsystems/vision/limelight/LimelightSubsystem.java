@@ -172,8 +172,10 @@ public class LimelightSubsystem extends SubsystemBase {
             return;
         }
 
-        // Add measurement to drivetrain pose estimator
-        drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
+        if (limelightEnabled) {
+            // Add measurement to drivetrain pose estimator
+            drivetrain.addVisionMeasurement(transformedPose, estimate.timestampSeconds, calculatedStdDevs);
+        }
 
         totalLimelightEstimates++;
         Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
