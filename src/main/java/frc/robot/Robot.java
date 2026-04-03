@@ -164,6 +164,8 @@ public class Robot extends LoggedRobot {
         // Use external-only heading during auto so pose resets are reflected immediately
         robotContainer.drivetrain.limelightSubsystem.setIMUMode(0);
 
+        CommandScheduler.getInstance().cancelAll();
+
         m_autonomousCommand = robotContainer.getAutonomousCommand();
 
         // Pre-reset pose before scheduling so CTRE's background thread has time to update getState().Pose

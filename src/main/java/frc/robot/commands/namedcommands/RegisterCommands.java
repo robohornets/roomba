@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -59,7 +60,11 @@ public class RegisterCommands {
                         double maxRPM = 1300; // MARK: Populate max rpm
 
                         shooterDataPoint.speed = rpm / maxRPM;
-                        // shooterDataPoint.speed = 0.30;
+
+                        if (!DriverStation.isFMSAttached()){
+                            shooterDataPoint.speed = 0.30;
+                        }
+                        
                         Logger.recordOutput("ShooterSubsystem/ShooterSpeed", shooterDataPoint.speed);
 
                         shooterSubsystem.setFlywheelSpeed(shooterDataPoint.speed);

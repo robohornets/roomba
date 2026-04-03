@@ -103,7 +103,7 @@ public class RobotContainer {
         configureBindings();
 
         // Warmup PathPlanner to avoid Java pauses
-        FollowPathCommand.warmupCommand().schedule();
+        // FollowPathCommand.warmupCommand().ignoringDisable(true).schedule();
     }
 
     // MARK: Configure Bindings

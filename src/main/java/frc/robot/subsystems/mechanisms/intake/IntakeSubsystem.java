@@ -106,6 +106,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 break;
             case INTAKE_OUT:
                 intakeWheelsMotor.drive(-IntakeConstants.INTAKE_WHEELS_SPEED / 2);
+                angleMotor.getMotor().set(IntakeConstants.INTAKE_ANGLE_DOWN_SPEED);
                 break;
             case OFF:
                 intakeWheelsMotor.drive(0.0);
