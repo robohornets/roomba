@@ -75,9 +75,14 @@
   "eventMarkers": [
     {
       "name": "ShootWheel",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootWheel"
+        }
+      }
     },
     {
       "name": "IntakeIn",

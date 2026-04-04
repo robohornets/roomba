@@ -156,7 +156,12 @@ import frc.robot.util.Elastic;
                 if (selectedAuto instanceof PathPlannerAuto auto) {
                     Pose2d startingPose = auto.getStartingPose();
                     if (startingPose != null) {
-                        robotContainer.drivetrain.resetPose(FlippingUtil.flipFieldPose(startingPose));
+                        if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)) {
+                            robotContainer.drivetrain.resetPose(FlippingUtil.flipFieldPose(startingPose));
+                        }
+                        else {
+                            robotContainer.drivetrain.resetPose(startingPose);
+                        }
                     }
                 }
             }
