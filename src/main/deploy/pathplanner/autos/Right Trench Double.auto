@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Back and forward"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Right Trench Double - Part 1"
           }
         },
