@@ -149,7 +149,7 @@ public class LimelightSubsystem extends SubsystemBase {
         }
         totalLimelightEstimates++;
         Logger.recordOutput("Limelight/" + limelightName + "/TotalEstimates", totalLimelightEstimates);
-        
+
         // Discard result if the angular velocity is too high
         double angularVelDegPerSec = Math.abs(angularVelocityZ.refresh().getValueAsDouble());
         if (angularVelDegPerSec > LimelightConstants.MAX_ANGULAR_VELOCITY_DEG_PER_SEC) {
@@ -230,7 +230,4 @@ public class LimelightSubsystem extends SubsystemBase {
             0
         );
     }
-
-    // MARK: Logging
-    public void logValues() {}
 }

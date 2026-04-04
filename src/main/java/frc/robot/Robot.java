@@ -18,6 +18,7 @@ import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
@@ -33,8 +34,9 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.Elastic;
 
 
-public class Robot extends LoggedRobot {
-    private Command m_autonomousCommand;
+ public class Robot extends LoggedRobot {
+    private Command autonomousCommand;
+    private Command lastSelectedAuto = null;
 
     private final RobotContainer robotContainer;
 
@@ -47,15 +49,7 @@ public class Robot extends LoggedRobot {
         .withTimestampReplay()
         .withJoystickReplay();
 
-    public double matchTimeRemainingSeconds = 160.0;
-    public double matchTimeElapsedSeconds = 0.0;
-
-    // A bool representing if the hub is inactive first or second
-    public Optional<Boolean> inactiveFirst;
-    public Optional<Alliance> firstInactiveAlliance;
-
-    // The current alliance for the robot
-    public Optional<Alliance> currentAlliance;
+    private int commandSchedulerLoops = 0;
 
     public Robot() {
         robotContainer = new RobotContainer();
@@ -64,8 +58,7 @@ public class Robot extends LoggedRobot {
     // MARK: Robot Init
     @Override
     public void robotInit() {
-        // TODO: Remove this later
-        robotContainer.drivetrain.limelightSubsystem.setEnabled(false);
+        // robotContainer.drivetrain.limelightSubsystem.setEnabled(false);
 
         // Configure logging for AdvantageKit
         Logger.recordMetadata("ProjectName", "1209Roomba");
@@ -122,15 +115,19 @@ public class Robot extends LoggedRobot {
     // MARK: Robot Periodic
     @Override
     public void robotPeriodic() {
-        robotContainer.statusChecks.runAllStatusChecks();
-
         m_timeAndJoystickReplay.update();
 
         CommandScheduler.getInstance().run();
 
-        logDriveStationValues();
-        logPowerDistribution();
-        logRobotController();
+        if (infrequentPeriodic(2)) {
+            robotContainer.statusChecks.runAllStatusChecks();
+
+            logDriveStationValues();
+            logPowerDistribution();
+            logRobotController();
+        }
+
+        commandSchedulerLoops++;
     }
 
     // MARK: Disabled Init
@@ -150,6 +147,20 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledPeriodic() {
         powerDistributionHub.clearStickyFaults();
+
+        // Update starting pose in background
+        if (DriverStation.isFMSAttached() || isSimulation()) {
+            Command selectedAuto = robotContainer.getAutonomousCommand();
+            if (selectedAuto != lastSelectedAuto) {
+                lastSelectedAuto = selectedAuto;
+                if (selectedAuto instanceof PathPlannerAuto auto) {
+                    Pose2d startingPose = auto.getStartingPose();
+                    if (startingPose != null) {
+                        robotContainer.drivetrain.resetPose(FlippingUtil.flipFieldPose(startingPose));
+                    }
+                }
+            }
+        }
     }
 
     // MARK: Disabled Exit
@@ -166,20 +177,10 @@ public class Robot extends LoggedRobot {
 
         CommandScheduler.getInstance().cancelAll();
 
-        m_autonomousCommand = robotContainer.getAutonomousCommand();
+        autonomousCommand = robotContainer.getAutonomousCommand();
 
-        // Pre-reset pose before scheduling so CTRE's background thread has time to update getState().Pose
-        if (m_autonomousCommand instanceof PathPlannerAuto auto) {
-            Pose2d startingPose = auto.getStartingPose();
-            if (startingPose != null) {
-                robotContainer.drivetrain.resetPose(
-                    Drive.flipAlliance(startingPose)
-                );
-            }
-        }
-
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().schedule(m_autonomousCommand);
+        if (autonomousCommand != null) {
+            CommandScheduler.getInstance().schedule(autonomousCommand);
         }
 
         if (DriverStation.isFMSAttached()) {
@@ -203,8 +204,8 @@ public class Robot extends LoggedRobot {
         // Set to use internal IMU as main and external as drift correction
         robotContainer.drivetrain.limelightSubsystem.setIMUMode(3);
 
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().cancel(m_autonomousCommand);
+        if (autonomousCommand != null) {
+            CommandScheduler.getInstance().cancel(autonomousCommand);
         }
 
         if (DriverStation.isFMSAttached()) {
@@ -237,6 +238,11 @@ public class Robot extends LoggedRobot {
     // MARK: Simulation Periodic
     @Override
     public void simulationPeriodic() {}
+
+    // MARK: InfrequentPeriodic
+    private boolean infrequentPeriodic(int numCommandLoops) {
+        return commandSchedulerLoops % numCommandLoops == 0;
+    }
 
 
     // MARK: Log DriverStation

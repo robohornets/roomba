@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.limelight.LimelightSubsystem;
 import frc.robot.subsystems.vision.questnav.QuestNavSubsystem;
@@ -94,14 +95,19 @@ public class Drive extends SubsystemBase {
     
     private boolean wiggleAgitation = false;
 
+    private int commandSchedulerLoops = 0;
+
     // MARK: Periodic Loop
     @Override
     public void periodic() {
         drivetrain.periodic();
 
         logValues();
-        logMotorInformation();
-        logPathPlanner();
+        
+        if (infrequentPeriodic(3)) {
+            logMotorInformation();
+            logPathPlanner();
+        }
     }
 
     @Override
@@ -152,9 +158,9 @@ public class Drive extends SubsystemBase {
         drivetrain.resetPose(pose);
 
         // Reset QuestNav pose
-        questNavSubsystem.setQuestPose(
-            new Pose3d(pose)
-        );
+        // questNavSubsystem.setQuestPose(
+        //     new Pose3d(pose)
+        // );
 
         limelightSubsystem.resetLimelightGyro(pose.getRotation().getDegrees());
     }
@@ -305,18 +311,6 @@ public class Drive extends SubsystemBase {
         return Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
     }
 
-    // MARK: Flip Alliance
-    public static Pose2d flipAlliance(Pose2d pose) {
-        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-            return new Pose2d(
-                DriveConstants.FIELD_LENGTH_METERS - pose.getX(),
-                pose.getY(),
-                new Rotation2d(-pose.getRotation().getCos(), pose.getRotation().getSin())
-            );
-        }
-        return pose;
-    }
-
     // MARK: Logging
     private void logValues() {
         Logger.recordOutput("SwerveDrive/Pose", getPose2d());
@@ -430,5 +424,10 @@ public class Drive extends SubsystemBase {
                 Logger.recordOutput("PathPlanner/CurrentPose", pose);
             }
         );
+    }
+
+    // MARK: InfrequentPeriodic
+    public boolean infrequentPeriodic(int numCommandLoops) {
+        return commandSchedulerLoops % numCommandLoops == 0;
     }
 }

@@ -36,13 +36,15 @@ public class RegisterCommands {
     }
     
     public void registerCommands(){
-
+        // MARK: WiggleStart
         NamedCommands.registerCommand("WiggleStart",
             Commands.runOnce(
                 () ->  drivetrain.setWiggleAgitation(true),
                 drivetrain
             )
         );
+
+        // MARK: WiggleStop
         NamedCommands.registerCommand("WiggleStop",
             Commands.runOnce(
                 () ->  drivetrain.setWiggleAgitation(false),
@@ -50,6 +52,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: ShootWheel
         NamedCommands.registerCommand("ShootWheel",
             Commands.run(
                 () -> {
@@ -74,6 +77,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: ShootStop
         NamedCommands.registerCommand("ShootStop",
             getShootStopCommand()
         );
@@ -115,6 +119,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: IntakeReset
         NamedCommands.registerCommand("IntakeReset",
             intakeSubsystem.ResetOffset()
         );
@@ -127,6 +132,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: IntakeOff
         NamedCommands.registerCommand("IntakeOff",
             Commands.runOnce(
                 () -> intakeSubsystem.setIntake(IntakeStates.OFF),
@@ -142,6 +148,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: FeederOff
         NamedCommands.registerCommand("FeederOff",
             Commands.runOnce(
                 () -> feederSubsystem.setFeederState(FeederState.OFF),
@@ -149,6 +156,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: FeederOut
         NamedCommands.registerCommand("FeederOut",
             Commands.runOnce(
                 () -> feederSubsystem.setFeederState(FeederState.ALL_FEEDER_OUT),
@@ -156,6 +164,7 @@ public class RegisterCommands {
             )
         );
 
+        // MARK: AutoShootSequence
         NamedCommands.registerCommand("AutoShootSequence", 
             Commands.sequence(
                 Commands.runOnce(
