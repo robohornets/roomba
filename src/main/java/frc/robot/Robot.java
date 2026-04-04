@@ -58,7 +58,7 @@ import frc.robot.util.Elastic;
     // MARK: Robot Init
     @Override
     public void robotInit() {
-        // robotContainer.drivetrain.limelightSubsystem.setEnabled(false);
+        robotContainer.drivetrain.limelightSubsystem.setEnabled(false);
 
         // Configure logging for AdvantageKit
         Logger.recordMetadata("ProjectName", "1209Roomba");
@@ -70,6 +70,7 @@ import frc.robot.util.Elastic;
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
+                // Logger.addDataReceiver(new WPILOGWriter("/media/sda1/logs"));
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 
