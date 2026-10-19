@@ -127,7 +127,20 @@ public class DriverJoystick {
 
         joystick.rightBumper();
 
-        joystick.leftBumper();
+        joystick.leftBumper()
+                .whileTrue(
+                    Commands.runEnd(
+                    () -> {
+                        feederSubsystem.feederFeederMotor.drive(1);
+                        feederSubsystem.feederBedMotor.drive(1);
+                    },
+                    () -> {
+                        feederSubsystem.feederFeederMotor.drive(0);
+                        feederSubsystem.feederBedMotor.drive(0);
+                    },
+                    feederSubsystem
+                )
+            );
 
         joystick.povUp();
 
