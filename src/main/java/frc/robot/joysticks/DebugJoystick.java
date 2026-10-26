@@ -48,15 +48,11 @@ public class DebugJoystick {
         // );
     }
 
-    /**
-     * 
-     */
     public void configureBindings() {
         // Continuously adjust flywheel speed (left Y) and pitch target (right Y).
         // No subsystem requirement — just updates the shared values; the subsystem's
         // default command picks them up and calls the motors.
-        Commands.run
-        (() -> {
+        Commands.run(() -> {
             double changeAmountPerTick = 0.0025;
             double leftY = Math.abs(joystick.getLeftY()) > 0.05 ? -joystick.getLeftY() : 0.0;
             double rightY = Math.abs(joystick.getRightY()) > 0.05 ? -joystick.getRightY() : 0.0;
@@ -68,7 +64,7 @@ public class DebugJoystick {
             // shooterSubsystem.shooterPitchMotor.goTo(shooterSubsystem.shooterPitchMotor.getCurrentValue() +  + Math.signum(rightY) * changeAmountPerTick);
             // shooterSubsystem.setFlywheelSpeed(shooterSubsystem.flywheelSpeed + Math.signum(leftY) * changeAmountPerTick);
             // shooterSubsystem.setPitchTarget(shooterSubsystem.pitchTarget + Math.signum(rightY) * changeAmountPerTick);
-        }, null).schedule();
+        }).schedule();
 
 
         joystick.a().onTrue(
@@ -137,5 +133,4 @@ public class DebugJoystick {
         );
 
         joystick.povRight();
-    }
-}
+    
