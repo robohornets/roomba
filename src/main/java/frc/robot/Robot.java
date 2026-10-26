@@ -111,6 +111,10 @@ import frc.robot.util.Elastic;
         Logger.recordOutput("MotorConfig/FeederBed", robotContainer.feederSubsystem.feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/FeederFeeder",robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
         Logger.recordOutput("MotorConfig/ShooterFeeder", robotContainer.feederSubsystem.shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+
+        // Applying a full TalonFXConfiguration resets inversion, so re-push the inversion WhatTime stored
+        robotContainer.shooterSubsystem.rightShooterMotor.setInverted(robotContainer.shooterSubsystem.rightShooterMotor.isInverted());
+        robotContainer.intakeSubsystem.intakeWheelLeft.setInverted(robotContainer.intakeSubsystem.intakeWheelLeft.isInverted());
     }
 
     // MARK: Robot Periodic
