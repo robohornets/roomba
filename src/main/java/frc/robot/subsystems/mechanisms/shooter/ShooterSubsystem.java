@@ -151,17 +151,4 @@ public class ShooterSubsystem extends SubsystemBase {
             motor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
     }
-
-    /**
-     * @return
-     */
-    public Object shooterUpperLower() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'shooterUpperLower'");
-    }
-
-    public ShooterDataPoint calculateShooterValues(Object shooterUpperLower, double distanceToHub) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'calculateShooterValues'");
-    }
 }

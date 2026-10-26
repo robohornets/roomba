@@ -1,17 +1,14 @@
 package frc.robot.joysticks;
 
-import org.littletonrobotics.junction.Logger;
-
-import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.mechanisms.feeder.FeederState;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeStates;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
-import frc.robot.subsystems.mechanisms.shooter.ShooterConstants;
-import frc.robot.subsystems.mechanisms.shooter.ShooterDataPoint;
 import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 
 public class DriverJoystick {
@@ -33,120 +30,65 @@ public class DriverJoystick {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
         this.feederSubsystem = feederSubsystem;
-        
-        Logger.recordOutput("DriverJoystick/ShooterSpeed", 0.0);
     }
 
     public void configureBindings() {
+        // MARK: Intake Down - A
         joystick.a();
-
-        joystick.b();
 
         // MARK: X - Lock to hub
         joystick.x().onTrue(
             Commands.runOnce(
                 () -> {
                     drivetrain.toggleLockedToHub();
-                    Logger.recordOutput("SwerveDrive/LockedToHub", drivetrain.isLockedToHub());
                 }
             )
         );
 
-        joystick.y();
-
-        final ShooterDataPoint[] saveShooterDataPoint = {new ShooterDataPoint(0.0, 0.0, 0.0)};
+        // MARK: Reset Shooter Angle - Y
+        joystick.y().whileTrue(
+            Commands.runEnd(
+                () -> {
+                    drivetrain.setWiggleAgitation(true);
+                },
+                () -> {
+                    drivetrain.setWiggleAgitation(false);
+                }
+            )
+        );
 
         // MARK: RT - Shooter shoot
-        joystick.rightTrigger()
-            .whileTrue(
-                Commands.startRun(
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
-
-                        shooterDataPoint = shooterSubsystem.calculateShooterValues(
-                            shooterSubsystem.shooterUpperLower(), 
-                            drivetrain.getDistanceToHub()
-                        );
-
-                        double rpm = shooterSubsystem.getRequiredRPM(shooterDataPoint);
-
-                        double maxRPM = 200; // MARK: Populate max rpm
-                        
-                        shooterDataPoint.speed = rpm / maxRPM;
-                        shooterDataPoint.angle = shooterDataPoint.angle / 180; // angle (0.5 = 180deg)
-
-                        saveShooterDataPoint[0] = shooterDataPoint;
-                    },
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
-                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.speed);
-
-                        // maintain motor speed
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                        feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
-                        ((MotorGroup) shooterSubsystem.shooterPitchMotor).goTo(shooterDataPoint.angle);
-
-                        saveShooterDataPoint[0] = shooterDataPoint;
-                    },
-                    shooterSubsystem, drivetrain
-                )
-            )
-            .onFalse(
-                Commands.run(
-                    () -> {
-                        ShooterDataPoint shooterDataPoint = saveShooterDataPoint[0];
-
-                        shooterDataPoint.speed = Math.max(0.0, shooterDataPoint.speed - 0.05);
-                        shooterSubsystem.shooterMotors.drive(shooterDataPoint.speed);
-                        feederSubsystem.shooterFeederMotor.drive(shooterDataPoint.speed);
-
-                        ((MotorGroup) shooterSubsystem.shooterPitchMotor).goTo(ShooterConstants.SHOOTER_MAX_ANGLE);
-
-                        Logger.recordOutput("DriverJoystick/ShooterSpeed", shooterDataPoint.speed);
-                        Logger.recordOutput("DriverJoystick/ShooterPitch", shooterDataPoint.angle);
-
-                        saveShooterDataPoint[0] = shooterDataPoint;
-                    },
-                    shooterSubsystem
-                )
-                .until(() -> saveShooterDataPoint[0].speed <= 0.0)
-            );
+        joystick.rightTrigger().whileTrue(
+            NamedCommands.getCommand("ShootWheel")
+        ).onFalse(
+            NamedCommands.getCommand("ShootStop")
+        );
 
         // MARK: LT - Intake
         joystick.leftTrigger()
             .whileTrue(
                 Commands.runEnd(
-                    () -> {
-                        intakeSubsystem.setIntake(IntakeStates.INTAKE_IN);
-                    },
-                    () -> {
-                        intakeSubsystem.setIntake(IntakeStates.OFF);
-                    },
+                    () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_IN),
+                    () -> intakeSubsystem.setIntake(IntakeStates.OFF),
                     intakeSubsystem
                 )
             );
 
-        joystick.rightBumper();
-
-        joystick.leftBumper()
-                .whileTrue(
-                    Commands.runEnd(
-                    () -> {
-                        feederSubsystem.feederFeederMotor.drive(1);
-                        feederSubsystem.feederBedMotor.drive(1);
-                    },
-                    () -> {
-                        feederSubsystem.feederFeederMotor.drive(0);
-                        feederSubsystem.feederBedMotor.drive(0);
-                    },
-                    feederSubsystem
-                )
-            );
+        // MARK: Intake Out - LB
+        joystick.leftBumper().whileTrue(
+            Commands.runEnd(
+                () -> intakeSubsystem.setIntake(IntakeStates.INTAKE_OUT),
+                () -> intakeSubsystem.setIntake(IntakeStates.OFF),
+                intakeSubsystem
+            )
+        );
 
         joystick.povUp();
 
-        joystick.povDown();
+        // Reset Field Centric Heading
+        joystick.povDown().onTrue(
+            drivetrain.runOnce(drivetrain.drivetrain::seedFieldCentric)
+        );
 
         joystick.povLeft();
 
