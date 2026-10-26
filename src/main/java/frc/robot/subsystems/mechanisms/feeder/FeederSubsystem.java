@@ -10,16 +10,16 @@ import frc.robot.RobotContainer;
 
 public class FeederSubsystem extends SubsystemBase {
     // MARK: Feeder Bed
-    public Motor feederBedMotor = ((Motor) new Motor(15, "Mechanisms")).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED)
-    .setAccelerationTime(0);
+    public Motor feederBedMotor = new Motor(15, "Mechanisms").setContinuous(0,1).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED)
+    ;
 
     // MARK: Feeder Feeder
-    public Motor feederFeederMotor = new Motor(16, "Mechanisms").setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED)
-    .setAccelerationTime(0);
+    public Motor feederFeederMotor = new Motor(16, "Mechanisms").setContinuous(0,1).setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED)
+    ;
 
     // MARK: Shooter Feeder
-    public Motor shooterFeederMotor = new Motor(12, "Mechanisms").setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED)
-    .setAccelerationTime(0);
+    public Motor shooterFeederMotor = new Motor(12, "Mechanisms").setContinuous(0,1).setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED)
+    ; //setcontinuous
 
     // MARK: Feeder State
     private FeederState feederState = FeederState.OFF;

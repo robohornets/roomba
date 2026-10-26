@@ -91,7 +91,7 @@ import frc.robot.util.Elastic;
         DriverStation.silenceJoystickConnectionWarning(true);
 
         // Enable motors (WhatTime Motor.isEnabled defaults to false — drive/goTo do nothing until this is called)
-        // robotContainer.shooterSubsystem.shooterPitchMotor.toggleEnabled(true);
+        // robotContainer.shooterSubsystem.shooterPitchMotor.setEnabled(true);
         robotContainer.shooterSubsystem.leftShooterMotor.setEnabled(true);
         robotContainer.shooterSubsystem.rightShooterMotor.setEnabled(true);
         robotContainer.intakeSubsystem.intakeWheelsMotor.setEnabled(true);
