@@ -133,4 +133,5 @@ public class DebugJoystick {
         );
 
         joystick.povRight();
-    
+    }
+}
