@@ -17,11 +17,11 @@ import frc.robot.RobotContainer;
 public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
     public Motor angleMotor = new Motor(9, "Mechanisms")
-        .setFree(false)
+
         .setMotorSpeed(0.2)
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
-        .setPG(0.05)
+        .setKP(0.05)
         .setThreshold(IntakeConstants.INTAKE_THRESHOLD);
 
 
@@ -30,14 +30,14 @@ public class IntakeSubsystem extends SubsystemBase {
     public Motor intakeWheelRight = new Motor(11, "Mechanisms");
 
     public MotorGroup intakeWheelsMotor = new MotorGroup(Arrays.asList(intakeWheelLeft, intakeWheelRight))
-    .setAccelerationSteps(0);
+    .setAccelerationTime(0);
 
     public double angleOffset = 0.0;
 
 
     public IntakeSubsystem() {
-        angleMotor.toggleEnabled(true);
-        intakeWheelsMotor.toggleEnabled(true);
+        angleMotor.setEnabled(true);
+        intakeWheelsMotor.setEnabled(true);
 
         intakeWheelsMotor.setNeutralMode(NeutralModeValue.Coast);
 
@@ -81,7 +81,6 @@ public class IntakeSubsystem extends SubsystemBase {
             angleMotor.brakelessReset(0.5),
             Commands.runOnce(
                 () -> {
-                    angleOffset = angleMotor.getCurrentValue();
                     angleMotor.setRange(
                         IntakeConstants.INTAKE_MIN_VALUE - angleOffset,
                         IntakeConstants.INTAKE_MAX_VALUE - angleOffset
@@ -123,7 +122,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // MARK: Logging
     private void logValues() {
-        Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getCurrentValue() - angleOffset);
+        Logger.recordOutput("IntakeSubsystem/Angle", - angleOffset);
         Logger.recordOutput("IntakeSubsystem/AngleTarget", angleTarget);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
         Logger.recordOutput("IntakeSubsystem/AngleOffset", angleOffset);

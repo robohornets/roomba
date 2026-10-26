@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.Optional;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -30,7 +28,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AdvantageKit.AdvantageKitConstants;
-import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.Elastic;
 
 
@@ -95,12 +92,12 @@ import frc.robot.util.Elastic;
 
         // Enable motors (WhatTime Motor.isEnabled defaults to false — drive/goTo do nothing until this is called)
         // robotContainer.shooterSubsystem.shooterPitchMotor.toggleEnabled(true);
-        robotContainer.shooterSubsystem.leftShooterMotor.toggleEnabled(true);
-        robotContainer.shooterSubsystem.rightShooterMotor.toggleEnabled(true);
-        robotContainer.intakeSubsystem.intakeWheelsMotor.toggleEnabled(true);
-        robotContainer.feederSubsystem.feederBedMotor.toggleEnabled(true);
-        robotContainer.feederSubsystem.feederFeederMotor.toggleEnabled(true);
-        robotContainer.feederSubsystem.shooterFeederMotor.toggleEnabled(true);
+        robotContainer.shooterSubsystem.leftShooterMotor.setEnabled(true);
+        robotContainer.shooterSubsystem.rightShooterMotor.setEnabled(true);
+        robotContainer.intakeSubsystem.intakeWheelsMotor.setEnabled(true);
+        robotContainer.feederSubsystem.feederBedMotor.setEnabled(true);
+        robotContainer.feederSubsystem.feederFeederMotor.setEnabled(true);
+        robotContainer.feederSubsystem.shooterFeederMotor.setEnabled(true);
 
         // Apply and log motor configs to AdvantageKit
         // Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());

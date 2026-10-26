@@ -1,7 +1,5 @@
 package frc.robot.joysticks;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,10 +13,7 @@ import frc.robot.subsystems.mechanisms.shooter.ShooterSubsystem;
 public class OperatorJoystick {
     public final CommandXboxController joystick;
     private final Drive drivetrain;
-    private final ShooterSubsystem shooterSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-    private final FeederSubsystem feederSubsystem;
-    
     public OperatorJoystick(
         CommandXboxController joystick, 
         Drive drivetrain, 
@@ -28,9 +23,7 @@ public class OperatorJoystick {
     ) {
         this.joystick = joystick;
         this.drivetrain = drivetrain;
-        this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
-        this.feederSubsystem = feederSubsystem;
 
 
     }

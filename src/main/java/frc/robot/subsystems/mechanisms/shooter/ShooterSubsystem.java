@@ -39,7 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public final MotorGroup shooterMotors = new MotorGroup(Arrays.asList(leftShooterMotor, rightShooterMotor))
         .setMotorSpeed(0.4)
-        .setAccelerationSteps(50);
+        .setAccelerationTime(50);
 
     // MARK: Constructor
     /**
@@ -49,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(Drive drivetrain) {
         this.drivetrain = drivetrain;
 
-        shooterMotors.toggleEnabled(true);
+        shooterMotors.setEnabled(true);
 
         for (ShooterDataPoint point : ShooterConstants.shooterDataPoints) {
             dataPoints.put(point.distance, point);
@@ -62,6 +62,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public double flywheelSpeed = 0.0;
 
     public double lastSetFlywheelSpeed = 0.0;
+
+    public Object shooterPitchMotor;
 
     // MARK: Set Flywheel
     public void setFlywheelSpeed(double speed) {
@@ -148,5 +150,18 @@ public class ShooterSubsystem extends SubsystemBase {
             "MotorStatus/ShooterSubsystem/Current/Supply/" + name, 
             motor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
+    }
+
+    /**
+     * @return
+     */
+    public Object shooterUpperLower() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'shooterUpperLower'");
+    }
+
+    public ShooterDataPoint calculateShooterValues(Object shooterUpperLower, double distanceToHub) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'calculateShooterValues'");
     }
 }

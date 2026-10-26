@@ -4,32 +4,31 @@ import org.littletonrobotics.junction.Logger;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
 
 public class FeederSubsystem extends SubsystemBase {
     // MARK: Feeder Bed
-    public Motor feederBedMotor = new Motor(15, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED)
-    .setAccelerationSteps(0);
+    public Motor feederBedMotor = ((Motor) new Motor(15, "Mechanisms")).setMotorSpeed(FeederConstants.FEEDER_BED_SPEED)
+    .setAccelerationTime(0);
 
     // MARK: Feeder Feeder
-    public Motor feederFeederMotor = new Motor(16, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED)
-    .setAccelerationSteps(0);
+    public Motor feederFeederMotor = new Motor(16, "Mechanisms").setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED)
+    .setAccelerationTime(0);
 
     // MARK: Shooter Feeder
-    public Motor shooterFeederMotor = new Motor(12, "Mechanisms").setFree(true).setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED)
-    .setAccelerationSteps(0);
+    public Motor shooterFeederMotor = new Motor(12, "Mechanisms").setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED)
+    .setAccelerationTime(0);
 
     // MARK: Feeder State
     private FeederState feederState = FeederState.OFF;
 
     // MARK: Constructor
     public FeederSubsystem() {
-        feederBedMotor.toggleEnabled(true);
-        feederFeederMotor.toggleEnabled(true);
-        shooterFeederMotor.toggleEnabled(true);
+        feederBedMotor.setEnabled(true);
+        feederFeederMotor.setEnabled(true);
+        shooterFeederMotor.setEnabled(true);
 
         feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
         feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
