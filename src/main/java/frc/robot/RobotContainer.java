@@ -8,8 +8,6 @@ import static edu.wpi.first.units.Units.Amps;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -77,19 +75,18 @@ public class RobotContainer {
     //             .withDutyCycleNeutralDeadband(0.04)
     //     );
 
-    public static final Consumer<TalonFXConfiguration> mechanismsMotorConsumer = config -> config
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(Amps.of(100))
-                .withSupplyCurrentLimit(Amps.of(40))
-                .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimitEnable(true)
-        )
-        .withMotorOutput(
-            new MotorOutputConfigs()
-                .withNeutralMode(NeutralModeValue.Brake)
-                .withDutyCycleNeutralDeadband(0.04)
-        );
+    // Edit the existing config objects rather than replacing them (withMotorOutput(new ...)),
+    // so settings the Motor already made, like inversion, aren't reset to defaults.
+    public static final Consumer<TalonFXConfiguration> mechanismsMotorConsumer = config -> {
+        config.CurrentLimits
+            .withStatorCurrentLimit(Amps.of(100))
+            .withSupplyCurrentLimit(Amps.of(40))
+            .withStatorCurrentLimitEnable(true)
+            .withSupplyCurrentLimitEnable(true);
+        config.MotorOutput
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withDutyCycleNeutralDeadband(0.04);
+    };
     
     // MARK: Tests
     // public final Tests tests = new Tests(intakeSubsystem, shooterSubsystem, climberSubsystem, motorSubsystem);

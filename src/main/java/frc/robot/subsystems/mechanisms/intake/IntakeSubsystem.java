@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
         .setMotorSpeed(1.0)
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
-        .setKP(2)
+        .setPID(2,0,0)
         .setGearRatio(16)
         .setThreshold(IntakeConstants.INTAKE_THRESHOLD)
         .configure(RobotContainer.mechanismsMotorConsumer);
@@ -58,7 +58,6 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Periodic Loop
     @Override
     public void periodic() {
-        // runAngleControl();
 
         logValues();
         logMotors();
@@ -99,19 +98,17 @@ public class IntakeSubsystem extends SubsystemBase {
         switch (intakeState) {
             case INTAKE_IN:
                 intakeWheelsMotor.drive(IntakeConstants.INTAKE_WHEELS_SPEED);
-                angleMotor.getMotor().set(IntakeConstants.INTAKE_ANGLE_DOWN_SPEED);
+                angleMotor.drive(IntakeConstants.INTAKE_ANGLE_DOWN_SPEED);
                 break;
             case INTAKE_OUT:
                 intakeWheelsMotor.drive(-IntakeConstants.INTAKE_WHEELS_SPEED / 2);
-                angleMotor.getMotor().set(IntakeConstants.INTAKE_ANGLE_DOWN_SPEED);
+                angleMotor.drive(IntakeConstants.INTAKE_ANGLE_DOWN_SPEED);
                 break;
             case OFF:
-                intakeWheelsMotor.drive(0.0);
-                angleMotor.getMotor().set(0.0);
+                intakeWheelsMotor.stop();
                 break;
             default:
-                intakeWheelsMotor.drive(0.0);
-                angleMotor.getMotor().set(0.0);
+                intakeWheelsMotor.stop();
                 break;
         }
 
