@@ -17,12 +17,10 @@ import frc.robot.RobotContainer;
 public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
     public Motor angleMotor = new Motor(9, "Mechanisms")
-        .setMotorSpeed(1.0)
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
-        .setPID(2,0,0)
+        .setPID(12,0,1)
         .setGearRatio(16)
-        .setThreshold(IntakeConstants.INTAKE_THRESHOLD)
         .configure(RobotContainer.mechanismsMotorConsumer);
 
 
@@ -105,10 +103,12 @@ public class IntakeSubsystem extends SubsystemBase {
                 angleMotor.drive(IntakeConstants.INTAKE_ANGLE_DOWN_SPEED);
                 break;
             case OFF:
-                intakeWheelsMotor.stop();
+                intakeWheelsMotor.drive(0.0);
+                angleMotor.drive(0.0);
                 break;
             default:
-                intakeWheelsMotor.stop();
+                intakeWheelsMotor.drive(0.0);
+                angleMotor.drive(0.0);
                 break;
         }
 
@@ -118,7 +118,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // MARK: Logging
     private void logValues() {
         Logger.recordOutput("IntakeSubsystem/Angle", angleMotor.getPosition() - angleOffset);
-        Logger.recordOutput("IntakeSubsystem/AngleTarget", angleTarget);
+        Logger.recordOutput("IntakeSubsystem/AngleTarget", angleTarget + angleOffset);
         Logger.recordOutput("IntakeSubsystem/AngleSpeed", angleMotor.getMotor().get());
         Logger.recordOutput("IntakeSubsystem/AngleOffset", angleOffset);
         Logger.recordOutput("IntakeSubsystem/WheelState", intakeState.toString());
