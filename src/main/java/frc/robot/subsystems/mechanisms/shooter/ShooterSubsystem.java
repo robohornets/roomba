@@ -80,7 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: CanShoot
     public Boolean canShoot() {
-        if (leftShooterMotor.getMotor().get() >= 0.1) {
+        if (leftShooterMotor.getVelocity() >= 0.1) {
             return false;
         }
 
@@ -111,7 +111,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // MARK: Logging
     private void logValues() {
-        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", leftShooterMotor.getMotor().get());
+        Logger.recordOutput("ShooterSubsystem/ShooterSpeed", leftShooterMotor.getVelocity());
         Logger.recordOutput("ShooterSubsystem/TargetAngle", shooterAngleTarget);
         Logger.recordOutput("ShooterSubsystem/CanShoot", canShoot() || isShooting());
         Logger.recordOutput("ShooterSubsystem/CanShootRaw", canShoot());

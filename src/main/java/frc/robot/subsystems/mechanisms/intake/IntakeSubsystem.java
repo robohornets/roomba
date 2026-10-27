@@ -36,10 +36,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     public IntakeSubsystem() {
-        angleMotor.setEnabled(true);
+        angleMotor.setEnabled(false);
         intakeWheelsMotor.setEnabled(true);
 
         intakeWheelsMotor.setNeutralMode(NeutralModeValue.Coast);
+        angleMotor.setNeutralMode(NeutralModeValue.Coast);
     
     }
 
@@ -153,7 +154,6 @@ public class IntakeSubsystem extends SubsystemBase {
             "MotorStatus/IntakeSubsystem/Current/Supply/AngleMotor", 
             angleMotor.getMotor().getSupplyCurrent().getValueAsDouble()
         );
-
         Logger.recordOutput(
             "MotorStatus/IntakeSubsystem/Current/Stator/IntakeLeftMotor", 
             intakeWheelLeft.getMotor().getStatorCurrent().getValueAsDouble()
