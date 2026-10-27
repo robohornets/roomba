@@ -17,10 +17,11 @@ import frc.robot.RobotContainer;
 public class IntakeSubsystem extends SubsystemBase {
     // MARK: Intake Angle
     public Motor angleMotor = new Motor(9, "Mechanisms")
-        .setMotorSpeed(0.2)
+        .setMotorSpeed(1.0)
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
-        .setKP(0.05)
+        .setKP(2)
+        .setGearRatio(16)
         .setThreshold(IntakeConstants.INTAKE_THRESHOLD)
         .configure(RobotContainer.mechanismsMotorConsumer);
 
