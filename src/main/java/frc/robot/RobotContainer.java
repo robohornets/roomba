@@ -18,6 +18,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +38,7 @@ import frc.robot.util.statuschecks.StatusChecks;
 import frc.robot.subsystems.mechanisms.feeder.FeederSubsystem;
 import frc.robot.subsystems.mechanisms.intake.IntakeSubsystem;
 
+import java.util.function.Consumer;
 
 public class RobotContainer {
     // MARK: Drivetrain
@@ -61,7 +63,21 @@ public class RobotContainer {
     public final RegisterCommands registerCommands = new RegisterCommands(intakeSubsystem, shooterSubsystem, feederSubsystem, drivetrain);
 
     // MARK: Motor Config
-    public static final TalonFXConfiguration mechanismsMotorConfiguration = new TalonFXConfiguration()
+    // public static final TalonFXConfiguration mechanismsMotorConfiguration = new TalonFXConfiguration()
+    //     .withCurrentLimits(
+    //         new CurrentLimitsConfigs()
+    //             .withStatorCurrentLimit(Amps.of(100))
+    //             .withSupplyCurrentLimit(Amps.of(40))
+    //             .withStatorCurrentLimitEnable(true)
+    //             .withSupplyCurrentLimitEnable(true)
+    //     )
+    //     .withMotorOutput(
+    //         new MotorOutputConfigs()
+    //             .withNeutralMode(NeutralModeValue.Brake)
+    //             .withDutyCycleNeutralDeadband(0.04)
+    //     );
+
+    public static final Consumer<TalonFXConfiguration> mechanismsMotorConsumer = config -> config
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(Amps.of(100))

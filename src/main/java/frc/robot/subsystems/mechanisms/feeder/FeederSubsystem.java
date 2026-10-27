@@ -2,22 +2,25 @@ package frc.robot.subsystems.mechanisms.feeder;
 
 import org.littletonrobotics.junction.Logger;
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
 
 public class FeederSubsystem extends SubsystemBase {
     // MARK: Feeder Bed
-    public Motor feederBedMotor = new Motor(15, "Mechanisms").setMotorSpeed(FeederConstants.FEEDER_BED_SPEED);
+    public Motor feederBedMotor = new Motor(15, "Mechanisms")
+        .setMotorSpeed(FeederConstants.FEEDER_BED_SPEED)
+        .configure(RobotContainer.mechanismsMotorConsumer);
 
     // MARK: Feeder Feeder
-    public Motor feederFeederMotor = new Motor(16, "Mechanisms").setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED);
+    public Motor feederFeederMotor = new Motor(16, "Mechanisms")
+        .setMotorSpeed(FeederConstants.FEEDER_FEEDER_SPEED)
+        .configure(RobotContainer.mechanismsMotorConsumer);
 
     // MARK: Shooter Feeder
-    public Motor shooterFeederMotor = new Motor(12, "Mechanisms").setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED);
+    public Motor shooterFeederMotor = new Motor(12, "Mechanisms")
+        .setMotorSpeed(FeederConstants.SHOOTER_FEEDER_SPEED)
+        .configure(RobotContainer.mechanismsMotorConsumer);
 
     // MARK: Feeder State
     private FeederState feederState = FeederState.OFF;
@@ -27,14 +30,6 @@ public class FeederSubsystem extends SubsystemBase {
         feederBedMotor.setEnabled(true);
         feederFeederMotor.setEnabled(true);
         shooterFeederMotor.setEnabled(true);
-
-        feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        
-        feederBedMotor.setNeutralMode(NeutralModeValue.Brake);
-        feederFeederMotor.setNeutralMode(NeutralModeValue.Brake);
-        shooterFeederMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
     // MARK: Periodic Loop

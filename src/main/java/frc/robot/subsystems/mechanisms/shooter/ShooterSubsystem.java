@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.btwrobotics.WhatTime.frc.MotorManagers.Motor;
 import com.btwrobotics.WhatTime.frc.MotorManagers.MotorGroup;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
@@ -39,7 +40,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public final MotorGroup shooterMotors = new MotorGroup(Arrays.asList(leftShooterMotor, rightShooterMotor))
         .setMotorSpeed(0.4)
-        .setAccelerationTime(1.0);
+        .setAccelerationTime(1.0)
+        .setNeutralMode(NeutralModeValue.Coast);
 
     // MARK: Constructor
     /**

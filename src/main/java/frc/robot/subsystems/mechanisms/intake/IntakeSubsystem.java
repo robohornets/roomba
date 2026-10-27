@@ -21,14 +21,16 @@ public class IntakeSubsystem extends SubsystemBase {
         .setMinValue(IntakeConstants.INTAKE_MIN_VALUE)
         .setMaxValue(IntakeConstants.INTAKE_MAX_VALUE)
         .setKP(0.05)
-        .setThreshold(IntakeConstants.INTAKE_THRESHOLD);
+        .setThreshold(IntakeConstants.INTAKE_THRESHOLD)
+        .configure(RobotContainer.mechanismsMotorConsumer);
 
 
     // MARK: Intake Wheels
     public Motor intakeWheelLeft = new Motor(10, "Mechanisms", true);
     public Motor intakeWheelRight = new Motor(11, "Mechanisms");
 
-    public MotorGroup intakeWheelsMotor = new MotorGroup(Arrays.asList(intakeWheelLeft, intakeWheelRight));
+    public MotorGroup intakeWheelsMotor = new MotorGroup(Arrays.asList(intakeWheelLeft, intakeWheelRight))
+        .configure(RobotContainer.mechanismsMotorConsumer);
 
     public double angleOffset = 0.0;
 
@@ -38,10 +40,6 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeWheelsMotor.setEnabled(true);
 
         intakeWheelsMotor.setNeutralMode(NeutralModeValue.Coast);
-
-        angleMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        intakeWheelLeft.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
-        intakeWheelRight.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration);
     
     }
 

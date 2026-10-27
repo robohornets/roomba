@@ -94,27 +94,28 @@ import frc.robot.util.Elastic;
         DriverStation.silenceJoystickConnectionWarning(true);
 
         // Enable motors (WhatTime Motor.isEnabled defaults to false — drive/goTo do nothing until this is called)
+        
         // robotContainer.shooterSubsystem.shooterPitchMotor.setEnabled(true);
-        robotContainer.shooterSubsystem.leftShooterMotor.setEnabled(true);
-        robotContainer.shooterSubsystem.rightShooterMotor.setEnabled(true);
-        robotContainer.intakeSubsystem.intakeWheelsMotor.setEnabled(true);
-        robotContainer.feederSubsystem.feederBedMotor.setEnabled(true);
-        robotContainer.feederSubsystem.feederFeederMotor.setEnabled(true);
-        robotContainer.feederSubsystem.shooterFeederMotor.setEnabled(true);
+        // robotContainer.shooterSubsystem.leftShooterMotor.setEnabled(true);
+        // robotContainer.shooterSubsystem.rightShooterMotor.setEnabled(true);
+        // robotContainer.intakeSubsystem.intakeWheelsMotor.setEnabled(true);
+        // robotContainer.feederSubsystem.feederBedMotor.setEnabled(true);
+        // robotContainer.feederSubsystem.feederFeederMotor.setEnabled(true);
+        // robotContainer.feederSubsystem.shooterFeederMotor.setEnabled(true);
 
         // Apply and log motor configs to AdvantageKit
         // Logger.recordOutput("MotorConfig/ShooterPitch", robotContainer.shooterSubsystem.shooterPitchMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/LeftShooter", robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/RightShooter", robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/IntakeWheelLeft", robotContainer.intakeSubsystem.intakeWheelLeft.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/IntakeWheelRight", robotContainer.intakeSubsystem.intakeWheelRight.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/FeederBed", robotContainer.feederSubsystem.feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/FeederFeeder",robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
-        Logger.recordOutput("MotorConfig/ShooterFeeder", robotContainer.feederSubsystem.shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/LeftShooter", robotContainer.shooterSubsystem.leftShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/RightShooter", robotContainer.shooterSubsystem.rightShooterMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/IntakeWheelLeft", robotContainer.intakeSubsystem.intakeWheelLeft.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/IntakeWheelRight", robotContainer.intakeSubsystem.intakeWheelRight.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/FeederBed", robotContainer.feederSubsystem.feederBedMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/FeederFeeder",robotContainer.feederSubsystem.feederFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
+        // Logger.recordOutput("MotorConfig/ShooterFeeder", robotContainer.feederSubsystem.shooterFeederMotor.getMotor().getConfigurator().apply(RobotContainer.mechanismsMotorConfiguration).toString());
 
         // Applying a full TalonFXConfiguration resets inversion, so re-push the inversion WhatTime stored
-        robotContainer.shooterSubsystem.rightShooterMotor.setInverted(robotContainer.shooterSubsystem.rightShooterMotor.isInverted());
-        robotContainer.intakeSubsystem.intakeWheelLeft.setInverted(robotContainer.intakeSubsystem.intakeWheelLeft.isInverted());
+        // robotContainer.shooterSubsystem.rightShooterMotor.setInverted(robotContainer.shooterSubsystem.rightShooterMotor.isInverted());
+        // robotContainer.intakeSubsystem.intakeWheelLeft.setInverted(robotContainer.intakeSubsystem.intakeWheelLeft.isInverted());
     }
 
     // MARK: Robot Periodic
